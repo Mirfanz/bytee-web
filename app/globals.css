@@ -17,11 +17,19 @@
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
+  /* color: rgb(var(--foreground-rgb));
   background: linear-gradient(
       to bottom,
       transparent,
       rgb(var(--background-end-rgb))
     )
-    rgb(var(--background-start-rgb));
+    rgb(var(--background-start-rgb)); */
+  color: #495057;
+  background: #f5f7fb;
+}
+.container {
+  overflow-x: hidden;
+  padding-inline: 0.75rem;
+  max-width: none;
+  min-width: none;
 }

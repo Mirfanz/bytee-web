@@ -1,0 +1,50 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+enum roles {
+  user
+  member
+  admin
+}
+
+model User {
+  id              String     @id @default(auto()) @map("_id") @db.ObjectId
+  name            String
+  image           String?
+  email           String     @unique
+  hashedPassword  String
+  apiKey          String?    @unique @default(cuid())
+  role            roles      @default(user)
+
+  verifiedAt      DateTime?
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+
+  devices         Device[]
+}
+
+type relay {
+  name           String?
+  status         Boolean     @default(false)
+}
+
+
+model Device {
+  id              String     @id @default(auto()) @map("_id") @db.ObjectId
+  name            String?
+  userId          String     @db.ObjectId
+  relay1          relay
+  relay2          relay
+
+  user            User      @relation(fields: [userId],references: [id])
+}
+
