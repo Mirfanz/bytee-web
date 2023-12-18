@@ -16,7 +16,6 @@ export default function DashboardLayout({
           style={{ height: "calc(100vh - 4rem)" }}
         >
           <Sidebar />
-
           <div className="bg-indigo-100 bg-opacity-30 -z-10 h-60 bottom-2 sticky left-0 right-0 rounded-lg m-2 "></div>
         </div>
         <div className=" w-full">

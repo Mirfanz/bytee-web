@@ -71,25 +71,23 @@ const Sidebar = (props: Props) => {
     },
   ];
   return (
-    <>
-      <List placeholder={""}>
-        {listItems.map((item, index) => (
-          <Link key={index} href={item.path}>
-            <ListItem
-              placeholder={""}
-              className={`flex py-4 items-center rounded-none bg-gray-100 duration-300 ${
-                item.active
-                  ? " border border-indigo-700 !bg-indigo-100 !text-indigo-700 rounded"
-                  : " text-gray-700"
-              }`}
-            >
-              <ListItemPrefix placeholder={""}>{item.icon}</ListItemPrefix>
-              {item.label}
-            </ListItem>
-          </Link>
-        ))}
-      </List>
-    </>
+    <List placeholder={""}>
+      {listItems.map((item, index) => (
+        <Link key={index} href={item.path}>
+          <ListItem
+            placeholder={""}
+            className={`flex py-4 items-center rounded-none bg-gray-100 duration-300 ${
+              item.active
+                ? " border border-indigo-700 !bg-indigo-100 !text-indigo-700 rounded"
+                : " text-gray-700"
+            }`}
+          >
+            <ListItemPrefix placeholder={""}>{item.icon}</ListItemPrefix>
+            {item.label}
+          </ListItem>
+        </Link>
+      ))}
+    </List>
   );
 };
 
