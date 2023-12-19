@@ -4,6 +4,9 @@ import prisma from "@/prisma";
 import { log } from "console";
 import { cookies } from "next/headers";
 import { compare, decode, encode, hash } from "./utils/auth";
+import { UserType } from "@/types";
+import { JwtPayload } from "jsonwebtoken";
+import { Prisma } from "@prisma/client";
 
 export interface RegisterProps {
   email: string;
@@ -88,4 +91,28 @@ export const GetSelf = async () => {
     cookies().delete("JWT_TOKEN");
     return null;
   }
+};
+
+export const FetchRooms = async () => {
+  const user: JwtPayload | null = await GetSelf();
+  // if (!user) return { error: 403, message: "Login required" };
+  if (!user) throw new Error("Login required");
+
+  return prisma.room
+    .findMany({ where: { user: { email: user.email } } })
+    .catch(() => null)
+    .finally(() => prisma.$disconnect());
+};
+
+export const FetchDevices = async () => {
+  const user: JwtPayload | null = await GetSelf();
+  if (!user) throw new Error("SDss");
+
+  return prisma.device
+    .findMany({
+      where: { user: { email: user.email } },
+      include: { room: true },
+    })
+    .catch(() => null)
+    .finally(() => prisma.$disconnect());
 };

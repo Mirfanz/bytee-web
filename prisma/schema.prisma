@@ -30,21 +30,39 @@ model User {
   updatedAt       DateTime   @updatedAt
 
   devices         Device[]
+  rooms           Room[]
 }
+
 
 type relay {
   name           String?
   status         Boolean     @default(false)
 }
 
-
 model Device {
-  id              String     @id @default(auto()) @map("_id") @db.ObjectId
+  id              String    @id @default(auto()) @map("_id") @db.ObjectId
   name            String?
-  userId          String     @db.ObjectId
+  description     String?
+  userId          String    @db.ObjectId
+  roomId          String    @db.ObjectId
   relay1          relay
   relay2          relay
 
+  createdAt       DateTime  @default(now())
+
   user            User      @relation(fields: [userId],references: [id])
+  room            Room      @relation(fields: [roomId],references: [id])
 }
 
+
+model Room{
+  id              String    @id @db.ObjectId @default(auto()) @map("_id")
+  userId          String    @db.ObjectId
+  name            String
+  description     String?
+
+  createdAt       DateTime  @default(now())
+  
+  devices         Device[]
+  user            User      @relation(fields: [userId],references: [id])
+}

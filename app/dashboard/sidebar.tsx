@@ -31,14 +31,14 @@ const Sidebar = (props: Props) => {
     {
       label: "Devices",
       icon: <CpuChipIcon className="h-5 w-5" />,
-      path: "/dashboard/devices",
-      active: pathname === "/dashboard/devices",
+      path: "/dashboard/device",
+      active: pathname === "/dashboard/device",
     },
     {
       label: "Rooms",
       icon: <HomeModernIcon className="h-5 w-5" />,
-      path: "/dashboard/rooms",
-      active: pathname === "/dashboard/rooms",
+      path: "/dashboard/room",
+      active: pathname === "/dashboard/room",
     },
     {
       label: "Schedule",
