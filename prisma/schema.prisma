@@ -33,15 +33,14 @@ model User {
   rooms           Room[]
 }
 
-
 type relay {
-  name           String?
+  name           String     @default("No Name")
   status         Boolean     @default(false)
 }
 
 model Device {
   id              String    @id @default(auto()) @map("_id") @db.ObjectId
-  name            String?
+  name            String    @default("No Name")
   description     String?
   userId          String    @db.ObjectId
   roomId          String    @db.ObjectId

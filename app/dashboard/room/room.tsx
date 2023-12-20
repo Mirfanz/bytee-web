@@ -47,7 +47,7 @@ const Room = ({ rooms }: Props) => {
             className="md:flex hidden items-center gap-2"
             placeholder={""}
             color="indigo"
-            onClick={() => router.push("/dashboard/device/new")}
+            onClick={() => router.push("/dashboard/room/new")}
           >
             <PlusIcon className="w-4 h-4" strokeWidth={3} />
             Add Room

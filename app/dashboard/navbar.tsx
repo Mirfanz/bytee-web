@@ -18,7 +18,7 @@ const Navbar = (props: Props) => {
   const [open, setOpen] = React.useState(false);
   return (
     <>
-      <nav className="sticky top-0 bg-indigo-900">
+      <nav className="sticky z-50 top-0 bg-indigo-900">
         <div className="container gap-3 flex items-center py-2 ">
           <Link
             href={"/"}

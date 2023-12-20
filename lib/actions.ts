@@ -93,24 +93,35 @@ export const GetSelf = async () => {
   }
 };
 
-export const FetchRooms = async () => {
+export const FetchRooms = async (roomId: string | undefined = undefined) => {
   const user: JwtPayload | null = await GetSelf();
   // if (!user) return { error: 403, message: "Login required" };
   if (!user) throw new Error("Login required");
 
   return prisma.room
-    .findMany({ where: { user: { email: user.email } } })
+    .findMany({
+      where: {
+        id: roomId,
+        user: { email: user.email },
+      },
+      include: { devices: true },
+    })
     .catch(() => null)
     .finally(() => prisma.$disconnect());
 };
 
-export const FetchDevices = async () => {
+export const FetchDevices = async (
+  deviceId: string | undefined = undefined
+) => {
   const user: JwtPayload | null = await GetSelf();
   if (!user) throw new Error("SDss");
 
   return prisma.device
     .findMany({
-      where: { user: { email: user.email } },
+      where: {
+        id: deviceId,
+        user: { email: user.email },
+      },
       include: { room: true },
     })
     .catch(() => null)
