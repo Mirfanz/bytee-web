@@ -40,7 +40,9 @@ export const Register = async ({ email, password, name }: RegisterProps) => {
       role: "user",
       image: null,
     });
-    cookie.set("JWT_TOKEN", token);
+    cookie.set("JWT_TOKEN", token, {
+      expires: new Date().getTime() + 1000 * 60 * 60 * 24 * 7,
+    });
     return { success: "Register berhasil.", authToken: token };
   } catch (err: any) {
     const { meta } = err;
@@ -77,7 +79,9 @@ export const Signin = async ({ email, password }: SigninProps) => {
       role: result.role,
     });
 
-    cookies().set("JWT_TOKEN", token);
+    cookies().set("JWT_TOKEN", token, {
+      expires: new Date().getTime() + 1000 * 60 * 60 * 24 * 7,
+    });
     return { success: "Login Berhasil.", authToken: token };
   } catch (error: any) {
     return { error: error.message || "Email atau password salah." };
