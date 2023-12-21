@@ -1,23 +1,61 @@
 "use client";
 
 import React from "react";
-import { Alert, IconButton, Typography } from "@material-tailwind/react";
 import {
+  Alert,
+  Button,
+  IconButton,
+  Option,
+  Select,
+  Typography,
+} from "@material-tailwind/react";
+import {
+  ArrowPathIcon,
   ArrowTopRightOnSquareIcon,
   EllipsisVerticalIcon,
   ExclamationTriangleIcon,
 } from "@heroicons/react/24/outline";
 import { Prisma } from "@prisma/client";
 import CardDevice from "./card-device";
+import { useRouter } from "next/navigation";
+import { PlusIcon } from "@heroicons/react/24/solid";
 
 type Props = {
   rooms: Prisma.RoomGetPayload<{ include: { devices: true } }>[] | null;
 };
 
 const Dashboard = ({ rooms }: Props) => {
+  const router = useRouter();
   return (
     <main>
       <div className="container py-4 lg:!p-8">
+        <div className="flex justify-between items-center gap-3 mb-6">
+          <Typography
+            placeholder={""}
+            className="text-2xl me-auto font-bold text-gray-900 !border-s-4 border-indigo-700 ps-2 "
+          >
+            My Devices
+          </Typography>
+          {/* <IconButton
+            placeholder={""}
+            size="sm"
+            variant="outlined"
+            color="indigo"
+            onClick={() => router.refresh()}
+          >
+            <ArrowPathIcon className="w-5 h-5" />
+          </IconButton> */}
+          <Button
+            size="sm"
+            variant="outlined"
+            className="flex items-center gap-2"
+            placeholder={""}
+            color="indigo"
+          >
+            <ArrowPathIcon className="w-4 h-4" />
+            Refresh
+          </Button>
+        </div>
         {rooms ? (
           rooms.map((room) => (
             <div key={room.id} className="mb-6">
@@ -43,10 +81,12 @@ const Dashboard = ({ rooms }: Props) => {
                   {room.devices.map((device) => (
                     <>
                       <CardDevice
+                        relayId="relay1"
                         relay={device.relay1}
                         deviceName={device.name || "No Name"}
                       />
                       <CardDevice
+                        relayId="relay2"
                         relay={device.relay2}
                         deviceName={device.name || "No Name"}
                       />

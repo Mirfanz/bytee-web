@@ -1,6 +1,6 @@
 "use client";
 
-import { LightBulbIcon } from "@heroicons/react/24/outline";
+import { LightBulbIcon, PowerIcon } from "@heroicons/react/24/outline";
 import {
   Card,
   CardBody,
@@ -8,7 +8,7 @@ import {
   Switch,
   Typography,
 } from "@material-tailwind/react";
-import React from "react";
+import React, { useState } from "react";
 
 type Props = {
   relay: {
@@ -16,9 +16,11 @@ type Props = {
     status: boolean;
   };
   deviceName: string;
+  relayId: "relay1" | "relay2";
 };
 
-const CardDevice = ({ relay, deviceName }: Props) => {
+const CardDevice = ({ relay, deviceName, relayId }: Props) => {
+  const [status, setStatus] = useState<boolean>(relay.status);
   return (
     <Card className="lg:hover:brightness-95 duration-300" placeholder={""}>
       <CardBody className="p-3" placeholder={""}>
@@ -33,32 +35,44 @@ const CardDevice = ({ relay, deviceName }: Props) => {
           </IconButton>
           <div className="flex flex-col">
             <Typography className="text-base text-gray-900" placeholder={""}>
-              {relay.name || "Relay"}
+              {relay.name}
             </Typography>
             <Typography
               placeholder={""}
               variant="small"
-              className="text-xs -mt-1 text-gray-500"
+              className="text-xs -mt-1 text-gray-500 line-clamp-1"
             >
-              {deviceName}
+              {deviceName} | {relayId}
             </Typography>
           </div>
         </div>
-        <div className="flex py-8 items-center justify-center ">
-          {/* <button className="p-4 hover:brightness-95 hover:scale-110 duration-100">
-                    <PowerIcon
-                    color={item.relay1.status ? "green" : "red"}
-                    className="h-10 w-10"
-                    />
-                  </button> */}
-          <Switch crossOrigin={true} color="green" className="" />
+        <div className="select-none flex py-8 items-center justify-center ">
+          <div
+            className="bg-white border-1 flex items-center  rounded-md p-1 w-28"
+            style={{
+              boxShadow: "3px 3px 7px #d4d4d4,-3px -3px 7px #ffffff",
+            }}
+          >
+            <button
+              className={`!w-12 h-8 shadow-none bg-gray-300 rounded flex justify-center items-center hover:brightness-95 ${
+                status ? "order-1" : "order-none"
+              }`}
+              onClick={() => setStatus(!status)}
+            >
+              <PowerIcon
+                className="w-4 h-4 !duration-300"
+                strokeWidth={2}
+                color={status ? "green" : "red"}
+              />
+            </button>
+            <Typography
+              placeholder={""}
+              className="mx-auto text-sm text-gray-700"
+            >
+              {status ? "ON" : "OFF"}
+            </Typography>
+          </div>
         </div>
-        <Typography
-          placeholder={""}
-          className="text-xs absolute bottom-2 left-2 text-gray-500"
-        >
-          Online
-        </Typography>
       </CardBody>
     </Card>
   );
