@@ -1,12 +1,7 @@
 "use client";
 
 import { Bars3BottomLeftIcon } from "@heroicons/react/20/solid";
-import {
-  Button,
-  Drawer,
-  IconButton,
-  Typography,
-} from "@material-tailwind/react";
+import { Button, Drawer, IconButton } from "@material-tailwind/react";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";

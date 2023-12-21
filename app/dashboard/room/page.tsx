@@ -1,8 +1,6 @@
-import { FetchRooms, GetSelf } from "@/lib/actions";
-import Room from "./room";
-import { Prisma, PrismaClient } from "@prisma/client";
-import { RedirectType, redirect } from "next/navigation";
-import { log } from "console";
+import { FetchRooms } from "@/lib/actions";
+import Room from "../../ui/dashboard/room";
+import { Prisma } from "@prisma/client";
 
 export default async function RoomPage() {
   const rooms: Prisma.RoomGetPayload<null>[] | null = await FetchRooms();

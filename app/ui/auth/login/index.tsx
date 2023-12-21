@@ -6,9 +6,8 @@ import {
   Input,
   Typography,
 } from "@material-tailwind/react";
-import React, { ChangeEvent } from "react";
+import React from "react";
 import { Signin, SigninProps } from "@/lib/actions";
-import { inputProps } from "@material-tailwind/react/types/components/slider";
 import Link from "next/link";
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";

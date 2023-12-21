@@ -1,6 +1,4 @@
-import { cookies, headers } from "next/headers";
-import Profile from "./Profile";
-import { decode } from "@/lib/utils/auth";
+import Profile from "../../ui/dashboard/profile";
 import { RedirectType, notFound, redirect } from "next/navigation";
 import { GetSelf } from "@/lib/actions";
 

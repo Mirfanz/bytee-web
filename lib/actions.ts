@@ -1,12 +1,9 @@
 "use server";
 
 import prisma from "@/prisma";
-import { log } from "console";
 import { cookies } from "next/headers";
 import { compare, decode, encode, hash } from "./utils/auth";
-import { UserType } from "@/types";
 import { JwtPayload } from "jsonwebtoken";
-import { Prisma } from "@prisma/client";
 import { redirect } from "next/navigation";
 
 export interface RegisterProps {

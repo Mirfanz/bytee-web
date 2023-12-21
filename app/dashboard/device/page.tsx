@@ -1,6 +1,5 @@
-import { FetchDevices, GetSelf } from "@/lib/actions";
-import Device from "./device";
-import { RedirectType, redirect } from "next/navigation";
+import { FetchDevices } from "@/lib/actions";
+import Device from "../../ui/dashboard/device";
 
 export default async function DevicePage() {
   const devices = await FetchDevices();

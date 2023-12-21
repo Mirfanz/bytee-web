@@ -1,6 +1,6 @@
 "use client";
 
-import TableRooms from "@/app/ui/table-rooms";
+import TableDevices from "@/app/ui/dashboard/device/table-devices";
 import { ArrowPathIcon, PlusIcon } from "@heroicons/react/24/outline";
 import { Button, IconButton, Typography } from "@material-tailwind/react";
 import { Prisma } from "@prisma/client";
@@ -8,10 +8,10 @@ import { useRouter } from "next/navigation";
 import React from "react";
 
 type Props = {
-  rooms: Prisma.RoomGetPayload<true>[];
+  devices: Prisma.DeviceGetPayload<{ include: { room: true } }>[];
 };
 
-const Room = ({ rooms }: Props) => {
+const Device = ({ devices }: Props) => {
   const router = useRouter();
   return (
     <main>
@@ -21,7 +21,7 @@ const Room = ({ rooms }: Props) => {
             placeholder={""}
             className="text-2xl me-auto font-bold text-gray-900 !border-s-4 border-indigo-700 ps-2 "
           >
-            My Rooms
+            My Devices
           </Typography>
           <IconButton
             placeholder={""}
@@ -47,16 +47,16 @@ const Room = ({ rooms }: Props) => {
             className="md:flex hidden items-center gap-2"
             placeholder={""}
             color="indigo"
-            onClick={() => router.push("/dashboard/room/new")}
+            onClick={() => router.push("/dashboard/device/new")}
           >
             <PlusIcon className="w-4 h-4" strokeWidth={3} />
-            Add Room
+            Add Device
           </Button>
         </div>
-        <TableRooms rooms={rooms} />
+        <TableDevices devices={devices} />
       </div>
     </main>
   );
 };
 
-export default Room;
+export default Device;

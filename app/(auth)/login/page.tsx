@@ -1,5 +1,4 @@
-import { GetSelf } from "@/lib/actions";
-import Login from "./Login";
+import Login from "../../ui/auth/login";
 
 export default async function LoginPage() {
   return <Login />;

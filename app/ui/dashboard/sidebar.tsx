@@ -32,19 +32,19 @@ const Sidebar = (props: Props) => {
       label: "Devices",
       icon: <CpuChipIcon className="h-5 w-5" />,
       path: "/dashboard/device",
-      active: pathname === "/dashboard/device",
+      active: pathname.startsWith("/dashboard/device"),
     },
     {
       label: "Rooms",
       icon: <HomeModernIcon className="h-5 w-5" />,
       path: "/dashboard/room",
-      active: pathname === "/dashboard/room",
+      active: pathname.startsWith("/dashboard/room"),
     },
     {
       label: "Schedule",
       icon: <CalendarDaysIcon className="h-5 w-5" />,
       path: "/dashboard/schedule",
-      active: pathname === "/dashboard/schedule",
+      active: pathname.startsWith("/dashboard/schedule"),
     },
     {
       label: "Credential",

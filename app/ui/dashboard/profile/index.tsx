@@ -1,6 +1,5 @@
 "use client";
 
-import { UserType } from "@/types";
 import { JwtPayload } from "jsonwebtoken";
 import React from "react";
 

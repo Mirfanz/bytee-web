@@ -3,7 +3,6 @@
 import React from "react";
 import Image from "next/image";
 import { Button, Typography } from "@material-tailwind/react";
-import { UserIcon } from "@heroicons/react/24/outline";
 import { RectangleGroupIcon, UserCircleIcon } from "@heroicons/react/24/solid";
 import { useRouter } from "next/navigation";
 

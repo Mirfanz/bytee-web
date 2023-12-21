@@ -1,6 +1,6 @@
 import React, { Suspense } from "react";
-import Navbar from "./navbar";
-import Sidebar from "./sidebar";
+import Navbar from "../ui/dashboard/navbar";
+import Sidebar from "../ui/dashboard/sidebar";
 
 export default function DashboardLayout({
   children,

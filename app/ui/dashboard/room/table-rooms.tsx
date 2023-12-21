@@ -1,10 +1,7 @@
 "use client";
-import {
-  Cog6ToothIcon,
-  PencilIcon,
-  TrashIcon,
-} from "@heroicons/react/24/outline";
-import { Card, IconButton, Typography } from "@material-tailwind/react";
+
+import { Cog6ToothIcon } from "@heroicons/react/24/outline";
+import { IconButton } from "@material-tailwind/react";
 import { Prisma } from "@prisma/client";
 
 const TABLE_HEAD = ["Name", "Description", "Home", ""];

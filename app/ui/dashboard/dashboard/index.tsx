@@ -1,29 +1,14 @@
 "use client";
 
 import React from "react";
-import {
-  Alert,
-  Breadcrumbs,
-  Card,
-  CardBody,
-  CardFooter,
-  CardHeader,
-  IconButton,
-  Switch,
-  Tooltip,
-  Typography,
-} from "@material-tailwind/react";
+import { Alert, IconButton, Typography } from "@material-tailwind/react";
 import {
   ArrowTopRightOnSquareIcon,
-  ChevronDoubleDownIcon,
-  ChevronDownIcon,
   EllipsisVerticalIcon,
   ExclamationTriangleIcon,
-  LightBulbIcon,
-  PowerIcon,
 } from "@heroicons/react/24/outline";
 import { Prisma } from "@prisma/client";
-import CardDevice from "../ui/dashboard/card-device";
+import CardDevice from "./card-device";
 
 type Props = {
   rooms: Prisma.RoomGetPayload<{ include: { devices: true } }>[] | null;

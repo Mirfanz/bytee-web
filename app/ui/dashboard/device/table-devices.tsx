@@ -1,10 +1,5 @@
 "use client";
-import {
-  Cog6ToothIcon,
-  PencilIcon,
-  PowerIcon,
-  TrashIcon,
-} from "@heroicons/react/24/outline";
+import { Cog6ToothIcon, PowerIcon } from "@heroicons/react/24/outline";
 import { Badge, Card, IconButton, Typography } from "@material-tailwind/react";
 import { Prisma } from "@prisma/client";
 
