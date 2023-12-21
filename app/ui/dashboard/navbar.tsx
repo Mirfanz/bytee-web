@@ -6,6 +6,9 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import Sidebar from "./sidebar";
+import { Audiowide } from "next/font/google";
+
+const font = Audiowide({ weight: ["400"], subsets: ["latin", "latin-ext"] });
 
 type Props = {};
 
@@ -14,19 +17,22 @@ const Navbar = (props: Props) => {
   return (
     <>
       <nav className="sticky z-50 top-0 bg-indigo-900">
-        <div className="container gap-3 flex items-center py-2 ">
+        <div className="container gap-3 flex items-center py-3 ">
           <Link
             href={"/"}
-            className="text-xl flex items-center gap-2 font-medium text-gray-100"
+            className={
+              " flex items-center gap-2 text-3xl text-gray-100 " +
+              font.className
+            }
           >
             <Image
               width={500}
               height={500}
               src={"/icon.png"}
-              className="w-12 h-12"
+              className="w-10 h-10"
               alt="logo"
             />
-            Bytee Smart
+            Bytee
           </Link>
           <div className="ms-auto text-gray-100 items-center gap-8 hidden lg:flex">
             <Link href={"/"}>Beranda</Link>
