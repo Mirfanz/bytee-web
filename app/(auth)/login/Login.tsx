@@ -1,12 +1,18 @@
 "use client";
 
-import { Button, Input, Typography } from "@material-tailwind/react";
+import {
+  Button,
+  IconButton,
+  Input,
+  Typography,
+} from "@material-tailwind/react";
 import React, { ChangeEvent } from "react";
 import { Signin, SigninProps } from "@/lib/actions";
 import { inputProps } from "@material-tailwind/react/types/components/slider";
 import Link from "next/link";
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
+import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 
 type Props = {};
 
@@ -17,14 +23,23 @@ const Login = (props: Props) => {
     password: "",
   });
 
-  const handleSubmitLogin = (e: React.FormEvent) => {
+  const [submiting, setSubmiting] = React.useState(false);
+  const [showPassword, setShowPassword] = React.useState(false);
+
+  const handleSubmitLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (submiting) return false;
+
+    setSubmiting(true);
     Signin(fields).then((data) => {
       if (data.success) return router.replace("/dashboard/profile");
+      setFields({ ...fields, password: "" });
       Swal.fire({
-        titleText: "Login Gagal",
-        text: data.message,
+        text: data.error,
+        showConfirmButton: false,
+        icon: "error",
       });
+      setSubmiting(false);
     });
   };
 
@@ -47,6 +62,7 @@ const Login = (props: Props) => {
               Login Account
             </Typography>
             <Input
+              className="invalid:text-red-400"
               color="indigo"
               name="email"
               value={fields?.email}
@@ -55,18 +71,45 @@ const Login = (props: Props) => {
               label="Email / Username"
               variant="outlined"
               crossOrigin={false}
+              required
             />
-            <Input
+            <div className="relative">
+              <Input
+                className="invalid:text-red-400"
+                color="indigo"
+                name="password"
+                value={fields?.password}
+                onChange={handleFieldChange}
+                label="Password"
+                type={showPassword ? "text" : "password"}
+                crossOrigin={false}
+                required
+                minLength={8}
+              />
+              <IconButton
+                variant="text"
+                color="indigo"
+                className="!absolute right-0 top-0"
+                placeholder={""}
+                // size="sm"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? (
+                  <EyeSlashIcon className="w-5 h-5" />
+                ) : (
+                  <EyeIcon className="w-5 h-5" />
+                )}
+              </IconButton>
+            </div>
+            <Button
+              type="submit"
+              disabled={submiting}
+              placeholder={""}
               color="indigo"
-              name="password"
-              value={fields?.password}
-              onChange={handleFieldChange}
-              label="Password"
-              type="password"
-              crossOrigin={false}
-            />
-            <Button type="submit" placeholder={"sds"} color="indigo">
-              Login
+              loading={submiting}
+              className="text-center justify-center"
+            >
+              {submiting ? "Tunggu Sebentar..." : "Login"}
             </Button>
             <Typography
               className="text-center"

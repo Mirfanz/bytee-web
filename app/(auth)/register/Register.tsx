@@ -1,12 +1,18 @@
 "use client";
 
-import { Button, Input, Typography } from "@material-tailwind/react";
+import {
+  Button,
+  IconButton,
+  Input,
+  Typography,
+} from "@material-tailwind/react";
 import React, { ChangeEvent } from "react";
 import { Register as ActionRegister, RegisterProps } from "@/lib/actions";
 import { inputProps } from "@material-tailwind/react/types/components/slider";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
+import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 
 type Props = {};
 
@@ -18,17 +24,28 @@ const Register = (props: Props) => {
     password: "",
   });
 
+  const [repeatPassword, setRepeatPassword] = React.useState<string>("");
+  const [submiting, setSubmiting] = React.useState(false);
+  const [showPassword, setShowPassword] = React.useState(false);
+
   const handleSubmitRegister = (e: React.FormEvent) => {
     e.preventDefault();
+    if (submiting) return false;
+    if (fields.password !== repeatPassword)
+      return Swal.fire({
+        icon: "warning",
+        text: "Password tidak cocok",
+        showConfirmButton: false,
+      });
+    setSubmiting(true);
     ActionRegister(fields).then((data) => {
       if (data.success) return router.replace("/dashboard/profile");
       Swal.fire({
-        titleText: data.message,
-        confirmButtonText: "Login",
-        showCancelButton: true,
-        cancelButtonText: "Coba Lagi",
-        focusCancel: true,
+        icon: "error",
+        text: data.error,
+        showConfirmButton: false,
       });
+      setSubmiting(false);
     });
   };
 
@@ -61,6 +78,8 @@ const Register = (props: Props) => {
               label="Full Name"
               variant="outlined"
               crossOrigin={false}
+              required
+              minLength={5}
             />
             <Input
               color="indigo"
@@ -71,18 +90,54 @@ const Register = (props: Props) => {
               label="Email / Username"
               variant="outlined"
               crossOrigin={false}
+              required
             />
+            <div className="relative">
+              <Input
+                color="indigo"
+                name="password"
+                value={fields?.password}
+                onChange={handleFieldChange}
+                label="Password"
+                type={showPassword ? "text" : "password"}
+                crossOrigin={false}
+                required
+                minLength={8}
+              />
+              <IconButton
+                placeholder={""}
+                onClick={() => setShowPassword(!showPassword)}
+                className="!absolute top-0 right-0"
+                variant="text"
+                color="indigo"
+              >
+                {showPassword ? (
+                  <EyeSlashIcon className="w-5 h-5" />
+                ) : (
+                  <EyeIcon className="w-5 h-5" />
+                )}
+              </IconButton>
+            </div>
             <Input
               color="indigo"
-              name="password"
-              value={fields?.password}
-              onChange={handleFieldChange}
-              label="Password"
-              type="password"
+              name="repeatpassword"
+              value={repeatPassword}
+              onChange={(e) => setRepeatPassword(e.target.value)}
+              label="Repeat Password"
+              type={showPassword ? "text" : "password"}
               crossOrigin={false}
+              required
+              minLength={8}
             />
-            <Button type="submit" placeholder={"sds"} color="indigo">
-              Register Now
+            <Button
+              type="submit"
+              placeholder={"sds"}
+              color="indigo"
+              loading={submiting}
+              disabled={submiting}
+              className="justify-center"
+            >
+              {submiting ? "Tunggu Sebentar..." : "Register Now"}
             </Button>
             <Typography
               className="text-center"

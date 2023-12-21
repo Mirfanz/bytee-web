@@ -28,58 +28,6 @@ import CardDevice from "../ui/dashboard/card-device";
 type Props = {
   rooms: Prisma.RoomGetPayload<{ include: { devices: true } }>[] | null;
 };
-const fakeData = [
-  {
-    id: "65815c0827de4b0c0b200bde",
-    name: "Jarwo",
-    description: "Produk pertama beli",
-    userId: "65804e4a841d0793c6de4469",
-    roomId: "65805d7bf45f78f2b427fafb",
-    createdAt: { $date: { $numberLong: "1702976520585" } },
-    relay1: { status: false },
-    relay2: { status: false },
-  },
-  {
-    id: "65815c0827de4b0c0b200bde",
-    name: "Jarwo",
-    description: "Produk pertama beli",
-    userId: "65804e4a841d0793c6de4469",
-    roomId: "65805d7bf45f78f2b427fafb",
-    createdAt: { $date: { $numberLong: "1702976520585" } },
-    relay1: { status: false },
-    relay2: { status: false },
-  },
-  {
-    id: "65815c0827de4b0c0b200bde",
-    name: "Jarwo",
-    description: "Produk pertama beli",
-    userId: "65804e4a841d0793c6de4469",
-    roomId: "65805d7bf45f78f2b427fafb",
-    createdAt: { $date: { $numberLong: "1702976520585" } },
-    relay1: { status: false },
-    relay2: { status: false },
-  },
-  {
-    id: "65815c0827de4b0c0b200bde",
-    name: "Jarwo",
-    description: "Produk pertama beli",
-    userId: "65804e4a841d0793c6de4469",
-    roomId: "65805d7bf45f78f2b427fafb",
-    createdAt: { $date: { $numberLong: "1702976520585" } },
-    relay1: { status: false },
-    relay2: { status: false },
-  },
-  {
-    id: "65815c0827de4b0c0b200bde",
-    name: "Jarwo",
-    description: "Produk pertama beli",
-    userId: "65804e4a841d0793c6de4469",
-    roomId: "65805d7bf45f78f2b427fafb",
-    createdAt: { $date: { $numberLong: "1702976520585" } },
-    relay1: { status: false },
-    relay2: { status: false },
-  },
-];
 
 const Dashboard = ({ rooms }: Props) => {
   return (

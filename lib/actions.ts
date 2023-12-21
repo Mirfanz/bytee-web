@@ -7,6 +7,7 @@ import { compare, decode, encode, hash } from "./utils/auth";
 import { UserType } from "@/types";
 import { JwtPayload } from "jsonwebtoken";
 import { Prisma } from "@prisma/client";
+import { redirect } from "next/navigation";
 
 export interface RegisterProps {
   email: string;
@@ -52,7 +53,7 @@ export const Register = async ({ email, password, name }: RegisterProps) => {
       default:
         message = "Error tidak diketahui.";
     }
-    return { error: err.code, message };
+    return { error: message };
   }
 };
 
@@ -62,7 +63,9 @@ export const Signin = async ({ email, password }: SigninProps) => {
       .findUniqueOrThrow({
         where: { email },
       })
+      .catch(() => null)
       .finally(() => prisma.$disconnect());
+    if (!result) throw new Error("User tidak ditemukan.");
 
     if (!(await compare(password, result.hashedPassword)))
       throw new Error("Password salah.");
@@ -77,15 +80,16 @@ export const Signin = async ({ email, password }: SigninProps) => {
     cookies().set("JWT_TOKEN", token);
     return { success: "Login Berhasil.", authToken: token };
   } catch (error: any) {
-    return { error: error.code, message: "Email atau password salah" };
+    return { error: error.message || "Email atau password salah." };
   }
 };
 
-export const GetSelf = async () => {
-  const authToken = await cookies().get("JWT_TOKEN");
-  if (!authToken?.value) return null;
+export const GetSelf = async (token: string | undefined = undefined) => {
+  const authToken = token || (await cookies().get("JWT_TOKEN"))?.value;
+
+  if (!authToken) return null;
   try {
-    const decodedToken = await decode(authToken.value);
+    const decodedToken = await decode(authToken);
     return decodedToken;
   } catch (error) {
     cookies().delete("JWT_TOKEN");
@@ -95,8 +99,7 @@ export const GetSelf = async () => {
 
 export const FetchRooms = async (roomId: string | undefined = undefined) => {
   const user: JwtPayload | null = await GetSelf();
-  // if (!user) return { error: 403, message: "Login required" };
-  if (!user) throw new Error("Login required");
+  if (!user) redirect("/login");
 
   return prisma.room
     .findMany({
@@ -114,7 +117,7 @@ export const FetchDevices = async (
   deviceId: string | undefined = undefined
 ) => {
   const user: JwtPayload | null = await GetSelf();
-  if (!user) throw new Error("SDss");
+  if (!user) redirect("/login");
 
   return prisma.device
     .findMany({

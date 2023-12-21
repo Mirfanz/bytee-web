@@ -5,9 +5,6 @@ import { RedirectType, redirect } from "next/navigation";
 import { log } from "console";
 
 export default async function RoomPage() {
-  const user = await GetSelf();
-  if (!user) return redirect("/login", RedirectType.replace);
-
   const rooms: Prisma.RoomGetPayload<null>[] | null = await FetchRooms();
   if (!rooms) return <h1>Terjadi Kesalahan</h1>;
 
