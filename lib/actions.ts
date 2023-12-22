@@ -113,6 +113,18 @@ export const GetSelf = async (token: string | undefined = undefined) => {
   }
 };
 
+export const FetchApiKey = async () => {
+  const user: JwtPayload | null = await GetSelf();
+  if (!user) redirect("/login");
+  return await prisma.user
+    .findUnique({
+      where: { email: user.email },
+      select: { apiKey: true },
+    })
+    .catch(() => null)
+    .finally(() => prisma.$disconnect());
+};
+
 export const FetchRooms = async (roomId: string | undefined = undefined) => {
   const user: JwtPayload | null = await GetSelf();
   if (!user) redirect("/login");
