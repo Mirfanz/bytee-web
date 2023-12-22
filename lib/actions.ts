@@ -45,7 +45,11 @@ export const Register = async ({ email, password, name }: RegisterProps) => {
     cookie.set("JWT_TOKEN", token, {
       expires: new Date().getTime() + 1000 * 60 * 60 * 24 * 7,
     });
-    return { success: "Register berhasil.", authToken: token };
+    return {
+      success: "Register berhasil.",
+      authToken: token,
+      name: result.name,
+    };
   } catch (err: any) {
     const { meta } = err;
     cookie.delete("JWT_TOKEN");
@@ -84,10 +88,16 @@ export const Signin = async ({ email, password }: SigninProps) => {
     cookies().set("JWT_TOKEN", token, {
       expires: new Date().getTime() + 1000 * 60 * 60 * 24 * 7,
     });
-    return { success: "Login Berhasil.", authToken: token };
+    return { success: "Login Berhasil.", authToken: token, name: result.name };
   } catch (error: any) {
     return { error: error.message || "Email atau password salah." };
   }
+};
+
+export const SignOut = async () => {
+  console.log(await cookies().delete("JWT_TOKEN"));
+
+  return true;
 };
 
 export const GetSelf = async (token: string | undefined = undefined) => {

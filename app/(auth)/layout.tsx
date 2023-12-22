@@ -1,4 +1,5 @@
 import React, { Suspense } from "react";
+import Navbar from "../ui/auth/navbar";
 
 export default function AuthLayout({
   children,
@@ -7,11 +8,7 @@ export default function AuthLayout({
 }) {
   return (
     <>
-      {/* <nav className="sticky top-0 text-center bg-blue-500 py-3">
-        <div className="container">
-          <h1 className="text-lg font-bold">Navbar Auth</h1>
-        </div>
-      </nav> */}
+      <Navbar />
       <Suspense fallback={<h1>Loading...</h1>}>{children}</Suspense>
     </>
   );

@@ -6,12 +6,13 @@ import {
   Input,
   Typography,
 } from "@material-tailwind/react";
-import React from "react";
+import React, { ChangeEvent, ChangeEventHandler } from "react";
 import { Signin, SigninProps } from "@/lib/actions";
 import Link from "next/link";
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
+import { Toast } from "@/lib/utils/swal";
 
 type Props = {};
 
@@ -31,7 +32,12 @@ const Login = (props: Props) => {
 
     setSubmiting(true);
     Signin(fields).then((data) => {
-      if (data.success) return router.replace("/dashboard/profile");
+      if (data.success) {
+        Toast.fire({
+          titleText: "Hi, " + data.name,
+        });
+        return router.replace("/dashboard/profile");
+      }
       setFields({ ...fields, password: "" });
       Swal.fire({
         text: data.error,
@@ -42,7 +48,7 @@ const Login = (props: Props) => {
     });
   };
 
-  const handleFieldChange = (e: any) => {
+  const handleFieldChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     const newFields: SigninProps = { ...fields, [name]: value };
     setFields(newFields);
@@ -51,7 +57,11 @@ const Login = (props: Props) => {
   return (
     <main>
       <div className="container !h-screen items-center flex justify-center">
-        <form onSubmit={handleSubmitLogin} className="w-[400px] max-w-[90vw]">
+        <form
+          onSubmit={handleSubmitLogin}
+          autoComplete="off"
+          className="w-[400px] max-w-[90vw]"
+        >
           <div className="flex gap-4 flex-col p-4 border-2 shadow-lg  shadow-indigo-900/50 border-indigo-600  rounded-lg">
             <Typography
               placeholder={""}
@@ -90,7 +100,6 @@ const Login = (props: Props) => {
                 color="indigo"
                 className="!absolute right-0 top-0"
                 placeholder={""}
-                // size="sm"
                 onClick={() => setShowPassword(!showPassword)}
               >
                 {showPassword ? (

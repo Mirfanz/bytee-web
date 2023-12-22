@@ -6,12 +6,13 @@ import {
   Input,
   Typography,
 } from "@material-tailwind/react";
-import React from "react";
+import React, { ChangeEvent } from "react";
 import { Register as ActionRegister, RegisterProps } from "@/lib/actions";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
+import { Toast } from "@/lib/utils/swal";
 
 type Props = {};
 
@@ -38,7 +39,12 @@ const Register = (props: Props) => {
       });
     setSubmiting(true);
     ActionRegister(fields).then((data) => {
-      if (data.success) return router.replace("/dashboard/profile");
+      if (data.success) {
+        Toast.fire({
+          titleText: "Hi, " + data.name,
+        });
+        return router.replace("/dashboard/profile");
+      }
       Swal.fire({
         icon: "error",
         text: data.error,
@@ -48,7 +54,7 @@ const Register = (props: Props) => {
     });
   };
 
-  const handleFieldChange = (e: any) => {
+  const handleFieldChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     const newFields: RegisterProps = { ...fields, [name]: value };
     setFields(newFields);
@@ -60,6 +66,7 @@ const Register = (props: Props) => {
         <form
           onSubmit={handleSubmitRegister}
           className="w-[400px] max-w-[90vw]"
+          autoComplete="off"
         >
           <div className="flex gap-4 flex-col p-4 border-2 shadow-lg shadow-indigo-900/50 border-indigo-600  rounded-lg">
             <Typography
