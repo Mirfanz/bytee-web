@@ -17,6 +17,11 @@ export interface SigninProps {
   password: string;
 }
 
+export interface AddRoomProps {
+  name: string;
+  description: string | undefined | null;
+}
+
 export const Register = async ({ email, password, name }: RegisterProps) => {
   const cookie = cookies();
   const hashedPassword = await hash(password);
@@ -112,6 +117,47 @@ export const FetchRooms = async (roomId: string | undefined = undefined) => {
     })
     .catch(() => null)
     .finally(() => prisma.$disconnect());
+};
+
+export const AddRoom = async ({ name, description }: AddRoomProps) => {
+  const user: any = await GetSelf();
+  if (!user) redirect("/login");
+
+  try {
+    const result = await prisma.room
+      .create({
+        data: {
+          name,
+          description,
+          user: { connect: { email: user.email } },
+        },
+      })
+      .finally(() => prisma.$disconnect());
+    return { success: "Succesfully add room", roomId: result.id };
+  } catch (error: any) {
+    return { error: "Gagal menambahkan room baru" };
+  }
+};
+
+export const DeleteRoom = async (roomID: string) => {
+  const user: any = await GetSelf();
+  if (!user) redirect("/login");
+
+  try {
+    const result = await prisma.room
+      .delete({
+        where: {
+          id: roomID,
+          user: { email: user.email },
+        },
+      })
+      .finally(() => prisma.$disconnect());
+    return { success: `${result.name} dihapus` };
+  } catch (error: any) {
+    console.log(error);
+
+    return { error: "Hapus room gagal" };
+  }
 };
 
 export const FetchDevices = async (

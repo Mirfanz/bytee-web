@@ -4,6 +4,7 @@ import TableRooms from "@/app/ui/dashboard/room/table-rooms";
 import { ArrowPathIcon, PlusIcon } from "@heroicons/react/24/outline";
 import { Button, IconButton, Typography } from "@material-tailwind/react";
 import { Prisma } from "@prisma/client";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React from "react";
 
@@ -32,26 +33,26 @@ const Room = ({ rooms }: Props) => {
           >
             <ArrowPathIcon className="w-5 h-5" />
           </IconButton>
-          <IconButton
-            size="sm"
-            placeholder={""}
-            variant="filled"
-            color="indigo"
-            className="md:hidden"
-            onClick={() => router.push("new")}
-          >
-            <PlusIcon className="w-4 h-4" />
-          </IconButton>
-          <Button
-            size="sm"
-            className="md:flex hidden items-center gap-2"
-            placeholder={""}
-            color="indigo"
-            onClick={() => router.push("/dashboard/room/new")}
-          >
-            <PlusIcon className="w-4 h-4" strokeWidth={3} />
-            Add Room
-          </Button>
+          <Link href={"/dashboard/room/new"}>
+            <IconButton
+              size="sm"
+              placeholder={""}
+              variant="filled"
+              color="indigo"
+              className="md:hidden"
+            >
+              <PlusIcon className="w-4 h-4" />
+            </IconButton>
+            <Button
+              size="sm"
+              className="md:flex hidden items-center gap-2"
+              placeholder={""}
+              color="indigo"
+            >
+              <PlusIcon className="w-4 h-4" strokeWidth={3} />
+              Add Room
+            </Button>
+          </Link>
         </div>
         <TableRooms rooms={rooms} />
       </div>
