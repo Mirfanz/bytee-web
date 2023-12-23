@@ -78,20 +78,19 @@ const Dashboard = ({ rooms }: Props) => {
               </div>
               {room.devices?.length ? (
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-                  {room.devices.map((device) => (
-                    <>
-                      <CardDevice
-                        relayId="relay1"
-                        relay={device.relay1}
-                        deviceName={device.name || "No Name"}
-                      />
-                      <CardDevice
-                        relayId="relay2"
-                        relay={device.relay2}
-                        deviceName={device.name || "No Name"}
-                      />
-                    </>
-                  ))}
+                  {room.devices.map((device) =>
+                    [device.relay1, device.relay2].map(
+                      (relay, id) =>
+                        relay && (
+                          <CardDevice
+                            key={device.id + "relay" + id}
+                            relay={relay}
+                            deviceName={device.name}
+                            relayId={"relay" + (id + 1)}
+                          />
+                        )
+                    )
+                  )}
                 </div>
               ) : (
                 <Alert

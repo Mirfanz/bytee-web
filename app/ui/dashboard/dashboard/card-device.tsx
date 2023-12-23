@@ -16,7 +16,7 @@ type Props = {
     status: boolean;
   };
   deviceName: string;
-  relayId: "relay1" | "relay2";
+  relayId: string;
 };
 
 const CardDevice = ({ relay, deviceName, relayId }: Props) => {
@@ -40,36 +40,37 @@ const CardDevice = ({ relay, deviceName, relayId }: Props) => {
             <Typography
               placeholder={""}
               variant="small"
-              className="text-xs -mt-1 text-gray-500 line-clamp-1"
+              className="text-xs -mt-1 text-gray-600 line-clamp-1"
             >
-              {deviceName} | {relayId}
+              {deviceName}
             </Typography>
           </div>
         </div>
         <div className="select-none flex py-8 items-center justify-center ">
           <div
-            className="bg-white border-1 flex items-center  rounded-md p-1 w-28"
+            className="w-28 h-10 bg-white relative border-1 flex items-center  rounded-md p-1 "
             style={{
               boxShadow: "3px 3px 7px #d4d4d4,-3px -3px 7px #ffffff",
             }}
           >
             <button
-              className={`!w-12 h-8 shadow-none bg-gray-300 rounded flex justify-center items-center hover:brightness-95 ${
-                status ? "order-1" : "order-none"
+              className={`!w-12 h-8 z-10 duration-100 absolute shadow-none bg-gray-300 rounded flex justify-center items-center hover:brightness-95 ${
+                status ? "left-14 translate-x-1" : "left-1"
               }`}
               onClick={() => setStatus(!status)}
             >
               <PowerIcon
-                className="w-4 h-4 !duration-300"
+                className="w-4 h-4 !duration-100"
                 strokeWidth={2}
                 color={status ? "green" : "red"}
               />
             </button>
             <Typography
+              className="flex w-full text-gray-700 text-base"
               placeholder={""}
-              className="mx-auto text-sm text-gray-700"
             >
-              {status ? "ON" : "OFF"}
+              <span className="w-full text-center">ON</span>
+              <span className="w-full text-center">OFF</span>
             </Typography>
           </div>
         </div>

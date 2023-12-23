@@ -17,51 +17,50 @@ enum roles {
 }
 
 model User {
-  id              String     @id @default(auto()) @map("_id") @db.ObjectId
-  name            String
-  image           String?
-  email           String     @unique
-  hashedPassword  String
-  apiKey          String?    @unique @default(cuid())
-  role            roles      @default(user)
+  id             String  @id @default(auto()) @map("_id") @db.ObjectId
+  name           String
+  image          String?
+  email          String  @unique
+  hashedPassword String
+  apiKey         String? @unique @default(cuid())
+  role           roles   @default(user)
 
-  verifiedAt      DateTime?
-  createdAt       DateTime   @default(now())
-  updatedAt       DateTime   @updatedAt
+  verifiedAt DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
 
-  devices         Device[]
-  rooms           Room[]
+  devices Device[]
+  rooms   Room[]
 }
 
 type relay {
-  name           String     @default("No Name")
-  status         Boolean     @default(false)
+  name   String
+  status Boolean @default(false)
 }
 
 model Device {
-  id              String    @id @default(auto()) @map("_id") @db.ObjectId
-  name            String    @default("No Name")
-  description     String?
-  userId          String    @db.ObjectId
-  roomId          String    @db.ObjectId
-  relay1          relay
-  relay2          relay
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  description String?
+  userId      String  @db.ObjectId
+  roomId      String  @db.ObjectId
+  relay1      relay?
+  relay2      relay?
 
-  createdAt       DateTime  @default(now())
+  createdAt DateTime @default(now())
 
-  user            User      @relation(fields: [userId],references: [id])
-  room            Room      @relation(fields: [roomId],references: [id])
+  user User @relation(fields: [userId], references: [id])
+  room Room @relation(fields: [roomId], references: [id])
 }
 
+model Room {
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String  @db.ObjectId
+  name        String
+  description String?
 
-model Room{
-  id              String    @id @db.ObjectId @default(auto()) @map("_id")
-  userId          String    @db.ObjectId
-  name            String
-  description     String?
+  createdAt DateTime @default(now())
 
-  createdAt       DateTime  @default(now())
-  
-  devices         Device[]
-  user            User      @relation(fields: [userId],references: [id])
+  devices Device[]
+  user    User     @relation(fields: [userId], references: [id])
 }

@@ -22,6 +22,14 @@ export interface AddRoomProps {
   description: string | undefined | null;
 }
 
+export interface AddDeviceProps {
+  roomId: string;
+  name: string;
+  description: string | undefined;
+  relay1: string | undefined;
+  relay2: string | undefined;
+}
+
 export const Register = async ({ email, password, name }: RegisterProps) => {
   const cookie = cookies();
   const hashedPassword = await hash(password);
@@ -161,7 +169,7 @@ export const AddRoom = async ({ name, description }: AddRoomProps) => {
   }
 };
 
-export const DeleteRoom = async (roomID: string) => {
+export const DeleteRoom = async (roomId: string) => {
   const user: any = await GetSelf();
   if (!user) redirect("/login");
 
@@ -169,7 +177,7 @@ export const DeleteRoom = async (roomID: string) => {
     const result = await prisma.room
       .delete({
         where: {
-          id: roomID,
+          id: roomId,
           user: { email: user.email },
         },
       })
@@ -177,7 +185,6 @@ export const DeleteRoom = async (roomID: string) => {
     return { success: `${result.name} dihapus` };
   } catch (error: any) {
     console.log(error);
-
     return { error: "Hapus room gagal" };
   }
 };
@@ -196,6 +203,60 @@ export const FetchDevices = async (
       },
       include: { room: true },
     })
-    .catch(() => null)
+    .catch((err) => {
+      console.log(err);
+      return null;
+    })
     .finally(() => prisma.$disconnect());
+};
+
+export const AddDevice = async ({
+  name,
+  description,
+  roomId,
+  relay1,
+  relay2,
+}: AddDeviceProps) => {
+  const user: any = await GetSelf();
+  if (!user) redirect("/login");
+  if (!name) return { error: "Name is required" };
+  if (!roomId) return { error: "Please select a room" };
+
+  try {
+    const result = await prisma.device
+      .create({
+        data: {
+          name,
+          description,
+          relay1: relay1 ? { name: relay1 } : null,
+          relay2: relay2 ? { name: relay2 } : null,
+          user: { connect: { email: user.email } },
+          room: { connect: { id: roomId } },
+        },
+      })
+      .finally(() => prisma.$disconnect());
+    return { success: "Succesfully add device", roomId: result.id };
+  } catch (error: any) {
+    return { error: "Add device failed" };
+  }
+};
+
+export const DeleteDevice = async (deviceId: string) => {
+  const user: any = await GetSelf();
+  if (!user) redirect("/login");
+
+  try {
+    const result = await prisma.device
+      .delete({
+        where: {
+          id: deviceId,
+          user: { email: user.email },
+        },
+      })
+      .finally(() => prisma.$disconnect());
+    return { success: `${result.name} dihapus` };
+  } catch (error: any) {
+    console.log(error);
+    return { error: "Delete device failed" };
+  }
 };
