@@ -49,17 +49,18 @@ const New = (props: Props) => {
     setSubmiting(true);
     AddRoom(fields)
       .then((data) => {
-        if (data.error)
-          return Swal.fire({
-            text: data.error,
-            showConfirmButton: false,
-            icon: "error",
-          });
-
-        Toast.fire({ icon: "success", text: "Room ditambahkan" });
+        if (data.error) throw new Error(data.error);
         router.replace("/dashboard/room");
+        Toast.fire({ icon: "success", text: "Room ditambahkan" });
       })
-      .finally(() => setSubmiting(false));
+      .catch((error) => {
+        Swal.fire({
+          text: error.message,
+          showConfirmButton: false,
+          icon: "error",
+        });
+        setSubmiting(false);
+      });
   }
 
   return (

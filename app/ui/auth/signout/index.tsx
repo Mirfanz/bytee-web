@@ -45,10 +45,10 @@ const Signout = (props: Props) => {
                       text: "Gagal",
                       icon: "error",
                     });
+                  router.back();
                   Toast.fire({
                     text: "Sampai Jumpa",
                   });
-                  router.back();
                 });
               }}
               color="indigo"

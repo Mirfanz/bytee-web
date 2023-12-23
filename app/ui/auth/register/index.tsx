@@ -38,20 +38,22 @@ const Register = (props: Props) => {
         showConfirmButton: false,
       });
     setSubmiting(true);
-    ActionRegister(fields).then((data) => {
-      if (data.success) {
+    ActionRegister(fields)
+      .then((data) => {
+        if (data.error) throw new Error(data.error);
+        router.replace("/dashboard/profile");
         Toast.fire({
           titleText: "Hi, " + data.name,
         });
-        return router.replace("/dashboard/profile");
-      }
-      Swal.fire({
-        icon: "error",
-        text: data.error,
-        showConfirmButton: false,
+      })
+      .catch((error) => {
+        setSubmiting(false);
+        Swal.fire({
+          text: error.message,
+          showConfirmButton: false,
+          icon: "error",
+        });
       });
-      setSubmiting(false);
-    });
   };
 
   const handleFieldChange = (e: ChangeEvent<HTMLInputElement>) => {

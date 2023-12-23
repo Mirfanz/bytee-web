@@ -31,21 +31,23 @@ const Login = (props: Props) => {
     if (submiting) return false;
 
     setSubmiting(true);
-    Signin(fields).then((data) => {
-      if (data.success) {
+    Signin(fields)
+      .then((data) => {
+        if (data.error) throw new Error(data.error);
+        router.replace("/dashboard/profile");
         Toast.fire({
           titleText: "Hi, " + data.name,
         });
-        return router.replace("/dashboard/profile");
-      }
-      setFields({ ...fields, password: "" });
-      Swal.fire({
-        text: data.error,
-        showConfirmButton: false,
-        icon: "error",
+      })
+      .catch((error) => {
+        setFields({ ...fields, password: "" });
+        setSubmiting(false);
+        Swal.fire({
+          text: error.message,
+          showConfirmButton: false,
+          icon: "error",
+        });
       });
-      setSubmiting(false);
-    });
   };
 
   const handleFieldChange = (e: ChangeEvent<HTMLInputElement>) => {
