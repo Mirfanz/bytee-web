@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import React from "react";
 
 type Props = {
-  rooms: Prisma.RoomGetPayload<true>[];
+  rooms: Prisma.RoomGetPayload<{ include: { devices: true } }>[];
 };
 
 const Room = ({ rooms }: Props) => {

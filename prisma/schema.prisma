@@ -49,8 +49,8 @@ model Device {
 
   createdAt DateTime @default(now())
 
-  user User @relation(fields: [userId], references: [id])
-  room Room @relation(fields: [roomId], references: [id])
+  user User @relation(fields: [userId], references: [id],onDelete: Cascade)
+  room Room @relation(fields: [roomId], references: [id],onDelete: Cascade)
 }
 
 model Room {
@@ -62,5 +62,5 @@ model Room {
   createdAt DateTime @default(now())
 
   devices Device[]
-  user    User     @relation(fields: [userId], references: [id])
+  user    User     @relation(fields: [userId], references: [id],onDelete: Cascade)
 }

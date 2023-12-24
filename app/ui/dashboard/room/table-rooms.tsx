@@ -24,14 +24,18 @@ import Swal from "sweetalert2";
 
 const TABLE_HEAD = ["Name", "Description", "Home", ""];
 
-const TableRow = ({ room }: { room: Prisma.RoomGetPayload<true> }) => {
+const TableRow = ({
+  room,
+}: {
+  room: Prisma.RoomGetPayload<{ include: { devices: true } }>;
+}) => {
   const [deleting, setDeleting] = React.useState(false);
   const [deleted, setDeleted] = React.useState(false);
   async function handleDeleteRoom(roomId: string) {
     const { isConfirmed } = await Swal.fire({
       icon: "warning",
       titleText: "Hapus Room?",
-      text: "Room beserta device yang ada di room ini akan dihapus secara permanent.",
+      text: `Room beserta ${room.devices.length} device yang ada di room ini akan dihapus secara permanent.`,
       confirmButtonText: "Hapus Room",
       showCancelButton: true,
       cancelButtonText: "Jangan Deh",
@@ -109,7 +113,11 @@ const TableRow = ({ room }: { room: Prisma.RoomGetPayload<true> }) => {
   );
 };
 
-const TableRooms = ({ rooms }: { rooms: Prisma.RoomGetPayload<true>[] }) => {
+const TableRooms = ({
+  rooms,
+}: {
+  rooms: Prisma.RoomGetPayload<{ include: { devices: true } }>[];
+}) => {
   return (
     <div className="h-full w-full overflow-auto shadow-none rounded  border border-gray-400">
       <table className="w-full min-w-max  text-left ">
