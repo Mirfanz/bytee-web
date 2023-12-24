@@ -19,6 +19,7 @@ import {
   Typography,
 } from "@material-tailwind/react";
 import { Prisma } from "@prisma/client";
+import Link from "next/link";
 import React from "react";
 import Swal from "sweetalert2";
 
@@ -117,10 +118,13 @@ const TableRow = ({
           </MenuHandler>
           <MenuList placeholder={""} className="min-w-0">
             <MenuItem placeholder={""}>
-              <div className="flex items-center gap-2">
+              <Link
+                href={"/dashboard/device/edit/" + device.id}
+                className="flex items-center gap-2"
+              >
                 <PencilSquareIcon className="w-4 h-4" />
                 Edit
-              </div>
+              </Link>
             </MenuItem>
             <MenuItem placeholder={""} disabled={deleting}>
               <div

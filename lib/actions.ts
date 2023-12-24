@@ -277,6 +277,9 @@ export const UpdateRelay = async ({
   status: boolean;
   relayName: string;
 }) => {
+  const user: any = await GetSelf();
+  if (!user) redirect("/login");
+
   try {
     const key = "relay" + relayId;
     const result = await prisma.device.update({
@@ -294,5 +297,45 @@ export const UpdateRelay = async ({
     };
   } catch (error: any) {
     return { error: "Gagal" };
+  }
+};
+
+export const EditDevice = async ({
+  deviceId,
+  data,
+}: {
+  deviceId: string;
+  data: AddDeviceProps;
+}) => {
+  const user: any = await GetSelf();
+  if (!user) redirect("/login");
+
+  try {
+    const result = await prisma.device
+      .update({
+        where: { id: deviceId },
+        data: {
+          name: data.name,
+          relay1: {
+            update: {
+              name: data.relay1,
+              status: !data.relay1 ? false : undefined,
+            },
+          },
+          relay2: {
+            update: {
+              name: data.relay2,
+              status: !data.relay2 ? false : undefined,
+            },
+          },
+          roomId: data.roomId,
+          description: data.description,
+        },
+      })
+      .finally(() => prisma.$disconnect());
+
+    return { success: "success", data: result };
+  } catch (error) {
+    return { error: "error" };
   }
 };

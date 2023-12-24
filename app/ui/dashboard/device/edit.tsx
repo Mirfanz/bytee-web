@@ -1,7 +1,8 @@
 "use client";
 
-import { AddDeviceProps, FetchRooms, AddDevice } from "@/lib/actions";
+import { AddDeviceProps, FetchRooms, EditDevice } from "@/lib/actions";
 import { Toast } from "@/lib/utils/swal";
+import { InformationCircleIcon } from "@heroicons/react/24/solid";
 import {
   Button,
   Card,
@@ -13,23 +14,26 @@ import {
   Textarea,
   Typography,
 } from "@material-tailwind/react";
+import { Prisma } from "@prisma/client";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { ChangeEvent, FormEvent } from "react";
 import Swal from "sweetalert2";
 
-type Props = {};
+type Props = {
+  device: Prisma.DeviceGetPayload<{ include: { room: true } }>;
+};
 
-const NewDevice = (props: Props) => {
+const Edit = ({ device }: Props) => {
   const router = useRouter();
 
   const [submiting, setSubmiting] = React.useState(false);
   const [fields, setFields] = React.useState<AddDeviceProps>({
-    roomId: "",
-    name: "",
-    description: "",
-    relay1: "",
-    relay2: "",
+    roomId: device.room?.id,
+    name: device.name,
+    description: device.description || "",
+    relay1: device.relay1.name || "",
+    relay2: device.relay2.name || "",
   });
   const [roomOptions, setRoomOptions] = React.useState<
     { name: string; roomId: string }[]
@@ -59,11 +63,11 @@ const NewDevice = (props: Props) => {
     if (submiting) return;
     setSubmiting(true);
 
-    AddDevice(fields)
+    EditDevice({ deviceId: device.id, data: fields })
       .then((data) => {
         if (data.error) throw new Error(data.error);
         router.replace("/dashboard/device");
-        Toast.fire({ icon: "success", text: "Device ditambahkan" });
+        Toast.fire({ icon: "success", text: "Device diedit" });
       })
       .catch((error) => {
         setSubmiting(false);
@@ -89,20 +93,30 @@ const NewDevice = (props: Props) => {
         <form onSubmit={handleFormSubmit} autoComplete="off">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="flex flex-col gap-4 mb-12">
-              <Select
-                placeholder={null}
-                name="roomId"
-                onChange={(val) => {
-                  setFields({ ...fields, roomId: val || "" });
-                }}
-                label="Room"
-              >
-                {roomOptions?.map((opt) => (
-                  <Option key={opt.roomId} value={opt.roomId}>
-                    {opt.name}
-                  </Option>
-                ))}
-              </Select>
+              <div className="">
+                <Select
+                  placeholder={""}
+                  name="roomId"
+                  onChange={(val) => {
+                    setFields({ ...fields, roomId: val || "" });
+                  }}
+                  label="Room"
+                >
+                  {roomOptions?.map((opt) => (
+                    <Option key={opt.roomId} value={opt.roomId}>
+                      {opt.name}
+                    </Option>
+                  ))}
+                </Select>
+                <Typography
+                  placeholder={""}
+                  className="text-xs flex gap-1 items-center mt-1"
+                  variant="small"
+                >
+                  <InformationCircleIcon className="w-4 h-4" />
+                  Kosongi jika tidak diubah
+                </Typography>
+              </div>
               <Input
                 name="name"
                 value={fields.name}
@@ -113,22 +127,42 @@ const NewDevice = (props: Props) => {
                 required
                 minLength={2}
               />
-              <Input
-                name="relay1"
-                value={fields.relay1}
-                onChange={handleFieldChange}
-                color="indigo"
-                crossOrigin={false}
-                label="Relay1 Name"
-              />
-              <Input
-                name="relay2"
-                value={fields.relay2}
-                onChange={handleFieldChange}
-                color="indigo"
-                crossOrigin={false}
-                label="Relay2 Name"
-              />
+              <div>
+                <Input
+                  name="relay1"
+                  value={fields.relay1}
+                  onChange={handleFieldChange}
+                  color="indigo"
+                  crossOrigin={false}
+                  label="Relay1 Name"
+                />
+                <Typography
+                  placeholder={""}
+                  className="text-xs flex gap-1 items-center mt-1"
+                  variant="small"
+                >
+                  <InformationCircleIcon className="w-4 h-4" />
+                  Kosongi untuk nonaktif
+                </Typography>
+              </div>
+              <div>
+                <Input
+                  name="relay2"
+                  value={fields.relay2}
+                  onChange={handleFieldChange}
+                  color="indigo"
+                  crossOrigin={false}
+                  label="Relay2 Name"
+                />
+                <Typography
+                  placeholder={""}
+                  className="text-xs flex gap-1 items-center mt-1"
+                  variant="small"
+                >
+                  <InformationCircleIcon className="w-4 h-4" />
+                  Kosongi untuk nonaktif
+                </Typography>
+              </div>
 
               <Textarea
                 name="description"
@@ -145,7 +179,7 @@ const NewDevice = (props: Props) => {
                 loading={submiting}
                 type="submit"
               >
-                {submiting ? "Tunggu Sebentar..." : "Add Device"}
+                {submiting ? "Tunggu Sebentar..." : "Update device"}
               </Button>
             </div>
 
@@ -174,4 +208,4 @@ const NewDevice = (props: Props) => {
   );
 };
 
-export default NewDevice;
+export default Edit;
