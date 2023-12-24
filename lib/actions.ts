@@ -170,6 +170,32 @@ export const AddRoom = async ({ name, description }: AddRoomProps) => {
   }
 };
 
+export const UpdateRoom = async ({
+  roomId,
+  data,
+}: {
+  roomId: string;
+  data: AddRoomProps;
+}) => {
+  const user: any = await GetSelf();
+  if (!user) redirect("/login");
+
+  try {
+    const result = await prisma.room
+      .update({
+        where: { id: roomId },
+        data: {
+          name: data.name,
+          description: data.description,
+        },
+      })
+      .finally(() => prisma.$disconnect());
+    return { success: "Room diedit", data: result };
+  } catch (error) {
+    return { error: "Gagal mengedit room" };
+  }
+};
+
 export const DeleteRoom = async (roomId: string) => {
   const user: any = await GetSelf();
   if (!user) redirect("/login");
