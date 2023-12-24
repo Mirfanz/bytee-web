@@ -34,17 +34,8 @@ const Dashboard = ({ rooms }: Props) => {
             placeholder={""}
             className="text-2xl me-auto font-bold text-gray-900 !border-s-4 border-indigo-700 ps-2 "
           >
-            My Devices
+            Dashboard
           </Typography>
-          {/* <IconButton
-            placeholder={""}
-            size="sm"
-            variant="outlined"
-            color="indigo"
-            onClick={() => router.refresh()}
-          >
-            <ArrowPathIcon className="w-5 h-5" />
-          </IconButton> */}
           <Button
             size="sm"
             variant="outlined"
@@ -81,12 +72,15 @@ const Dashboard = ({ rooms }: Props) => {
                   {room.devices.map((device) =>
                     [device.relay1, device.relay2].map(
                       (relay, id) =>
-                        relay && (
+                        relay?.name && (
                           <CardDevice
                             key={device.id + "relay" + id}
                             relay={relay}
-                            deviceName={device.name}
-                            relayId={"relay" + (id + 1)}
+                            device={{
+                              id: device.id,
+                              name: device.name,
+                            }}
+                            relayId={id + 1}
                           />
                         )
                     )

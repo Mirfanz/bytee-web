@@ -111,7 +111,7 @@ const NewDevice = (props: Props) => {
                 crossOrigin={false}
                 label="Name"
                 required
-                minLength={4}
+                minLength={2}
               />
               <Input
                 name="relay1"
@@ -120,7 +120,6 @@ const NewDevice = (props: Props) => {
                 color="indigo"
                 crossOrigin={false}
                 label="Relay1 Name"
-                minLength={4}
               />
               <Input
                 name="relay2"
@@ -129,7 +128,6 @@ const NewDevice = (props: Props) => {
                 color="indigo"
                 crossOrigin={false}
                 label="Relay2 Name"
-                minLength={4}
               />
 
               <Textarea

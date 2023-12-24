@@ -75,7 +75,7 @@ const TableRow = ({
         {device.description || <i className="text-gray-600">( Kosyong )</i>}
       </td>
       <td className="p-4">
-        {device.relay1 ? (
+        {device.relay1.name ? (
           <div className=" flex gap-1 items-center">
             <PowerIcon
               strokeWidth={3}
@@ -89,7 +89,7 @@ const TableRow = ({
         )}
       </td>
       <td className="p-4">
-        {device.relay2 ? (
+        {device.relay2.name ? (
           <div className=" flex gap-1 items-center">
             <PowerIcon
               strokeWidth={3}

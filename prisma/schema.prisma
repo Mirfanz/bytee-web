@@ -34,7 +34,7 @@ model User {
 }
 
 type relay {
-  name   String
+  name   String?
   status Boolean @default(false)
 }
 
@@ -44,8 +44,8 @@ model Device {
   description String?
   userId      String  @db.ObjectId
   roomId      String  @db.ObjectId
-  relay1      relay?
-  relay2      relay?
+  relay1      relay   
+  relay2      relay
 
   createdAt DateTime @default(now())
 

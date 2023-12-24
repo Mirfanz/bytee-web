@@ -5,6 +5,7 @@ import { cookies } from "next/headers";
 import { compare, decode, encode, hash } from "./utils/auth";
 import { JwtPayload } from "jsonwebtoken";
 import { redirect } from "next/navigation";
+import { Prisma } from "@prisma/client";
 
 export interface RegisterProps {
   email: string;
@@ -228,8 +229,12 @@ export const AddDevice = async ({
         data: {
           name,
           description,
-          relay1: relay1 ? { name: relay1 } : null,
-          relay2: relay2 ? { name: relay2 } : null,
+          relay1: {
+            name: relay1 ?? null,
+          },
+          relay2: {
+            name: relay2 ?? null,
+          },
           user: { connect: { email: user.email } },
           room: { connect: { id: roomId } },
         },
@@ -258,5 +263,36 @@ export const DeleteDevice = async (deviceId: string) => {
   } catch (error: any) {
     console.log(error);
     return { error: "Delete device failed" };
+  }
+};
+
+export const UpdateRelay = async ({
+  deviceId,
+  relayId,
+  status,
+  relayName,
+}: {
+  deviceId: string;
+  relayId: number;
+  status: boolean;
+  relayName: string;
+}) => {
+  try {
+    const key = "relay" + relayId;
+    const result = await prisma.device.update({
+      where: { id: deviceId },
+      data: {
+        [key]: {
+          update: { status },
+        },
+      },
+      select: { [key]: true },
+    });
+    return {
+      succes: `${relayName} ${status ? "on" : "off"}`,
+      data: result[key],
+    };
+  } catch (error: any) {
+    return { error: "Gagal" };
   }
 };
