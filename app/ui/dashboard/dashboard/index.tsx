@@ -1,17 +1,10 @@
 "use client";
 
 import React from "react";
+import { Alert, Button, IconButton } from "@material-tailwind/react";
 import {
-  Alert,
-  Button,
-  IconButton,
-  Option,
-  Select,
-  Typography,
-} from "@material-tailwind/react";
-import {
+  ArrowLeftOnRectangleIcon,
   ArrowPathIcon,
-  ArrowTopRightOnSquareIcon,
   EllipsisVerticalIcon,
   ExclamationTriangleIcon,
 } from "@heroicons/react/24/outline";
@@ -30,12 +23,9 @@ const Dashboard = ({ rooms }: Props) => {
     <main>
       <div className="container py-4 lg:!p-8">
         <div className="flex justify-between items-center gap-3 mb-6">
-          <Typography
-            placeholder={""}
-            className="text-2xl me-auto font-bold text-gray-900 !border-s-4 border-indigo-700 ps-2 "
-          >
+          <h1 className="text-2xl me-auto font-semibold text-gray-900 !border-s-4 border-indigo-700 ps-2 ">
             Dashboard
-          </Typography>
+          </h1>
           <Button
             size="sm"
             variant="outlined"
@@ -51,13 +41,10 @@ const Dashboard = ({ rooms }: Props) => {
           rooms.map((room) => (
             <div key={room.id} className="mb-6">
               <div className="flex items-center justify-between mb-2">
-                <Typography
-                  placeholder={""}
-                  className="font-semibold flex items-center gap-1 "
-                >
-                  <ArrowTopRightOnSquareIcon className="w-4 h-4" />
+                <p className="font-semibold flex items-center gap-1 ">
+                  <ArrowLeftOnRectangleIcon className="w-4 h-4" />
                   {room.name}
-                </Typography>
+                </p>
                 <IconButton
                   placeholder={""}
                   variant="text"

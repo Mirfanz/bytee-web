@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  Button,
-  IconButton,
-  Input,
-  Typography,
-} from "@material-tailwind/react";
+import { Button, IconButton, Input } from "@material-tailwind/react";
 import React, { ChangeEvent, ChangeEventHandler } from "react";
 import { Signin, SigninProps } from "@/lib/actions";
 import Link from "next/link";
@@ -65,13 +60,9 @@ const Login = (props: Props) => {
           className="w-[400px] max-w-[90vw]"
         >
           <div className="flex gap-4 flex-col p-4 border-2 shadow-lg  shadow-indigo-900/50 border-indigo-600  rounded-lg">
-            <Typography
-              placeholder={""}
-              variant="h3"
-              className="text-2xl my-2 !border-s-2 ps-3 border-indigo-700"
-            >
+            <h1 className="text-2xl font-semibold my-2 !border-s-2 ps-3 border-indigo-700">
               Login Account
-            </Typography>
+            </h1>
             <Input
               className="invalid:text-red-400"
               color="indigo"
@@ -121,16 +112,12 @@ const Login = (props: Props) => {
             >
               {submiting ? "Tunggu Sebentar..." : "Login"}
             </Button>
-            <Typography
-              className="text-center"
-              variant="small"
-              placeholder={""}
-            >
+            <p className="text-center text-sm">
               Belum Punya Akun?
               <Link href={"/register"} className="text-indigo-500 ms-1" replace>
                 Register
               </Link>
-            </Typography>
+            </p>
           </div>
         </form>
       </div>

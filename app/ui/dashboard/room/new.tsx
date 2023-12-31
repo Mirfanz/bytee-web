@@ -12,7 +12,6 @@ import {
   Option,
   Select,
   Textarea,
-  Typography,
 } from "@material-tailwind/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -67,12 +66,9 @@ const New = (props: Props) => {
     <main>
       <div className="container py-4 lg:!p-8">
         <div className="flex justify-between items-center gap-3 mb-6">
-          <Typography
-            placeholder={""}
-            className="text-2xl me-auto font-bold text-gray-900 !border-s-4 border-indigo-700 ps-2 "
-          >
+          <h1 className="text-2xl me-auto font-semibold text-gray-900 !border-s-4 border-indigo-700 ps-2 ">
             My Rooms
-          </Typography>
+          </h1>
         </div>
         <form onSubmit={handleFormSubmit} autoComplete="off">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">

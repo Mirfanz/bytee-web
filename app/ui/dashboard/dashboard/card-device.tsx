@@ -3,12 +3,7 @@
 import { UpdateRelay } from "@/lib/actions";
 import { Toast } from "@/lib/utils/swal";
 import { PowerIcon, RectangleStackIcon } from "@heroicons/react/24/solid";
-import {
-  Card,
-  CardBody,
-  IconButton,
-  Typography,
-} from "@material-tailwind/react";
+import { Card, CardBody, IconButton } from "@material-tailwind/react";
 import React, { useState } from "react";
 
 type Props = {
@@ -67,16 +62,10 @@ const CardDevice = ({ relay, device, relayId }: Props) => {
             <RectangleStackIcon className="h-5 w-5" />
           </IconButton>
           <div className="flex flex-col">
-            <Typography className="text-base text-gray-900" placeholder={""}>
-              {relay.name}
-            </Typography>
-            <Typography
-              placeholder={""}
-              variant="small"
-              className="text-xs -mt-1 text-gray-600 line-clamp-1"
-            >
+            <h5 className="text-sm text-gray-900">{relay.name}</h5>
+            <h6 className="text-xs  text-gray-600 line-clamp-1">
               {device.name}
-            </Typography>
+            </h6>
           </div>
         </div>
         <div className="select-none flex py-8 items-center justify-center ">
@@ -99,13 +88,10 @@ const CardDevice = ({ relay, device, relayId }: Props) => {
                 color={status ? "green" : "red"}
               />
             </button>
-            <Typography
-              className="flex w-full text-gray-700 text-sm"
-              placeholder={""}
-            >
+            <p className="flex w-full text-gray-700 text-sm">
               <span className="w-full text-center">ON</span>
               <span className="w-full text-center">OFF</span>
-            </Typography>
+            </p>
           </div>
         </div>
       </CardBody>

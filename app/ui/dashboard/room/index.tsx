@@ -2,7 +2,7 @@
 
 import TableRooms from "@/app/ui/dashboard/room/table-rooms";
 import { ArrowPathIcon, PlusIcon } from "@heroicons/react/24/outline";
-import { Button, IconButton, Typography } from "@material-tailwind/react";
+import { Button, IconButton } from "@material-tailwind/react";
 import { Prisma } from "@prisma/client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -18,12 +18,9 @@ const Room = ({ rooms }: Props) => {
     <main>
       <div className="container py-4 lg:!p-8">
         <div className="flex justify-between items-center gap-3 mb-6">
-          <Typography
-            placeholder={""}
-            className="text-2xl me-auto font-bold text-gray-900 !border-s-4 border-indigo-700 ps-2 "
-          >
+          <h1 className="text-2xl me-auto font-semibold text-gray-900 !border-s-4 border-indigo-700 ps-2 ">
             My Rooms
-          </Typography>
+          </h1>
           <IconButton
             placeholder={""}
             size="sm"

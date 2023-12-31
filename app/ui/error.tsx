@@ -2,7 +2,7 @@
 
 import { ExclamationCircleIcon } from "@heroicons/react/24/outline";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/solid";
-import { Alert, AlertProps, Typography } from "@material-tailwind/react";
+import { Alert } from "@material-tailwind/react";
 import React, { ComponentProps } from "react";
 
 type Props = {

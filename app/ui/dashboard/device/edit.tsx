@@ -12,7 +12,6 @@ import {
   Option,
   Select,
   Textarea,
-  Typography,
 } from "@material-tailwind/react";
 import { Prisma } from "@prisma/client";
 import Image from "next/image";
@@ -83,12 +82,9 @@ const Edit = ({ device }: Props) => {
     <main>
       <div className="container py-4 lg:!p-8">
         <div className="flex justify-between items-center gap-3 mb-6">
-          <Typography
-            placeholder={""}
-            className="text-2xl me-auto font-bold text-gray-900 !border-s-4 border-indigo-700 ps-2 "
-          >
+          <h1 className="text-2xl me-auto font-semibold text-gray-900 !border-s-4 border-indigo-700 ps-2 ">
             My Devices
-          </Typography>
+          </h1>
         </div>
         <form onSubmit={handleFormSubmit} autoComplete="off">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -108,14 +104,10 @@ const Edit = ({ device }: Props) => {
                     </Option>
                   ))}
                 </Select>
-                <Typography
-                  placeholder={""}
-                  className="text-xs flex gap-1 items-center mt-1"
-                  variant="small"
-                >
+                <p className="text-xs flex gap-1 items-center mt-1">
                   <InformationCircleIcon className="w-4 h-4" />
                   Kosongi jika tidak diubah
-                </Typography>
+                </p>
               </div>
               <Input
                 name="name"
@@ -136,14 +128,10 @@ const Edit = ({ device }: Props) => {
                   crossOrigin={false}
                   label="Relay1 Name"
                 />
-                <Typography
-                  placeholder={""}
-                  className="text-xs flex gap-1 items-center mt-1"
-                  variant="small"
-                >
+                <p className="text-xs flex gap-1 items-center mt-1">
                   <InformationCircleIcon className="w-4 h-4" />
                   Kosongi untuk nonaktif
-                </Typography>
+                </p>
               </div>
               <div>
                 <Input
@@ -154,14 +142,10 @@ const Edit = ({ device }: Props) => {
                   crossOrigin={false}
                   label="Relay2 Name"
                 />
-                <Typography
-                  placeholder={""}
-                  className="text-xs flex gap-1 items-center mt-1"
-                  variant="small"
-                >
+                <p className="text-xs flex gap-1 items-center mt-1">
                   <InformationCircleIcon className="w-4 h-4" />
                   Kosongi untuk nonaktif
-                </Typography>
+                </p>
               </div>
 
               <Textarea

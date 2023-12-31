@@ -15,7 +15,7 @@ const Notification = ({ notifications }: Props) => {
     <main>
       <div className="container py-4 lg:!p-8">
         <div className="flex justify-between items-center gap-3 mb-6">
-          <h1 className="text-2xl me-auto font-bold text-gray-900 !border-s-4 border-indigo-700 ps-2 ">
+          <h1 className="text-2xl me-auto font-semibold text-gray-900 !border-s-4 border-indigo-700 ps-2 ">
             Notifications
           </h1>
         </div>

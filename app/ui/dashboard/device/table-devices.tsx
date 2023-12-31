@@ -16,7 +16,6 @@ import {
   MenuHandler,
   MenuItem,
   MenuList,
-  Typography,
 } from "@material-tailwind/react";
 import { Prisma } from "@prisma/client";
 import Link from "next/link";

@@ -2,7 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
-import { Button, Typography } from "@material-tailwind/react";
+import { Button } from "@material-tailwind/react";
 import { RectangleGroupIcon, UserCircleIcon } from "@heroicons/react/24/solid";
 import { useRouter } from "next/navigation";
 
@@ -20,13 +20,9 @@ const Home = (props: Props) => {
         alt="background"
       />
       <div className="container w-screen h-screen flex flex-col gap-12 z-10 items-center text-center justify-center">
-        <Typography
-          placeholder={""}
-          variant="h1"
-          className="text-gray-50 max-w-3xl text-6xl"
-        >
+        <h1 className="text-gray-50 font-semibold max-w-3xl text-6xl">
           Wujudkan Dunia Yang Modern Biar Bisa Melawan Alien!
-        </Typography>
+        </h1>
         <div className="flex gap-3">
           <Button
             placeholder={""}
