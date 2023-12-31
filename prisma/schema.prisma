@@ -25,12 +25,13 @@ model User {
   apiKey         String? @unique @default(cuid())
   role           roles   @default(user)
 
-  verifiedAt DateTime?
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
+  verifiedAt      DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
 
-  devices Device[]
-  rooms   Room[]
+  devices         Device[]
+  rooms           Room[]
+  notifications   Notification[]
 }
 
 type relay {
@@ -63,4 +64,25 @@ model Room {
 
   devices Device[]
   user    User     @relation(fields: [userId], references: [id],onDelete: Cascade)
+}
+
+enum statusNotification {
+  info
+  warning
+  error
+  success
+}
+
+model Notification {
+  id          String  @id @default(auto()) @db.ObjectId @map("_id")
+  userId      String?  @db.ObjectId
+
+  title       String  
+  message     String
+  status      statusNotification
+  url         String?
+
+  createdAt   DateTime  @default(now())
+
+  user        User?   @relation(fields: [userId],references: [id], onDelete: Cascade)
 }

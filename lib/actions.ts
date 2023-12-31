@@ -365,3 +365,31 @@ export const EditDevice = async ({
     return { error: "error" };
   }
 };
+
+export const FetchNotifications = async (
+  notifId: string | undefined = undefined
+) => {
+  const user: JwtPayload | null = await GetSelf();
+
+  if (!user) redirect("/login");
+
+  try {
+    const result = await prisma.notification.findMany({
+      where: {
+        id: notifId,
+        OR: [
+          { user: null },
+          {
+            user: {
+              email: user.email,
+            },
+          },
+        ],
+      },
+      orderBy: { createdAt: "desc" },
+    });
+    return { success: "Success", data: result };
+  } catch (error) {
+    return { error: "Terjadi kesalahan saat mengambil data notifikasi" };
+  }
+};
