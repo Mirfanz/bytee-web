@@ -122,6 +122,42 @@ export const GetSelf = async (token: string | undefined = undefined) => {
   }
 };
 
+export const FetchUser = async (userId: string | undefined = undefined) => {
+  let email: string | undefined;
+  const self = userId ? false : true;
+
+  if (self) {
+    // @ts-ignore
+    email = (await GetSelf())?.email;
+    if (!email) redirect("/login");
+  }
+
+  try {
+    const result = await prisma.user
+      .findUnique({
+        where: { id: userId, email: email },
+        select: {
+          name: true,
+          email: true,
+          role: true,
+          image: true,
+          createdAt: true,
+          verifiedAt: self,
+          updatedAt: self,
+          id: self,
+          apiKey: self,
+          _count: {
+            select: { devices: true, rooms: true },
+          },
+        },
+      })
+      .finally(() => prisma.$disconnect());
+    return { success: "Data user " + result?.name, data: result, self };
+  } catch (error: any) {
+    return { error: "Gagal mengambil data user." };
+  }
+};
+
 export const FetchApiKey = async () => {
   const user: JwtPayload | null = await GetSelf();
   if (!user) redirect("/login");
