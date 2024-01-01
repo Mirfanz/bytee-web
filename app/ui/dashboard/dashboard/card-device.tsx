@@ -1,6 +1,7 @@
 "use client";
 
 import { UpdateRelay } from "@/lib/actions";
+import { Publish } from "@/lib/mqtt-actions";
 import { Toast } from "@/lib/utils/swal";
 import { PowerIcon, RectangleStackIcon } from "@heroicons/react/24/solid";
 import { Card, CardBody, IconButton } from "@material-tailwind/react";
@@ -25,28 +26,32 @@ const CardDevice = ({ relay, device, relayId }: Props) => {
   async function handleSwithBtn() {
     if (switching) return;
     setSwitching(true);
-    UpdateRelay({
-      deviceId: device.id,
-      relayId,
-      status: !status,
-      relayName: relay.name || "",
-    })
-      .then((result) => {
-        if (result.error) throw new Error("Aksi gagal");
-        // @ts-ignore
-        setStatus(result.data?.status);
-        Toast.fire({
-          text: result.succes,
-          timer: 1000,
-        });
-      })
-      .catch((error) => {
-        Toast.fire({
-          text: error.message,
-          timer: 1000,
-        });
-      })
-      .finally(() => setSwitching(false));
+    Publish(`bytee/${device.id}/relay${relayId}`, !status).finally(() => {
+      setStatus(!status);
+      setSwitching(false);
+    });
+    // UpdateRelay({
+    //   deviceId: device.id,
+    //   relayId,
+    //   status: !status,
+    //   relayName: relay.name || "",
+    // })
+    //   .then((result) => {
+    //     if (result.error) throw new Error("Aksi gagal");
+    //     // @ts-ignore
+    //     setStatus(result.data?.status);
+    //     Toast.fire({
+    //       text: result.succes,
+    //       timer: 1000,
+    //     });
+    //   })
+    //   .catch((error) => {
+    //     Toast.fire({
+    //       text: error.message,
+    //       timer: 1000,
+    //     });
+    //   })
+    //   .finally(() => setSwitching(false));
   }
 
   return (

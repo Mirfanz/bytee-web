@@ -52,7 +52,11 @@ const Profile = ({ self, profile }: Props) => {
     <main>
       <div className="container py-4 lg:!p-8">
         <div className="flex items-center gap-4 mb-6">
-          <Avatar placeholder={""} src="/chip-bg.jpeg" size="xxl" />
+          <Avatar
+            placeholder={""}
+            src={profile?.image || "/no-profile.jpg"}
+            size="xxl"
+          />
           <div className="">
             <h1 className="text-xl font-semibold">{profile?.name}</h1>
             <p className="text-sm">{profile?.email}</p>
