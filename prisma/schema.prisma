@@ -34,19 +34,14 @@ model User {
   notifications   Notification[]
 }
 
-type relay {
-  name   String?
-  status Boolean @default(false)
-}
-
 model Device {
   id          String  @id @default(auto()) @map("_id") @db.ObjectId
   name        String
   description String?
   userId      String  @db.ObjectId
   roomId      String  @db.ObjectId
-  relay1      relay   
-  relay2      relay
+  active      Boolean @default(false)
+  status      Boolean @default(false)
 
   createdAt DateTime @default(now())
 

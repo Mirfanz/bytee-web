@@ -27,8 +27,6 @@ export interface AddDeviceProps {
   roomId: string;
   name: string;
   description: string | undefined;
-  relay1: string | undefined;
-  relay2: string | undefined;
 }
 
 export const Register = async ({ email, password, name }: RegisterProps) => {
@@ -277,8 +275,6 @@ export const AddDevice = async ({
   name,
   description,
   roomId,
-  relay1,
-  relay2,
 }: AddDeviceProps) => {
   const user: any = await GetSelf();
   if (!user) redirect("/login");
@@ -291,12 +287,6 @@ export const AddDevice = async ({
         data: {
           name,
           description,
-          relay1: {
-            name: relay1 ?? null,
-          },
-          relay2: {
-            name: relay2 ?? null,
-          },
           user: { connect: { email: user.email } },
           room: { connect: { id: roomId } },
         },
@@ -328,37 +318,28 @@ export const DeleteDevice = async (deviceId: string) => {
   }
 };
 
-export const UpdateRelay = async ({
+export const SwitchDevice = async ({
   deviceId,
-  relayId,
   status,
-  relayName,
 }: {
   deviceId: string;
-  relayId: number;
   status: boolean;
-  relayName: string;
 }) => {
   const user: any = await GetSelf();
   if (!user) redirect("/login");
-
   try {
-    const key = "relay" + relayId;
     const result = await prisma.device.update({
       where: { id: deviceId },
       data: {
-        [key]: {
-          update: { status },
-        },
+        status,
       },
-      select: { [key]: true },
     });
     return {
-      succes: `${relayName} ${status ? "on" : "off"}`,
-      data: result[key],
+      succes: `${result.name} ${status ? "on" : "off"}`,
+      data: result,
     };
   } catch (error: any) {
-    return { error: "Gagal" };
+    return { error: "Terjadi Kesalahan" };
   }
 };
 
@@ -378,18 +359,6 @@ export const EditDevice = async ({
         where: { id: deviceId },
         data: {
           name: data.name,
-          relay1: {
-            update: {
-              name: data.relay1,
-              status: !data.relay1 ? false : undefined,
-            },
-          },
-          relay2: {
-            update: {
-              name: data.relay2,
-              status: !data.relay2 ? false : undefined,
-            },
-          },
           roomId: data.roomId,
           description: data.description,
         },

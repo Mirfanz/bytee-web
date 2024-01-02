@@ -22,7 +22,7 @@ import Link from "next/link";
 import React from "react";
 import Swal from "sweetalert2";
 
-const TABLE_HEAD = ["Name", "Description", "Relay.1", "Relay.2", "Room", ""];
+const TABLE_HEAD = ["Name", "Description", "Room", ""];
 
 const TableRow = ({
   device,
@@ -73,34 +73,6 @@ const TableRow = ({
       </td>
       <td className="p-4">
         {device.description || <i className="text-gray-600">( Kosyong )</i>}
-      </td>
-      <td className="p-4">
-        {device.relay1.name ? (
-          <div className=" flex gap-1 items-center">
-            <PowerIcon
-              strokeWidth={3}
-              color={device.relay1.status ? "darkgreen" : "red"}
-              className="h-4 w-4"
-            />
-            {device.relay1.name || "R.1"}
-          </div>
-        ) : (
-          "-"
-        )}
-      </td>
-      <td className="p-4">
-        {device.relay2.name ? (
-          <div className=" flex gap-1 items-center">
-            <PowerIcon
-              strokeWidth={3}
-              color={device.relay2.status ? "darkgreen" : "red"}
-              className="h-4 w-4"
-            />
-            {device.relay2.name || "R.2"}
-          </div>
-        ) : (
-          "-"
-        )}
       </td>
       <td className="p-4">{device.room.name}</td>
       <td className="p-4 w-12">

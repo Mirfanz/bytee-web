@@ -56,22 +56,9 @@ const Dashboard = ({ rooms }: Props) => {
               </div>
               {room.devices?.length ? (
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-                  {room.devices.map((device) =>
-                    [device.relay1, device.relay2].map(
-                      (relay, id) =>
-                        relay?.name && (
-                          <CardDevice
-                            key={device.id + "relay" + id}
-                            relay={relay}
-                            device={{
-                              id: device.id,
-                              name: device.name,
-                            }}
-                            relayId={id + 1}
-                          />
-                        )
-                    )
-                  )}
+                  {room.devices.map((device) => (
+                    <CardDevice key={device.id} device={device} />
+                  ))}
                 </div>
               ) : (
                 <Alert

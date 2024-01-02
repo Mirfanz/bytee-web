@@ -31,8 +31,6 @@ const Edit = ({ device }: Props) => {
     roomId: device.room?.id,
     name: device.name,
     description: device.description || "",
-    relay1: device.relay1.name || "",
-    relay2: device.relay2.name || "",
   });
   const [roomOptions, setRoomOptions] = React.useState<
     { name: string; roomId: string }[]
@@ -119,35 +117,6 @@ const Edit = ({ device }: Props) => {
                 required
                 minLength={2}
               />
-              <div>
-                <Input
-                  name="relay1"
-                  value={fields.relay1}
-                  onChange={handleFieldChange}
-                  color="indigo"
-                  crossOrigin={false}
-                  label="Relay1 Name"
-                />
-                <p className="text-xs flex gap-1 items-center mt-1">
-                  <InformationCircleIcon className="w-4 h-4" />
-                  Kosongi untuk nonaktif
-                </p>
-              </div>
-              <div>
-                <Input
-                  name="relay2"
-                  value={fields.relay2}
-                  onChange={handleFieldChange}
-                  color="indigo"
-                  crossOrigin={false}
-                  label="Relay2 Name"
-                />
-                <p className="text-xs flex gap-1 items-center mt-1">
-                  <InformationCircleIcon className="w-4 h-4" />
-                  Kosongi untuk nonaktif
-                </p>
-              </div>
-
               <Textarea
                 name="description"
                 value={fields.description}

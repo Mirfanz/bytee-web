@@ -27,8 +27,6 @@ const NewDevice = (props: Props) => {
     roomId: "",
     name: "",
     description: "",
-    relay1: "",
-    relay2: "",
   });
   const [roomOptions, setRoomOptions] = React.useState<
     { name: string; roomId: string }[]
@@ -109,23 +107,6 @@ const NewDevice = (props: Props) => {
                 required
                 minLength={2}
               />
-              <Input
-                name="relay1"
-                value={fields.relay1}
-                onChange={handleFieldChange}
-                color="indigo"
-                crossOrigin={false}
-                label="Relay1 Name"
-              />
-              <Input
-                name="relay2"
-                value={fields.relay2}
-                onChange={handleFieldChange}
-                color="indigo"
-                crossOrigin={false}
-                label="Relay2 Name"
-              />
-
               <Textarea
                 name="description"
                 value={fields.description}

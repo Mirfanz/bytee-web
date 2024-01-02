@@ -1,40 +1,31 @@
 "use client";
 
-import { UpdateRelay } from "@/lib/actions";
+import { SwitchDevice } from "@/lib/actions";
 import { Publish } from "@/lib/mqtt-actions";
 import { Toast } from "@/lib/utils/swal";
 import { PowerIcon, RectangleStackIcon } from "@heroicons/react/24/solid";
 import { Card, CardBody, IconButton } from "@material-tailwind/react";
+import { Prisma } from "@prisma/client";
 import React, { useState } from "react";
 
 type Props = {
-  relay: {
-    name: string | null;
-    status: boolean;
-  };
-  relayId: number;
-  device: {
-    id: string;
-    name: string;
-  };
+  device: Prisma.DeviceGetPayload<{}>;
 };
 
-const CardDevice = ({ relay, device, relayId }: Props) => {
-  const [status, setStatus] = useState<boolean>(relay.status);
+const CardDevice = ({ device }: Props) => {
+  const [status, setStatus] = useState<boolean>(device.status);
   const [switching, setSwitching] = useState<boolean>(false);
 
   async function handleSwithBtn() {
     if (switching) return;
     setSwitching(true);
-    Publish(`bytee/${device.id}/relay${relayId}`, !status).finally(() => {
+    Publish(`bytee/${device.id}`, !status).finally(() => {
       setStatus(!status);
       setSwitching(false);
     });
-    // UpdateRelay({
+    // SwitchDevice({
     //   deviceId: device.id,
-    //   relayId,
     //   status: !status,
-    //   relayName: relay.name || "",
     // })
     //   .then((result) => {
     //     if (result.error) throw new Error("Aksi gagal");
@@ -67,10 +58,10 @@ const CardDevice = ({ relay, device, relayId }: Props) => {
             <RectangleStackIcon className="h-5 w-5" />
           </IconButton>
           <div className="flex flex-col">
-            <h5 className="text-sm text-gray-900">{relay.name}</h5>
-            <h6 className="text-xs  text-gray-600 line-clamp-1">
+            <h5 className="text-sm text-gray-900">{device.name}</h5>
+            {/* <h6 className="text-xs  text-gray-600 line-clamp-1">
               {device.name}
-            </h6>
+            </h6> */}
           </div>
         </div>
         <div className="select-none flex py-8 items-center justify-center ">
