@@ -39,12 +39,15 @@ const Dashboard = ({ rooms }: Props) => {
         </div>
         {rooms ? (
           rooms.map((room) => (
-            <div key={room.id} className="mb-6">
-              <div className="flex items-center justify-between mb-2">
-                <p className="font-semibold flex items-center gap-1 ">
-                  <ArrowLeftOnRectangleIcon className="w-4 h-4" />
+            <div key={room.id} className="mb-8">
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="font-medium text-lg text-gray-800 flex items-center gap-2 ">
+                  <ArrowLeftOnRectangleIcon
+                    strokeWidth={2}
+                    className="w-5 h-5"
+                  />
                   {room.name}
-                </p>
+                </h3>
                 <IconButton
                   placeholder={""}
                   variant="text"
