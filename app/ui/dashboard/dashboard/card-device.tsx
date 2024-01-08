@@ -1,7 +1,6 @@
 "use client";
 
 import { SwitchDevice } from "@/lib/actions";
-import { Publish } from "@/lib/mqtt-actions";
 import { Toast } from "@/lib/utils/swal";
 import { PowerIcon, RectangleStackIcon } from "@heroicons/react/24/solid";
 import { Card, CardBody, IconButton } from "@material-tailwind/react";
@@ -37,26 +36,6 @@ const CardDevice = ({ device, socket }: Props) => {
     });
     setStatus(newStatus);
     setSwitching(false);
-    // SwitchDevice({
-    //   deviceId: device.id,
-    //   status: !status,
-    // })
-    //   .then((result) => {
-    //     if (result.error) throw new Error("Aksi gagal");
-    //     // @ts-ignore
-    //     setStatus(result.data?.status);
-    //     Toast.fire({
-    //       text: result.succes,
-    //       timer: 1000,
-    //     });
-    //   })
-    //   .catch((error) => {
-    //     Toast.fire({
-    //       text: error.message,
-    //       timer: 1000,
-    //     });
-    //   })
-    //   .finally(() => setSwitching(false));
   }
 
   return (

@@ -20,13 +20,13 @@ type Props = {
 };
 
 const Dashboard = ({ rooms }: Props) => {
-  const [connectStatus, setConnectStatus] = React.useState("belum");
+  const [connectStatus, setConnectStatus] = React.useState<string | null>(null);
   const [socket, setSocket] = React.useState<Socket | null>(null);
   let f = false;
   useEffect(() => {
     if (!f) {
       f = true;
-      setSocket(io("192.168.180.124:8000"));
+      setSocket(io("http://202.10.36.46:8083"));
     }
     if (socket) {
       socket.on("connect", () => {
@@ -52,7 +52,7 @@ const Dashboard = ({ rooms }: Props) => {
       <div className="container py-4 lg:!p-8">
         <div className="flex justify-between items-center gap-3 mb-6">
           <h1 className="text-2xl me-auto font-semibold text-gray-900 !border-s-4 border-indigo-700 ps-2 ">
-            Dashboard {connectStatus}
+            Dashboard
           </h1>
           <Button
             size="sm"
