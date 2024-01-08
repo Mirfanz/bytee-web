@@ -6,23 +6,37 @@ import { Toast } from "@/lib/utils/swal";
 import { PowerIcon, RectangleStackIcon } from "@heroicons/react/24/solid";
 import { Card, CardBody, IconButton } from "@material-tailwind/react";
 import { Prisma } from "@prisma/client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { Socket } from "socket.io-client";
 
 type Props = {
   device: Prisma.DeviceGetPayload<{}>;
+  socket: Socket | null;
 };
 
-const CardDevice = ({ device }: Props) => {
+const CardDevice = ({ device, socket }: Props) => {
   const [status, setStatus] = useState<boolean>(device.status);
   const [switching, setSwitching] = useState<boolean>(false);
+  const topic = "bytee/" + device.id;
+  useEffect(() => {
+    socket?.emit("subscribe", topic);
+    socket?.on("mqtt_message", (data) => {
+      console.log(data);
 
+      if (data.topic == topic) setStatus(data.message == 1 ? true : false);
+    });
+  }, [socket]);
   async function handleSwithBtn() {
     if (switching) return;
     setSwitching(true);
-    Publish(`bytee/${device.id}`, !status).finally(() => {
-      setStatus(!status);
-      setSwitching(false);
+    const newStatus = !status;
+
+    socket?.emit("publish", {
+      topic: topic,
+      message: newStatus ? "1" : "0",
     });
+    setStatus(newStatus);
+    setSwitching(false);
     // SwitchDevice({
     //   deviceId: device.id,
     //   status: !status,

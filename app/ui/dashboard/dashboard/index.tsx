@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Alert, Button, IconButton } from "@material-tailwind/react";
 import {
   ArrowLeftOnRectangleIcon,
@@ -12,19 +12,47 @@ import { Prisma } from "@prisma/client";
 import CardDevice from "./card-device";
 import { useRouter } from "next/navigation";
 import { PlusIcon } from "@heroicons/react/24/solid";
+import { Socket, io } from "socket.io-client";
+// import mqtt, { MqttClient } from "mqtt";
 
 type Props = {
   rooms: Prisma.RoomGetPayload<{ include: { devices: true } }>[] | null;
 };
 
 const Dashboard = ({ rooms }: Props) => {
+  const [connectStatus, setConnectStatus] = React.useState("belum");
+  const [socket, setSocket] = React.useState<Socket | null>(null);
+  let f = false;
+  useEffect(() => {
+    if (!f) {
+      f = true;
+      setSocket(io("192.168.180.124:8000"));
+    }
+    if (socket) {
+      socket.on("connect", () => {
+        setConnectStatus("Connected");
+      });
+      socket.on("error", (err) => {
+        console.error("Connection error: ", err);
+        socket.close();
+      });
+      socket.on("reconnect", () => {
+        setConnectStatus("Reconnecting");
+      });
+      socket.on("message", (topic, message) => {
+        const payload = { topic, message: message.toString() };
+        // setPayload(payload);
+      });
+    }
+  }, []);
+
   const router = useRouter();
   return (
     <main>
       <div className="container py-4 lg:!p-8">
         <div className="flex justify-between items-center gap-3 mb-6">
           <h1 className="text-2xl me-auto font-semibold text-gray-900 !border-s-4 border-indigo-700 ps-2 ">
-            Dashboard
+            Dashboard {connectStatus}
           </h1>
           <Button
             size="sm"
@@ -60,7 +88,11 @@ const Dashboard = ({ rooms }: Props) => {
               {room.devices?.length ? (
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
                   {room.devices.map((device) => (
-                    <CardDevice key={device.id} device={device} />
+                    <CardDevice
+                      key={device.id}
+                      socket={socket}
+                      device={device}
+                    />
                   ))}
                 </div>
               ) : (
