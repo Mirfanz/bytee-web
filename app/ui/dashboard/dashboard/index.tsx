@@ -26,7 +26,12 @@ const Dashboard = ({ rooms }: Props) => {
   useEffect(() => {
     if (!f) {
       f = true;
-      setSocket(io("http://202.10.36.46:8083"));
+      setSocket(
+        io("http://202.10.36.46:8083", {
+          port: 8083,
+          secure: false,
+        })
+      );
     }
     if (socket) {
       socket.on("connect", () => {
