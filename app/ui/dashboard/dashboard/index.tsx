@@ -1,7 +1,12 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Alert, Button, IconButton } from "@material-tailwind/react";
+import {
+  Alert,
+  Button,
+  ButtonGroup,
+  IconButton,
+} from "@material-tailwind/react";
 import {
   ArrowLeftOnRectangleIcon,
   ArrowPathIcon,
@@ -27,7 +32,7 @@ const Dashboard = ({ rooms }: Props) => {
     if (!f) {
       f = true;
       setSocket(
-        io("http://202.10.36.46:8083", {
+        io(":8083", {
           port: 8083,
           secure: false,
         })
@@ -59,16 +64,6 @@ const Dashboard = ({ rooms }: Props) => {
           <h1 className="text-2xl me-auto font-semibold text-gray-900 !border-s-4 border-indigo-700 ps-2 ">
             Dashboard
           </h1>
-          <Button
-            size="sm"
-            variant="outlined"
-            className="flex items-center gap-2"
-            placeholder={""}
-            color="indigo"
-          >
-            <ArrowPathIcon className="w-4 h-4" />
-            Refresh
-          </Button>
         </div>
         {rooms ? (
           rooms.map((room) => (
@@ -81,14 +76,39 @@ const Dashboard = ({ rooms }: Props) => {
                   />
                   {room.name}
                 </h3>
-                <IconButton
+                <ButtonGroup
                   placeholder={""}
-                  variant="text"
                   size="sm"
+                  variant="outlined"
                   color="indigo"
                 >
-                  <EllipsisVerticalIcon strokeWidth={3} className="w-4 h-4" />
-                </IconButton>
+                  <Button
+                    placeholder={""}
+                    onClick={() => {
+                      room.devices.map((device) => {
+                        socket?.emit("publish", {
+                          topic: "bytee/" + device.id,
+                          message: "0",
+                        });
+                      });
+                    }}
+                  >
+                    OFF
+                  </Button>
+                  <Button
+                    placeholder={""}
+                    onClick={() => {
+                      room.devices.map((device) => {
+                        socket?.emit("publish", {
+                          topic: "bytee/" + device.id,
+                          message: "1",
+                        });
+                      });
+                    }}
+                  >
+                    ON
+                  </Button>
+                </ButtonGroup>
               </div>
               {room.devices?.length ? (
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
