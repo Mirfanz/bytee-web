@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "mongodb"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
@@ -17,7 +17,7 @@ enum roles {
 }
 
 model User {
-  id             String  @id @default(auto()) @map("_id") @db.ObjectId
+  id             String  @id @default(uuid())
   name           String
   image          String?
   email          String  @unique
@@ -25,40 +25,40 @@ model User {
   apiKey         String? @unique @default(cuid())
   role           roles   @default(user)
 
-  verifiedAt      DateTime?
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
+  verifiedAt DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
 
-  devices         Device[]
-  rooms           Room[]
-  notifications   Notification[]
+  devices       Device[]
+  rooms         Room[]         @relation(name: "owner")
+  notifications Notification[]
 }
 
 model Device {
-  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  id          String  @id @default(cuid())
   name        String
   description String?
-  userId      String  @db.ObjectId
-  roomId      String  @db.ObjectId
+  userId      String
+  roomId      String
   active      Boolean @default(false)
   status      Boolean @default(false)
 
   createdAt DateTime @default(now())
 
-  user User @relation(fields: [userId], references: [id],onDelete: Cascade)
-  room Room @relation(fields: [roomId], references: [id],onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  room Room @relation(fields: [roomId], references: [id], onDelete: Cascade)
 }
 
 model Room {
-  id          String  @id @default(auto()) @map("_id") @db.ObjectId
-  userId      String  @db.ObjectId
+  id          String  @id @default(cuid())
+  userId      String
   name        String
   description String?
 
   createdAt DateTime @default(now())
 
   devices Device[]
-  user    User     @relation(fields: [userId], references: [id],onDelete: Cascade)
+  user    User     @relation(name: "owner", fields: [userId], references: [id], onDelete: Cascade)
 }
 
 enum statusNotification {
@@ -69,15 +69,15 @@ enum statusNotification {
 }
 
 model Notification {
-  id          String  @id @default(auto()) @db.ObjectId @map("_id")
-  userId      String?  @db.ObjectId
+  id     String  @id @default(cuid())
+  userId String?
 
-  title       String  
-  message     String
-  status      statusNotification
-  url         String?
+  title   String
+  message String
+  status  statusNotification
+  url     String?
 
-  createdAt   DateTime  @default(now())
+  createdAt DateTime @default(now())
 
-  user        User?   @relation(fields: [userId],references: [id], onDelete: Cascade)
+  user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
