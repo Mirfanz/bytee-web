@@ -9,3 +9,14 @@ export const Toast = Swal.mixin({
   width: "max-content",
   padding: 8,
 });
+
+export const Confirm = Swal.mixin({
+  icon: "question",
+  titleText: "Yakin Bre?",
+  // text: "Pastikan ",
+  confirmButtonText: "Ya, Yakin",
+  showCancelButton: true,
+  cancelButtonText: "Jangan Deh",
+  focusConfirm: false,
+  focusCancel: true,
+});

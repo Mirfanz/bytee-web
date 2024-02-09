@@ -50,6 +50,7 @@ const New = (props: Props) => {
       .then((data) => {
         if (data.error) throw new Error(data.error);
         router.replace("/dashboard/room");
+        router.refresh();
         Toast.fire({ icon: "success", text: "Room ditambahkan" });
       })
       .catch((error) => {

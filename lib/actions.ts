@@ -3,9 +3,11 @@
 import prisma from "@/prisma";
 import { cookies } from "next/headers";
 import { compare, decode, encode, hash } from "./utils/auth";
-import { JwtPayload } from "jsonwebtoken";
+import { Jwt, JwtPayload, Algorithm } from "jsonwebtoken";
 import { redirect } from "next/navigation";
 import { Prisma } from "@prisma/client";
+
+import type { RoomType, UserType } from "@/types";
 
 export interface RegisterProps {
   email: string;
@@ -168,19 +170,104 @@ export const FetchApiKey = async () => {
     .finally(() => prisma.$disconnect());
 };
 
-export const FetchRooms = async (roomId: string | undefined = undefined) => {
+export const FetchRooms = async ({
+  roomId,
+  asGuest,
+}: {
+  roomId?: string;
+  asGuest?: boolean;
+}) => {
   const user: JwtPayload | null = await GetSelf();
   if (!user) redirect("/login");
+  console.log("guests", asGuest);
 
   return prisma.room
     .findMany({
       where: {
         id: roomId,
+        user: !asGuest ? { email: user.email } : {},
+        guests: asGuest
+          ? {
+              some: {
+                email: user.email,
+              },
+            }
+          : {},
+      },
+      include: {
+        devices: true,
+        guests: true,
+        user: {
+          select: {
+            email: true,
+            name: true,
+          },
+        },
+        _count: { select: { devices: true, guests: true } },
+      },
+    })
+    .catch((error) => null)
+    .finally(() => prisma.$disconnect());
+};
+
+export const AddGuestAccess = async ({
+  roomId,
+  email,
+}: {
+  roomId: string;
+  email: string;
+}) => {
+  const user: any = await GetSelf();
+  if (!user) redirect("/login");
+
+  if (email === user.email) return { error: "Email sendiri _-" };
+
+  return prisma.room
+    .update({
+      where: {
+        id: roomId,
         user: { email: user.email },
       },
-      include: { devices: true },
+      data: {
+        guests: { connect: { email } },
+      },
     })
-    .catch(() => null)
+    .then((result) => {
+      console.log("result", result);
+      return {
+        success: "email ditambahkan",
+        data: result,
+      };
+    })
+    .catch((error) => {
+      if (error.code == "P2025") return { error: "Email tidak ditemukan" };
+      return { error: "Terjadi kesalahan" };
+    })
+    .finally(() => prisma.$disconnect());
+};
+
+export const RemoveGuestAccess = async ({
+  roomId,
+  guestEmail,
+}: {
+  roomId: string;
+  guestEmail?: string;
+}) => {
+  const user: any = await GetSelf();
+  if (!user) redirect("/login");
+
+  return prisma.room
+    .update({
+      where: {
+        id: roomId,
+        user: { email: guestEmail ? user.email : undefined },
+      },
+      data: {
+        guests: { disconnect: { email: guestEmail ?? user.email } },
+      },
+    })
+    .then((data) => ({ success: "Access removed.", data }))
+    .catch((error) => ({ error: error.message }))
     .finally(() => prisma.$disconnect());
 };
 
@@ -217,7 +304,7 @@ export const UpdateRoom = async ({
   try {
     const result = await prisma.room
       .update({
-        where: { id: roomId },
+        where: { id: roomId, user: { email: user.email } },
         data: {
           name: data.name,
           description: data.description,
@@ -243,7 +330,7 @@ export const DeleteRoom = async (roomId: string) => {
         },
       })
       .finally(() => prisma.$disconnect());
-    return { success: `${result.name} dihapus` };
+    return { success: `Room ${result.name} dihapus`, data: result };
   } catch (error: any) {
     console.log(error);
     return { error: "Hapus room gagal" };

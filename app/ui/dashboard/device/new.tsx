@@ -33,7 +33,7 @@ const NewDevice = (props: Props) => {
   >([]);
 
   React.useEffect(() => {
-    FetchRooms().then((data) => {
+    FetchRooms({}).then((data) => {
       if (!data) return;
       const newData = data?.map((item) => ({
         name: item.name,
@@ -59,7 +59,8 @@ const NewDevice = (props: Props) => {
     AddDevice(fields)
       .then((data) => {
         if (data.error) throw new Error(data.error);
-        router.replace("/dashboard/device");
+        router.back();
+        router.refresh();
         Toast.fire({ icon: "success", text: "Device ditambahkan" });
       })
       .catch((error) => {

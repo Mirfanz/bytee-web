@@ -7,7 +7,7 @@ export default async function EditRoomPage({
 }: {
   params: { roomId: string };
 }) {
-  const room = await FetchRooms(params.roomId);
+  const room = await FetchRooms({ roomId: params.roomId });
 
   if (!room?.length) return notFound();
   return <Edit room={room[0]} />;

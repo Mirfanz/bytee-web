@@ -33,3 +33,7 @@ body {
   max-width: none;
   min-width: none;
 }
+
+.swal2-container {
+  z-index: 10001 !important;
+}

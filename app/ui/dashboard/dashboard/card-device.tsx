@@ -2,6 +2,7 @@
 
 import { SwitchDevice } from "@/lib/actions";
 import { Toast } from "@/lib/utils/swal";
+import { PublishType, SubscribeType } from "@/types";
 import { PowerIcon, RectangleStackIcon } from "@heroicons/react/24/solid";
 import { Card, CardBody, IconButton } from "@material-tailwind/react";
 import { Prisma } from "@prisma/client";
@@ -16,24 +17,32 @@ type Props = {
 const CardDevice = ({ device, socket }: Props) => {
   const [status, setStatus] = useState<boolean>(device.status);
   const [switching, setSwitching] = useState<boolean>(false);
-  const topic = "bytee/" + device.id;
-  useEffect(() => {
-    socket?.emit("subscribe", topic);
-    socket?.on("mqtt_message", (data) => {
-      console.log(data);
 
-      if (data.topic == topic) setStatus(data.message == 1 ? true : false);
+  function subscribe(deviceId: SubscribeType) {
+    return socket?.emit("subscribe", deviceId);
+  }
+  function publish(data: PublishType) {
+    return socket?.emit("publish", data);
+  }
+
+  useEffect(() => {
+    socket?.on("connect", () => {
+      subscribe(device.id);
+    });
+    socket?.on("mqtt_message", (data: PublishType) => {
+      console.log(data);
+      // alert("message");
+      if (data.deviceId === device.id) setStatus(data.state);
     });
   }, [socket]);
+
   async function handleSwithBtn() {
     if (switching) return;
     setSwitching(true);
     const newStatus = !status;
 
-    socket?.emit("publish", {
-      topic: topic,
-      message: newStatus ? "1" : "0",
-    });
+    console.log("publish ", publish({ deviceId: device.id, state: newStatus }));
+
     setStatus(newStatus);
     setSwitching(false);
   }

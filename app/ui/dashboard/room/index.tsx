@@ -1,23 +1,37 @@
 "use client";
 
 import TableRooms from "@/app/ui/dashboard/room/table-rooms";
+import { GetSelf } from "@/lib/actions";
+import type { RoomType } from "@/types";
 import { ArrowPathIcon, PlusIcon } from "@heroicons/react/24/outline";
-import { Button, IconButton } from "@material-tailwind/react";
+import {
+  Button,
+  ButtonGroup,
+  IconButton,
+  Tab,
+  TabPanel,
+  Tabs,
+  TabsBody,
+  TabsHeader,
+} from "@material-tailwind/react";
 import { Prisma } from "@prisma/client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useState } from "react";
 
 type Props = {
-  rooms: Prisma.RoomGetPayload<{ include: { devices: true } }>[];
+  rooms: RoomType[];
+  guestRooms: RoomType[] | null;
 };
 
-const Room = ({ rooms }: Props) => {
+const Room = ({ rooms, guestRooms }: Props) => {
   const router = useRouter();
+  // const user = GetSelf();
+  const [tabsActive, setTabsActive] = useState(1);
   return (
     <main>
       <div className="container py-4 lg:!p-8">
-        <div className="flex justify-between items-center gap-3 mb-6">
+        <div className="flex justify-between items-center gap-3 mb-8">
           <h1 className="text-2xl me-auto font-semibold text-gray-900 !border-s-4 border-indigo-700 ps-2 ">
             My Rooms
           </h1>
@@ -51,7 +65,31 @@ const Room = ({ rooms }: Props) => {
             </Button>
           </Link>
         </div>
-        <TableRooms rooms={rooms} />
+
+        <Tabs value="A">
+          <TabsHeader
+            placeholder={""}
+            indicatorProps={{
+              className: "",
+            }}
+            className="w-full  md:w-80 !shadow-sm"
+          >
+            <Tab value={"A"} placeholder={""} defaultChecked>
+              Milik Saya
+            </Tab>
+            <Tab value={"B"} placeholder={""}>
+              Sebagai Tamu
+            </Tab>
+          </TabsHeader>
+          <TabsBody placeholder={""} className="">
+            <TabPanel value={"A"} className="px-0">
+              <TableRooms rooms={rooms} />
+            </TabPanel>
+            <TabPanel value={"B"} className="px-0">
+              <TableRooms rooms={guestRooms || []} guest />
+            </TabPanel>
+          </TabsBody>
+        </Tabs>
       </div>
     </main>
   );

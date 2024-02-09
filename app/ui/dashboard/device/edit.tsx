@@ -37,7 +37,7 @@ const Edit = ({ device }: Props) => {
   >([]);
 
   React.useEffect(() => {
-    FetchRooms().then((data) => {
+    FetchRooms({}).then((data) => {
       if (!data) return;
       const newData = data?.map((item) => ({
         name: item.name,
@@ -63,7 +63,8 @@ const Edit = ({ device }: Props) => {
     EditDevice({ deviceId: device.id, data: fields })
       .then((data) => {
         if (data.error) throw new Error(data.error);
-        router.replace("/dashboard/device");
+        router.back();
+        router.refresh();
         Toast.fire({ icon: "success", text: "Device diedit" });
       })
       .catch((error) => {
