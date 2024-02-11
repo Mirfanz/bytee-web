@@ -62,7 +62,7 @@ const Edit = ({ device }: Props) => {
     setSubmiting(true);
 
     EditDevice({ deviceId: device.id, data: fields })
-      .then((data) => {
+      .then((data: any) => {
         if (data.error) throw new Error(data.error);
         router.back();
         router.refresh();

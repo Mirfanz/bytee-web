@@ -12,29 +12,22 @@ import {
   ArrowPathIcon,
   ChevronDownIcon,
   Cog6ToothIcon,
-  CpuChipIcon,
   CubeIcon,
   EllipsisVerticalIcon,
   PencilSquareIcon,
   PlusIcon,
   TrashIcon,
   UserIcon,
-  UsersIcon,
-  XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { CogIcon } from "@heroicons/react/24/solid";
 import {
   Accordion,
   AccordionBody,
-  AccordionHeader,
   Button,
   Card,
-  CardHeader,
   Dialog,
   DialogBody,
-  DialogFooter,
   DialogHeader,
-  Drawer,
   IconButton,
   Input,
   List,
@@ -50,12 +43,7 @@ import {
 import { Prisma } from "@prisma/client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, {
-  FormEvent,
-  MouseEventHandler,
-  useEffect,
-  useState,
-} from "react";
+import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 
 const TableRow = ({
@@ -207,7 +195,7 @@ const TableRooms = ({
     }).then(({ isConfirmed }) => {
       if (!isConfirmed) return;
       RemoveGuestAccess({ roomId, guestEmail })
-        .then((resp: any) => {
+        .then((resp) => {
           if (resp.error)
             return Toast.fire({
               icon: "error",
@@ -245,7 +233,6 @@ const TableRooms = ({
     });
     if (!isConfirmed) return;
 
-    // setDeleting(true);
     DeleteRoom(roomId)
       .then((data) => {
         if (data.error) throw new Error(data.error);
@@ -253,7 +240,6 @@ const TableRooms = ({
           icon: "success",
           text: data.success,
         });
-        console.log("data.data", data);
 
         const newRooms: RoomType[] = [...listRooms];
         newRooms.splice(roomIndex, 1);
@@ -280,7 +266,7 @@ const TableRooms = ({
       email: addGuestField,
       roomId: listRooms[shownRoomId]?.id || "",
     })
-      .then((data: any) => {
+      .then((data) => {
         if (data.error) throw new Error(data.error);
         Toast.fire({
           icon: "success",

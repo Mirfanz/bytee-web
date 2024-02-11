@@ -1,10 +1,7 @@
 "use client";
 
 import {
-  ArrowLeftOnRectangleIcon,
   ChevronRightIcon,
-  CpuChipIcon,
-  FingerPrintIcon,
   LockClosedIcon,
   ShareIcon,
   TrashIcon,
@@ -13,7 +10,6 @@ import {
   Avatar,
   Button,
   Card,
-  CardBody,
   Chip,
   IconButton,
   List,
@@ -22,7 +18,6 @@ import {
   ListItemSuffix,
 } from "@material-tailwind/react";
 import { Prisma } from "@prisma/client";
-import { JwtPayload } from "jsonwebtoken";
 import Link from "next/link";
 import React from "react";
 

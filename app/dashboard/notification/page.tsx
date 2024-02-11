@@ -1,7 +1,6 @@
 import Notification from "@/app/ui/dashboard/notification";
 import ErrorComponent from "@/app/ui/error";
 import { FetchNotifications } from "@/lib/actions";
-import { notFound } from "next/navigation";
 
 export default async function NotificationPage() {
   let errorMessage: string = "";

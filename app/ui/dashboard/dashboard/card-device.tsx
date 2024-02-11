@@ -1,11 +1,8 @@
 "use client";
 
-import { SwitchDevice } from "@/lib/actions";
-import { Toast } from "@/lib/utils/swal";
 import type { DeviceType, PublishProps, SubscribeProps } from "@/types";
-import { PowerIcon, RectangleStackIcon } from "@heroicons/react/24/solid";
-import { Card, CardBody, IconButton } from "@material-tailwind/react";
-import { Prisma } from "@prisma/client";
+import { PowerIcon } from "@heroicons/react/24/solid";
+import { Card } from "@material-tailwind/react";
 import React, { useEffect, useState } from "react";
 import { Socket } from "socket.io-client";
 
@@ -15,7 +12,7 @@ type Props = {
 };
 
 const CardDevice = ({ device, socket }: Props) => {
-  const [status, setStatus] = useState<boolean>(device.status);
+  const [status, setStatus] = useState<boolean>(device.state);
   const [switching, setSwitching] = useState<boolean>(false);
 
   function subscribe(deviceId: SubscribeProps) {
@@ -30,8 +27,6 @@ const CardDevice = ({ device, socket }: Props) => {
       subscribe(device.id);
     });
     socket?.on("mqtt_message", (data: PublishProps) => {
-      console.log(data);
-      // alert("message");
       if (data.deviceId === device.id) setStatus(data.state);
     });
   }, [socket]);
@@ -40,8 +35,7 @@ const CardDevice = ({ device, socket }: Props) => {
     if (switching) return;
     setSwitching(true);
     const newStatus = !status;
-
-    console.log("publish ", publish({ deviceId: device.id, state: newStatus }));
+    publish({ deviceId: device.id, state: newStatus });
 
     setStatus(newStatus);
     setSwitching(false);

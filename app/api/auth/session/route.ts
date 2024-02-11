@@ -1,4 +1,4 @@
-import { decode } from "@/lib/utils/auth";
+import { decodeToken } from "@/lib/utils/auth";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
       { status: 405 }
     );
   try {
-    const user = await decode(token);
+    const user = await decodeToken(token);
     return NextResponse.json({
       user,
       isAuthenticated: true,

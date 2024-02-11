@@ -8,14 +8,14 @@ export type UserType = {
   image: undefined | string | null;
 };
 
-export type SessionType =
-  | (JwtPayload & {
-      name: string;
-      email: string;
-      role: "user" | "member" | "admin";
-      image: undefined | string | null;
-    })
-  | null;
+export type ResultType = { error?: string; success?: string; data?: any };
+
+export type SessionType = {
+  name: string;
+  email: string;
+  role: "user" | "member" | "admin";
+  image?: string | null;
+} | null;
 
 export type RoomType = Prisma.RoomGetPayload<{
   select: {
@@ -30,7 +30,7 @@ export type RoomType = Prisma.RoomGetPayload<{
         active: true;
         createdAt: true;
         description: true;
-        status: true;
+        state: true;
       };
     };
     guests: {
@@ -59,7 +59,7 @@ export type DeviceType = Prisma.DeviceGetPayload<{
     active: true;
     createdAt: true;
     description: true;
-    status: true;
+    state: true;
   };
 }>;
 

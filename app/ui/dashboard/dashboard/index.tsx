@@ -1,26 +1,15 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import {
-  Alert,
-  Button,
-  ButtonGroup,
-  Chip,
-  IconButton,
-} from "@material-tailwind/react";
+import React, { useEffect } from "react";
+import { Alert, Button, ButtonGroup } from "@material-tailwind/react";
 import {
   ArrowLeftOnRectangleIcon,
-  ArrowPathIcon,
-  EllipsisVerticalIcon,
   ExclamationTriangleIcon,
 } from "@heroicons/react/24/outline";
-import { Prisma } from "@prisma/client";
 import CardDevice from "./card-device";
 import { useRouter } from "next/navigation";
-import { PlusIcon } from "@heroicons/react/24/solid";
-import { Socket, io } from "socket.io-client";
+import { io } from "socket.io-client";
 import type { RoomType } from "@/types";
-// import mqtt, { MqttClient } from "mqtt";
 
 type Props = {
   rooms: RoomType[] | null;

@@ -1,8 +1,7 @@
 "use client";
 
 import { FetchApiKey } from "@/lib/actions";
-import { ArrowPathIcon } from "@heroicons/react/24/outline";
-import { Button, Input } from "@material-tailwind/react";
+import { Input } from "@material-tailwind/react";
 import React from "react";
 
 type Props = {};

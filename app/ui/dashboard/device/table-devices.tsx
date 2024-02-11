@@ -2,15 +2,11 @@
 import { DeleteDevice } from "@/lib/actions";
 import { Toast } from "@/lib/utils/swal";
 import {
-  Cog6ToothIcon,
   EllipsisVerticalIcon,
   PencilSquareIcon,
-  PowerIcon,
   TrashIcon,
 } from "@heroicons/react/24/outline";
 import {
-  Badge,
-  Card,
   IconButton,
   Menu,
   MenuHandler,

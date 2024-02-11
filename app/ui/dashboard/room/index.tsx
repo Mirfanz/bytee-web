@@ -1,12 +1,10 @@
 "use client";
 
 import TableRooms from "@/app/ui/dashboard/room/table-rooms";
-import { GetSelf } from "@/lib/actions";
 import type { RoomType } from "@/types";
-import { ArrowPathIcon, PlusIcon } from "@heroicons/react/24/outline";
+import { PlusIcon } from "@heroicons/react/24/outline";
 import {
   Button,
-  ButtonGroup,
   IconButton,
   Tab,
   TabPanel,
@@ -14,10 +12,9 @@ import {
   TabsBody,
   TabsHeader,
 } from "@material-tailwind/react";
-import { Prisma } from "@prisma/client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 
 type Props = {
   rooms: RoomType[];

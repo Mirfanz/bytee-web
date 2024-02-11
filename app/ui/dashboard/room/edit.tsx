@@ -2,7 +2,7 @@
 
 import { UpdateRoom } from "@/lib/actions";
 import { Toast } from "@/lib/utils/swal";
-import { RoomType } from "@/types";
+import type { RoomType } from "@/types";
 import {
   Button,
   Card,
@@ -13,7 +13,6 @@ import {
   Select,
   Textarea,
 } from "@material-tailwind/react";
-import { Prisma } from "@prisma/client";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { ChangeEvent, FormEvent } from "react";
@@ -50,7 +49,7 @@ const Edit = ({ room }: Props) => {
     if (submiting) return;
     setSubmiting(true);
     UpdateRoom({ roomId: room.id, data: fields })
-      .then((data) => {
+      .then((data: any) => {
         if (data.error) throw new Error(data.error);
         router.replace("/dashboard/room");
         Toast.fire({ icon: "success", text: "Room diedit" });
