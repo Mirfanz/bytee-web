@@ -1,7 +1,8 @@
 "use client";
 
-import { AddDeviceProps, FetchRooms, AddDevice } from "@/lib/actions";
+import { FetchRooms, AddDevice } from "@/lib/actions";
 import { Toast } from "@/lib/utils/swal";
+import type { AddDeviceProps } from "@/types";
 import {
   Button,
   Card,
@@ -22,7 +23,7 @@ type Props = {};
 const NewDevice = (props: Props) => {
   const router = useRouter();
 
-  const [submiting, setSubmiting] = React.useState(false);
+  const [submiting, setSubmiting] = React.useState<boolean>(false);
   const [fields, setFields] = React.useState<AddDeviceProps>({
     roomId: "",
     name: "",

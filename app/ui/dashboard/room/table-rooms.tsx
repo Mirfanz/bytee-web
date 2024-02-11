@@ -72,11 +72,11 @@ const TableRow = ({
   removeGuest: (P: { roomId: string; guestId?: string }) => void;
 }) => {
   return (
-    <tr
-      className="text-sm border-b text-blue-gray-900  hover:cursor-pointer border-gray-400 hover:bg-blue-gray-50/50 "
-      onClick={() => showDetailRoom(room.id)}
-    >
-      <td className="p-4">
+    <tr className="text-sm border-b text-blue-gray-900  border-gray-400 hover:bg-blue-gray-50/50 ">
+      <td
+        className="p-4 hover:cursor-pointer"
+        onClick={() => showDetailRoom(room.id)}
+      >
         <h1 className="text-purple-900">{room.name} </h1>
         <small className="text-gray-600 whitespace-nowrap">ID: {room.id}</small>
       </td>
@@ -88,10 +88,10 @@ const TableRow = ({
         {room.createdAt.toLocaleDateString()}
       </td>
       <td className="p-4 text-center hidden md:table-cell">
-        {room._count.devices}
+        {room.devices.length}
       </td>
       <td className="p-4 text-center hidden md:table-cell">
-        {room._count.guests}
+        {room.guests.length}
       </td>
       <td className="p-4 w-12">
         <Menu placement="left-start">
@@ -481,9 +481,9 @@ const TableRooms = ({
               </Button> */}
             </div>
             <List placeholder={""}>
-              {listRooms[shownRoomId || -0]?.guests.map((item) => (
+              {listRooms[shownRoomId || -0]?.guests.map((item, i) => (
                 <ListItem
-                  key={item.id}
+                  key={"guest" + i}
                   placeholder={""}
                   className={guest ? "" : "p-2 ps-4"}
                 >
@@ -578,6 +578,7 @@ const TableRooms = ({
                 variant="text"
                 color="indigo"
                 size="sm"
+                onClick={router.refresh}
               >
                 <ArrowPathIcon className="w-5 h-5" />
               </IconButton>

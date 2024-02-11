@@ -2,7 +2,8 @@
 
 import { Button, IconButton, Input } from "@material-tailwind/react";
 import React, { ChangeEvent, ChangeEventHandler } from "react";
-import { Signin, SigninProps } from "@/lib/actions";
+import { Signin } from "@/lib/actions";
+import type { SigninProps } from "@/types";
 import Link from "next/link";
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";

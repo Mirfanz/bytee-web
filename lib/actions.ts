@@ -7,29 +7,12 @@ import { Jwt, JwtPayload, Algorithm } from "jsonwebtoken";
 import { redirect } from "next/navigation";
 import { Prisma } from "@prisma/client";
 
-import type { RoomType, UserType } from "@/types";
-
-export interface RegisterProps {
-  email: string;
-  password: string;
-  name: string;
-}
-
-export interface SigninProps {
-  email: string;
-  password: string;
-}
-
-export interface AddRoomProps {
-  name: string;
-  description: string | undefined | null;
-}
-
-export interface AddDeviceProps {
-  roomId: string;
-  name: string;
-  description: string | undefined;
-}
+import type {
+  RegisterProps,
+  AddRoomProps,
+  AddDeviceProps,
+  SigninProps,
+} from "@/types";
 
 export const Register = async ({ email, password, name }: RegisterProps) => {
   const cookie = cookies();
@@ -104,7 +87,7 @@ export const Signin = async ({ email, password }: SigninProps) => {
 };
 
 export const SignOut = async () => {
-  console.log(await cookies().delete("JWT_TOKEN"));
+  console.log(cookies().delete("JWT_TOKEN"));
 
   return true;
 };
@@ -194,16 +177,37 @@ export const FetchRooms = async ({
             }
           : {},
       },
-      include: {
-        devices: true,
-        guests: true,
+      select: {
+        name: true,
+        id: true,
+        description: true,
+        createdAt: true,
+        devices: {
+          select: {
+            id: true,
+            name: true,
+            active: true,
+            createdAt: true,
+            description: true,
+            status: true,
+          },
+        },
+        guests: {
+          select: {
+            name: true,
+            email: true,
+            image: true,
+            role: true,
+          },
+        },
         user: {
           select: {
             email: true,
+            image: true,
             name: true,
+            role: true,
           },
         },
-        _count: { select: { devices: true, guests: true } },
       },
     })
     .catch((error) => null)

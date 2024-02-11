@@ -17,7 +17,7 @@ import {
 import { Prisma } from "@prisma/client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 type Props = {
   rooms: RoomType[];
@@ -26,8 +26,10 @@ type Props = {
 
 const Room = ({ rooms, guestRooms }: Props) => {
   const router = useRouter();
-  // const user = GetSelf();
-  const [tabsActive, setTabsActive] = useState(1);
+  useEffect(() => {
+    console.log("rooms", rooms);
+  }, []);
+
   return (
     <main>
       <div className="container py-4 lg:!p-8">
@@ -35,15 +37,7 @@ const Room = ({ rooms, guestRooms }: Props) => {
           <h1 className="text-2xl me-auto font-semibold text-gray-900 !border-s-4 border-indigo-700 ps-2 ">
             My Rooms
           </h1>
-          <IconButton
-            placeholder={""}
-            size="sm"
-            variant="outlined"
-            color="indigo"
-            onClick={() => router.refresh()}
-          >
-            <ArrowPathIcon className="w-5 h-5" />
-          </IconButton>
+
           <Link href={"/dashboard/room/new"}>
             <IconButton
               size="sm"

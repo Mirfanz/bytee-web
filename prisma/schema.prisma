@@ -43,7 +43,7 @@ model Device {
   userId      String
   roomId      String
   active      Boolean @default(false)
-  status      Boolean @default(false)
+  state       Boolean @default(false)
 
   createdAt DateTime @default(now())
 

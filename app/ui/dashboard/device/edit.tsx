@@ -1,7 +1,8 @@
 "use client";
 
-import { AddDeviceProps, FetchRooms, EditDevice } from "@/lib/actions";
+import { FetchRooms, EditDevice } from "@/lib/actions";
 import { Toast } from "@/lib/utils/swal";
+import type { AddDeviceProps } from "@/types";
 import { InformationCircleIcon } from "@heroicons/react/24/solid";
 import {
   Button,
@@ -26,7 +27,7 @@ type Props = {
 const Edit = ({ device }: Props) => {
   const router = useRouter();
 
-  const [submiting, setSubmiting] = React.useState(false);
+  const [submiting, setSubmiting] = React.useState<boolean>(false);
   const [fields, setFields] = React.useState<AddDeviceProps>({
     roomId: device.room?.id,
     name: device.name,

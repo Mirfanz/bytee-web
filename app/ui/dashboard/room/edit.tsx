@@ -2,6 +2,7 @@
 
 import { UpdateRoom } from "@/lib/actions";
 import { Toast } from "@/lib/utils/swal";
+import { RoomType } from "@/types";
 import {
   Button,
   Card,
@@ -19,7 +20,7 @@ import React, { ChangeEvent, FormEvent } from "react";
 import Swal from "sweetalert2";
 
 type Props = {
-  room: Prisma.RoomGetPayload<{}>;
+  room: RoomType;
 };
 
 type FieldsType = {

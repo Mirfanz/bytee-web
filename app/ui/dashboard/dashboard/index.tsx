@@ -68,7 +68,6 @@ const Dashboard = ({ rooms, guestRooms }: Props) => {
             color={connectStatus ? "green" : "red"}
             size="sm"
             variant="gradient"
-            // loading={connectStatus == "Connecting"}
           >
             {connectStatus ? "Connected" : "Disconnected"}
           </Button>

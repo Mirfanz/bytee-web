@@ -2,12 +2,13 @@
 
 import { Button, IconButton, Input } from "@material-tailwind/react";
 import React, { ChangeEvent } from "react";
-import { Register as ActionRegister, RegisterProps } from "@/lib/actions";
+import { Register as ActionRegister } from "@/lib/actions";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import { Toast } from "@/lib/utils/swal";
+import type { RegisterProps } from "@/types";
 
 type Props = {};
 

@@ -2,7 +2,7 @@
 
 import { SwitchDevice } from "@/lib/actions";
 import { Toast } from "@/lib/utils/swal";
-import { PublishType, SubscribeType } from "@/types";
+import type { DeviceType, PublishProps, SubscribeProps } from "@/types";
 import { PowerIcon, RectangleStackIcon } from "@heroicons/react/24/solid";
 import { Card, CardBody, IconButton } from "@material-tailwind/react";
 import { Prisma } from "@prisma/client";
@@ -10,7 +10,7 @@ import React, { useEffect, useState } from "react";
 import { Socket } from "socket.io-client";
 
 type Props = {
-  device: Prisma.DeviceGetPayload<{}>;
+  device: DeviceType;
   socket: Socket | null;
 };
 
@@ -18,10 +18,10 @@ const CardDevice = ({ device, socket }: Props) => {
   const [status, setStatus] = useState<boolean>(device.status);
   const [switching, setSwitching] = useState<boolean>(false);
 
-  function subscribe(deviceId: SubscribeType) {
+  function subscribe(deviceId: SubscribeProps) {
     return socket?.emit("subscribe", deviceId);
   }
-  function publish(data: PublishType) {
+  function publish(data: PublishProps) {
     return socket?.emit("publish", data);
   }
 
@@ -29,7 +29,7 @@ const CardDevice = ({ device, socket }: Props) => {
     socket?.on("connect", () => {
       subscribe(device.id);
     });
-    socket?.on("mqtt_message", (data: PublishType) => {
+    socket?.on("mqtt_message", (data: PublishProps) => {
       console.log(data);
       // alert("message");
       if (data.deviceId === device.id) setStatus(data.state);
