@@ -92,6 +92,32 @@ export const Signin = async ({ email, password }: SigninProps) => {
   }
 };
 
+export const RemoveAccount = async () => {
+  const user = await GetSelf();
+  if (!user) redirect("/login");
+
+  try {
+    const data = await prisma.user.delete({
+      where: { email: user.email },
+      select: {
+        createdAt: true,
+        email: true,
+        name: true,
+        image: true,
+        role: true,
+      },
+    });
+    // console.log("data", data);
+    cookies().delete("JWT_TOKEN");
+    return { success: "Akun dihapus", data };
+  } catch (error: any) {
+    if (error.code === "P2025") return { error: "User tidak ditemukan" };
+    return { error: "Gagal menghapus akun" };
+  } finally {
+    prisma.$disconnect();
+  }
+};
+
 export const SignOut = async () => {
   cookies().delete("JWT_TOKEN");
   return true;
@@ -102,7 +128,7 @@ export const GetSelf = async (token: string | undefined = undefined) => {
   if (!authToken) return null;
 
   const decodedToken: SessionType = decodeToken(authToken);
-  console.log("decoded", decodedToken);
+  // console.log("decoded", decodedToken);
   if (!decodedToken) cookies().delete("JWT_TOKEN");
   return decodedToken;
 };

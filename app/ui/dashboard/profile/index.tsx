@@ -1,5 +1,6 @@
 "use client";
 
+import { RemoveAccount } from "@/lib/actions";
 import {
   ChevronRightIcon,
   LockClosedIcon,
@@ -68,9 +69,11 @@ const Profile = ({ self, profile }: Props) => {
           <Button className="grow" color="indigo" placeholder={""}>
             Edit Profil
           </Button>
-          <Button className="grow" color="indigo" placeholder={""}>
-            Dashboard
-          </Button>
+          <Link href={"/dashboard"} className="grow">
+            <Button color="indigo" placeholder={""}>
+              Dashboard
+            </Button>
+          </Link>
           <IconButton placeholder={""} color="indigo">
             <ShareIcon className="w-5 h-5" />
           </IconButton>
@@ -143,7 +146,7 @@ const Profile = ({ self, profile }: Props) => {
                 </ListItem>
               </Link>
               <hr />
-              <Link href={"#"}>
+              <Link href={"/account/delete"}>
                 <ListItem placeholder={""} className="text-red-400 py-4">
                   <ListItemPrefix placeholder={""}>
                     <TrashIcon className="w-5 h-5" />

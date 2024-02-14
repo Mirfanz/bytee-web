@@ -2,32 +2,35 @@
 
 import type { DeviceType, PublishProps, SubscribeProps } from "@/types";
 import { PowerIcon } from "@heroicons/react/24/solid";
-import { Card } from "@material-tailwind/react";
+import { Card, Spinner } from "@material-tailwind/react";
 import React, { useEffect, useState } from "react";
 import { Socket } from "socket.io-client";
 
 type Props = {
   device: DeviceType;
-  socket: Socket | null;
+  socket: Socket;
+  connectStatus?: boolean;
 };
 
-const CardDevice = ({ device, socket }: Props) => {
+const CardDevice = ({ device, socket, connectStatus }: Props) => {
   const [status, setStatus] = useState<boolean>(device.state);
   const [switching, setSwitching] = useState<boolean>(false);
 
   function subscribe(deviceId: SubscribeProps) {
-    return socket?.emit("subscribe", deviceId);
+    return socket.emit("subscribe", deviceId);
   }
   function publish(data: PublishProps) {
-    return socket?.emit("publish", data);
+    return socket.emit("publish", data);
   }
 
   useEffect(() => {
-    socket?.on("connect", () => {
+    socket.on("connect", () => {
       subscribe(device.id);
     });
-    socket?.on("mqtt_message", (data: PublishProps) => {
-      if (data.deviceId === device.id) setStatus(data.state);
+    socket.on("mqtt_message", (data: PublishProps) => {
+      if (data.deviceId != device.id) return;
+      setSwitching(false);
+      setStatus(data.state);
     });
   }, [socket]);
 
@@ -36,9 +39,12 @@ const CardDevice = ({ device, socket }: Props) => {
     setSwitching(true);
     const newStatus = !status;
     publish({ deviceId: device.id, state: newStatus });
+    // setTimeout(() => {
+    //   setSwitching(false);
+    // }, 3000);
 
-    setStatus(newStatus);
-    setSwitching(false);
+    // setStatus(newStatus);
+    // setSwitching(false);
   }
 
   return (
@@ -46,15 +52,6 @@ const CardDevice = ({ device, socket }: Props) => {
       className="lg:hover:brightness-95 overflow-hidden duration-300"
       placeholder={""}
     >
-      {/* <CardBody className="p-3" placeholder={""}> */}
-      {/* <IconButton
-          placeholder={""}
-          variant="outlined"
-          color="indigo"
-          size="sm"
-        >
-          <RectangleStackIcon className="h-5 w-5" />
-        </IconButton> */}
       <h5 className="text-sm bg-blue-gray-50 font-medium py-3 text-gray-900 text-center">
         {device.name}
       </h5>
@@ -73,11 +70,15 @@ const CardDevice = ({ device, socket }: Props) => {
             onClick={handleSwithBtn}
             disabled={switching}
           >
-            <PowerIcon
-              className="w-4 h-4 !duration-100"
-              strokeWidth={2}
-              color={status ? "green" : "red"}
-            />
+            {switching ? (
+              <Spinner className="w-4 h-4" color="indigo" />
+            ) : (
+              <PowerIcon
+                className="w-4 h-4 !duration-100"
+                strokeWidth={2}
+                color={status ? "green" : "red"}
+              />
+            )}
           </button>
           <p className="flex w-full text-gray-700 text-sm">
             <span className="w-full text-center">ON</span>
@@ -85,7 +86,6 @@ const CardDevice = ({ device, socket }: Props) => {
           </p>
         </div>
       </div>
-      {/* </CardBody> */}
     </Card>
   );
 };

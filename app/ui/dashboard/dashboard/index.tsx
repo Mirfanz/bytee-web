@@ -24,7 +24,7 @@ const Dashboard = ({ rooms, guestRooms }: Props) => {
   });
 
   useEffect(() => {
-    setConnectStatus(socket.connected || false);
+    setConnectStatus(socket.connected);
     socket.on("connect", () => {
       setConnectStatus(socket.connected);
     });
@@ -113,6 +113,7 @@ const Dashboard = ({ rooms, guestRooms }: Props) => {
                       key={device.id}
                       socket={socket}
                       device={device}
+                      connectStatus={connectStatus}
                     />
                   ))}
                 </div>
@@ -188,6 +189,7 @@ const Dashboard = ({ rooms, guestRooms }: Props) => {
                       key={device.id}
                       socket={socket}
                       device={device}
+                      connectStatus={connectStatus}
                     />
                   ))}
                 </div>
