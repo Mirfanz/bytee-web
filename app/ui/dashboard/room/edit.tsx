@@ -51,7 +51,8 @@ const Edit = ({ room }: Props) => {
     UpdateRoom({ roomId: room.id, data: fields })
       .then((data: any) => {
         if (data.error) throw new Error(data.error);
-        router.replace("/dashboard/room");
+        router.back();
+        router.refresh();
         Toast.fire({ icon: "success", text: "Room diedit" });
       })
       .catch((error) => {

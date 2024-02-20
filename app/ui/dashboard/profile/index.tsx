@@ -11,6 +11,7 @@ import {
   Avatar,
   Button,
   Card,
+  CardBody,
   Chip,
   IconButton,
   List,
@@ -47,36 +48,50 @@ const Profile = ({ self, profile }: Props) => {
   return (
     <main>
       <div className="container py-4 lg:!p-8">
-        <div className="flex items-center gap-4 mb-6">
-          <Avatar
-            placeholder={""}
-            src={profile?.image || "/no-profile.jpg"}
-            size="xxl"
-          />
-          <div className="">
-            <h1 className="text-xl font-semibold">{profile?.name}</h1>
-            <p className="text-sm">{profile?.email}</p>
-            <Chip
-              className="w-max mt-1"
-              color="indigo"
-              variant="ghost"
-              value={profile?.role}
-              size="sm"
-            />
+        <div className="flex w-full mb-6 gap-4">
+          <div className="w-full">
+            <div className="flex items-center gap-4 mb-6">
+              <Avatar
+                placeholder={""}
+                src={profile?.image || "/no-profile.jpg"}
+                size="xxl"
+              />
+              <div className="">
+                <h1 className="text-xl font-semibold">{profile?.name}</h1>
+                <p className="text-sm">{profile?.email}</p>
+                <Chip
+                  className="w-max mt-1"
+                  color="indigo"
+                  variant="ghost"
+                  value={profile?.role}
+                  size="sm"
+                />
+              </div>
+            </div>
+            <div className="flex gap-1">
+              <Button className="grow w-full" color="teal" placeholder={""}>
+                Edit Profil
+              </Button>
+              <Link href={"/dashboard"} className="w-full">
+                <Button color="teal" className="w-full" placeholder={""}>
+                  Dashboard
+                </Button>
+              </Link>
+              <IconButton placeholder={""} className="grow w-full" color="teal">
+                <ShareIcon className="w-5 h-5" />
+              </IconButton>
+            </div>
           </div>
-        </div>
-        <div className="flex gap-1 mb-6">
-          <Button className="grow" color="indigo" placeholder={""}>
-            Edit Profil
-          </Button>
-          <Link href={"/dashboard"} className="grow">
-            <Button color="indigo" placeholder={""}>
-              Dashboard
-            </Button>
-          </Link>
-          <IconButton placeholder={""} color="indigo">
-            <ShareIcon className="w-5 h-5" />
-          </IconButton>
+          <div className="hidden md:block w-full">
+            <Card placeholder={""} className="w-full h-full" color="white">
+              <CardBody
+                placeholder={""}
+                className=" justify-center items-center"
+              >
+                Setiap yang bernyawa 10 miliar % akan mati.
+              </CardBody>
+            </Card>
+          </div>
         </div>
         <div className="">
           <Card placeholder={""}>
