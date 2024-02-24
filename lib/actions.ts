@@ -9,7 +9,7 @@ import {
   hashPassword,
 } from "./utils/auth";
 import { Jwt, JwtPayload, Algorithm } from "jsonwebtoken";
-import { redirect } from "next/navigation";
+import { RedirectType, redirect } from "next/navigation";
 import { Prisma } from "@prisma/client";
 
 import type {
@@ -19,6 +19,7 @@ import type {
   SigninProps,
   SessionType,
 } from "@/types";
+import { sendVerification } from "./utils/mail";
 
 export const Register = async ({ email, password, name }: RegisterProps) => {
   const cookie = cookies();
@@ -37,8 +38,9 @@ export const Register = async ({ email, password, name }: RegisterProps) => {
     const token = createToken({
       name: result.name,
       email: result.email,
-      role: "user",
-      image: null,
+      role: result.role,
+      image: result.image,
+      verified: result.verified,
     });
     cookie.set("JWT_TOKEN", token, {
       expires: new Date().getTime() + 1000 * 60 * 60 * 24 * 7,
@@ -48,8 +50,9 @@ export const Register = async ({ email, password, name }: RegisterProps) => {
       authToken: token,
       name: result.name,
     };
-  } catch (err: any) {
-    const { meta } = err;
+  } catch (error: any) {
+    const { meta } = error;
+    console.log("error.code", error.code);
     cookie.delete("JWT_TOKEN");
     let message = "Terjadi kesalahan";
     switch (meta?.target) {
@@ -81,14 +84,75 @@ export const Signin = async ({ email, password }: SigninProps) => {
       name: result.name,
       image: result.image,
       role: result.role,
+      verified: result.verified,
     });
 
     cookies().set("JWT_TOKEN", token, {
       expires: new Date().getTime() + 1000 * 60 * 60 * 24 * 7,
     });
-    return { success: "Login Berhasil", authToken: token, name: result.name };
+
+    // if (!result.verified)
+    return {
+      success: "Login Berhasil",
+      data: {
+        email: result.email,
+        name: result.name,
+        role: result.role,
+        image: result.image,
+        authToken: token,
+        verified: result.verified,
+      },
+    };
   } catch (error: any) {
+    console.log("error.code", error);
     return { error: error.message || "Email atau password salah" };
+  }
+};
+
+export const SendEmailVerification = async () => {
+  const session = await GetSelf();
+  if (!session) redirect("login");
+
+  try {
+    const result = await prisma.emailVerification.create({
+      data: {
+        user: {
+          connect: { email: session.email, verified: false },
+        },
+      },
+    });
+    if (!(await sendVerification(session, result.token)))
+      return { error: "Gagal mengirim email" };
+    return {
+      success: "Link verifikasi dikirim",
+      data: { createdAt: result.createdAt },
+    };
+  } catch (error: any) {
+    return { error: "Gagal membuat token" };
+  } finally {
+    prisma.$disconnect();
+  }
+};
+
+export const GetLastSendEmailVerification = async () => {
+  const session = await GetSelf();
+  if (!session) redirect("login");
+
+  try {
+    const result = await prisma.emailVerification.findFirst({
+      where: {
+        user: { email: session.email },
+      },
+      orderBy: { createdAt: "desc" },
+    });
+    console.log("last Send Email", result);
+    if (!result) return null;
+    return result.createdAt;
+  } catch (error) {
+    console.log("error", error);
+    return null;
+  } finally {
+    prisma.$disconnect();
   }
 };
 
@@ -152,7 +216,7 @@ export const FetchUser = async (userId: string | undefined = undefined) => {
           role: true,
           image: true,
           createdAt: true,
-          verifiedAt: self,
+          verified: self,
           updatedAt: self,
           id: self,
           apiKey: self,

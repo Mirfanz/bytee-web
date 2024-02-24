@@ -5,17 +5,10 @@ export type UserType = {
   name: string;
   email: string;
   role: "user" | "member" | "admin";
-  image: undefined | string | null;
+  image: string | null;
 };
 
-export type ResultType = { error?: string; success?: string; data?: any };
-
-export type SessionType = {
-  name: string;
-  email: string;
-  role: "user" | "member" | "admin";
-  image?: string | null;
-} | null;
+export type SessionType = (UserType & { verified: boolean }) | null;
 
 export type RoomType = Prisma.RoomGetPayload<{
   select: {

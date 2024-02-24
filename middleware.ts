@@ -10,22 +10,17 @@ export async function middleware(request: NextRequest) {
     if (!token?.value)
       return NextResponse.redirect(new URL("/login", request.url));
 
-    const isAuthenticated = await fetch(
-      new URL("/api/auth/session", request.url),
-      {
-        method: "post",
-        body: JSON.stringify({ authToken: token.value }),
-      }
-    )
+    const session = await fetch(new URL("/api/auth/session", request.url), {
+      method: "post",
+      body: JSON.stringify({ authToken: token.value }),
+    })
       .then((data) => data.json())
-      .then((data) => {
-        if (!data?.isAuthenticated) return false;
-        return true;
-      })
-      .catch(() => false);
+      .catch(() => null);
 
-    if (!isAuthenticated)
+    if (!session?.user)
       return NextResponse.redirect(new URL("/login", request.url));
+    else if (!session?.user.verified)
+      return NextResponse.redirect(new URL("/account/verify", request.url));
   }
 
   return response;

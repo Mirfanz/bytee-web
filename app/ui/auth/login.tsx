@@ -28,11 +28,11 @@ const Login = (props: Props) => {
 
     setSubmiting(true);
     Signin(fields)
-      .then((data) => {
-        if (data.error) throw new Error(data.error);
+      .then((resp) => {
+        if (resp.error) throw new Error(resp.error);
         router.replace("/dashboard/profile");
         Toast.fire({
-          titleText: "Hi, " + data.name,
+          titleText: "Welcome, " + resp.data?.name,
         });
       })
       .catch((error) => {

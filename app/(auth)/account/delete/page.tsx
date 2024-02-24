@@ -1,4 +1,4 @@
-import DeleteAccount from "@/app/ui/auth/delete-account";
+import DeleteAccount from "@/app/ui/auth/account/delete";
 import { GetSelf } from "@/lib/actions";
 import { RedirectType, redirect } from "next/navigation";
 

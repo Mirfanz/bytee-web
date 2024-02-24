@@ -9,9 +9,11 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@getbrevo/brevo": "^1.0.1",
     "@heroicons/react": "^2.0.18",
     "@material-tailwind/react": "^2.1.8",
     "@prisma/client": "^5.7.0",
+    "@sendinblue/client": "^3.3.1",
     "bcrypt": "^5.1.1",
     "jsonwebtoken": "^9.0.2",
     "mqtt": "^5.3.4",

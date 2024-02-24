@@ -24,6 +24,7 @@ export function decodeToken(token: string): SessionType {
       email: sessionData.email,
       image: sessionData.image,
       role: sessionData.role,
+      verified: sessionData.verified,
     };
   } catch (error) {
     console.error("error", error);

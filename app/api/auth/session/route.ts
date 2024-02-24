@@ -11,16 +11,7 @@ export async function POST(request: NextRequest) {
       { user: null, isAuthenticated: false },
       { status: 405 }
     );
-  try {
-    const user = await decodeToken(token);
-    return NextResponse.json({
-      user,
-      isAuthenticated: true,
-    });
-  } catch (error) {
-    return NextResponse.json(
-      { user: null, isAuthenticated: false },
-      { status: 405 }
-    );
-  }
+
+  const user = decodeToken(token);
+  return NextResponse.json({ user }, { status: user?.verified ? 405 : 200 });
 }

@@ -34,7 +34,7 @@ type Props = {
           role: true;
           image: true;
           createdAt: true;
-          verifiedAt: true;
+          verified: true;
           updatedAt: true;
           apiKey: true;
           _count: { select: { devices: true; rooms: true } };
@@ -142,8 +142,8 @@ const Profile = ({ self, profile }: Props) => {
                 Sudah Verifikasi
                 <ListItemSuffix placeholder={""}>
                   <Chip
-                    value={profile?.verifiedAt ? "Ya" : "Tidak"}
-                    color={profile?.verifiedAt ? "green" : "deep-orange"}
+                    value={profile?.verified ? "Ya" : "Tidak"}
+                    color={profile?.verified ? "green" : "deep-orange"}
                     variant="ghost"
                   />
                 </ListItemSuffix>
