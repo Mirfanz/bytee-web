@@ -4,6 +4,7 @@ import {
   GetLastSendEmailVerification,
   SendEmailVerification,
   SignOut,
+  UpdateSession,
 } from "@/lib/actions";
 import { Toast } from "@/lib/utils/swal";
 import { SessionType } from "@/types";
@@ -17,12 +18,9 @@ type Props = { sessionData: SessionType; wait: number; delay: number };
 const VerifyPage = ({ sessionData, wait, delay }: Props) => {
   const router = useRouter();
   const [waiting, setWaiting] = useState<number>(wait);
+  const [loading, setLoading] = useState<boolean>(false);
   useEffect(() => {
-    console.log("wait", wait);
-    console.log("delay", delay);
-    // const timeGap = new Date().getTime() - (lastSent?.getTime() || 0);
-    // console.log("timeGap", timeGap);
-    // if (timeGap < 30 * 1000) setWaiting(30 - Math.floor(timeGap / 1000));
+    UpdateSession();
   }, []);
   useEffect(() => {
     if (waiting > 0)
@@ -53,24 +51,31 @@ const VerifyPage = ({ sessionData, wait, delay }: Props) => {
                 <Button
                   placeholder={""}
                   onClick={() => {
-                    SendEmailVerification().then((resp) => {
-                      if (resp.error)
-                        return Swal.fire({
-                          titleText: resp.error,
+                    if (loading) return;
+                    setLoading(true);
+                    SendEmailVerification()
+                      .then((resp) => {
+                        if (resp.error)
+                          return Swal.fire({
+                            titleText: resp.error,
+                          });
+                        Toast.fire({
+                          titleText: resp.success,
                         });
-                      Toast.fire({
-                        titleText: resp.success,
-                      });
 
-                      const timeGap =
-                        new Date().getTime() -
-                        (resp.data?.createdAt?.getTime() || 0);
-                      console.log("timeGap", timeGap);
-                      setWaiting(delay - Math.floor(timeGap / 1000));
-                    });
+                        const timeGap =
+                          new Date().getTime() -
+                          (resp.data?.createdAt?.getTime() || 0);
+                        console.log("timeGap", timeGap);
+                        setWaiting(delay - Math.floor(timeGap / 1000));
+                      })
+                      .finally(() => {
+                        setLoading(false);
+                      });
                   }}
                   color="teal"
-                  className="flex-1 "
+                  className="flex-1 justify-center"
+                  loading={loading}
                   disabled={waiting > 0}
                 >
                   Kirim Ulang {waiting > 0 && "( " + waiting + "s )"}

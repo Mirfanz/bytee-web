@@ -87,7 +87,7 @@ const Profile = ({ self, profile }: Props) => {
             <Card placeholder={""} className="w-full h-full" color="white">
               <CardBody
                 placeholder={""}
-                className=" justify-center text-sm md:text-base  items-center text-center flex flex-1"
+                className=" justify-center px-2 text-sm md:text-base  items-center text-center flex flex-1"
               >
                 Jika kamu tak sanggup menahan lelahnya belajar,
                 <br /> Maka bersiaplah menahan pahitnya kebodohan. <br />- Imam

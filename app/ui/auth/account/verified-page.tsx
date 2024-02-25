@@ -8,6 +8,7 @@ import {
 import { Toast } from "@/lib/utils/swal";
 import { SessionType } from "@/types";
 import { Button, Chip } from "@material-tailwind/react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
@@ -26,9 +27,11 @@ const VerifiedPage = ({ sessionData }: Props) => {
             Terimakasih telah melakukan verifikasi akun.
           </p>
           <div className="flex relative items-center">
-            <Button placeholder={""} color="teal" className="flex-1 ">
-              Buka Halaman Akun
-            </Button>
+            <Link href={"/dashboard/profile"} className="w-full">
+              <Button placeholder={""} color="teal" className="w-full">
+                Buka Halaman Akun
+              </Button>
+            </Link>
           </div>
         </div>
       </div>

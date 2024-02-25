@@ -44,17 +44,21 @@ const VerifyingPage = ({ token }: Props) => {
             className="flex-1 justify-center"
             loading={status == "loading"}
             onClick={() => {
-              if (!status) {
+              if (!status && status != "loading") {
                 setStatus("loading");
                 //   setStatus("error");
-                VerifyEmail(token).then((result) => {
-                  console.log("result", result);
-                  if (result.error) {
+                VerifyEmail(token)
+                  .then((result) => {
+                    console.log("result", result);
+                    if (result.error) {
+                      setStatus("error");
+                    } else {
+                      setStatus("success");
+                    }
+                  })
+                  .catch((error) => {
                     setStatus("error");
-                  } else {
-                    setStatus("success");
-                  }
-                });
+                  });
               } else if (status === "error") router.replace("/account/verify");
               else if (status === "success")
                 router.replace("/dashboard/profile");
