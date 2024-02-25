@@ -12,6 +12,7 @@ import {
   Button,
   Card,
   CardBody,
+  CardHeader,
   Chip,
   IconButton,
   List,
@@ -47,13 +48,13 @@ type Props = {
 const Profile = ({ self, profile }: Props) => {
   return (
     <main>
-      <div className="container py-4 lg:!p-8">
-        <div className="flex w-full mb-6 gap-4">
+      <div className="container  py-4 pb-6 lg:py-8 lg:!px-8">
+        <div className="flex flex-col md:flex-row w-full gap-4">
           <div className="w-full">
-            <div className="flex items-center gap-4 mb-6">
+            <div className="flex items-center gap-4">
               <Avatar
                 placeholder={""}
-                src={profile?.image || "/no-profile.jpg"}
+                src={profile?.image || "/img/no-profile.png"}
                 size="xxl"
               />
               <div className="">
@@ -68,7 +69,7 @@ const Profile = ({ self, profile }: Props) => {
                 />
               </div>
             </div>
-            <div className="flex gap-1">
+            <div className="flex gap-1 mt-3">
               <Button className="grow w-full" color="teal" placeholder={""}>
                 Edit Profil
               </Button>
@@ -82,98 +83,130 @@ const Profile = ({ self, profile }: Props) => {
               </IconButton>
             </div>
           </div>
-          <div className="hidden md:block w-full">
+          <div className="w-full">
             <Card placeholder={""} className="w-full h-full" color="white">
               <CardBody
                 placeholder={""}
-                className=" justify-center items-center"
+                className=" justify-center text-sm md:text-base  items-center text-center flex flex-1"
               >
-                Setiap yang bernyawa 10 miliar % akan mati.
+                Jika kamu tak sanggup menahan lelahnya belajar,
+                <br /> Maka bersiaplah menahan pahitnya kebodohan. <br />- Imam
+                Syafi&apos;i
               </CardBody>
             </Card>
           </div>
         </div>
-        <div className="">
-          <Card placeholder={""}>
-            <List placeholder={""}>
-              <ListItem placeholder={""}>
-                Total Rooms
-                <ListItemSuffix placeholder={""}>
-                  <Chip value={profile?._count.rooms} variant="ghost" />
-                </ListItemSuffix>
-              </ListItem>
+      </div>
+      <div className="container pb-6 lg:!px-8">
+        <div className="grid grid-cols-12 gap-4">
+          <div className="overflow-y-auto h-auto pb-3 flex flex-col gap-3 col-span-12 md:col-span-6 2xl:col-span-8">
+            <Card placeholder={""} className=" gap-3 p-4">
+              <h1 className="font-semibold line-clamp-1">
+                2024 Pemilu Paling Dungu?
+              </h1>
               <hr />
-              <ListItem placeholder={""}>
-                Total Devices
-                <ListItemSuffix placeholder={""}>
-                  <Chip value={profile?._count.devices} variant="ghost" />
-                </ListItemSuffix>
-              </ListItem>
+              <p className="line-clamp-3 text-justify">
+                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quae
+                labore aspernatur rerum. Consequatur, placeat dolorum sapiente
+                ratione ipsum facere dicta incidunt est quae minima impedit
+                voluptates eos officia dolores ipsa.
+              </p>
+            </Card>
+            <Card placeholder={""} className=" gap-3 p-4">
+              <h1 className="font-semibold line-clamp-1">
+                Menjelang Halving Bitcoin Meroket
+              </h1>
               <hr />
-              <ListItem placeholder={""}>
-                Email
-                <ListItemSuffix placeholder={""}>
-                  <Chip
-                    value={profile?.email}
-                    className="lowercase"
-                    variant="ghost"
-                  />
-                </ListItemSuffix>
-              </ListItem>
+              <p className="line-clamp-3 text-justify">
+                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Qui,
+                ex. Magni ducimus numquam, optio sed soluta obcaecati possimus
+                perspiciatis corporis!
+              </p>
+            </Card>
+            <Card placeholder={""} className=" gap-3 p-4">
+              <h1 className="font-semibold line-clamp-1">
+                Tiktok Shop Mengakali Hukum Indonesia?
+              </h1>
               <hr />
-              <ListItem placeholder={""}>
-                Telepon
-                <ListItemSuffix placeholder={""}>
-                  <Chip value={"-"} variant="ghost" />
-                </ListItemSuffix>
-              </ListItem>
-              <hr />
-              <ListItem placeholder={""}>
-                Akun Dibuat
-                <ListItemSuffix placeholder={""}>
-                  <Chip
-                    value={profile?.createdAt.toLocaleDateString()}
-                    variant="ghost"
-                  />
-                </ListItemSuffix>
-              </ListItem>
-              <hr />
-              <ListItem placeholder={""}>
-                Sudah Verifikasi
-                <ListItemSuffix placeholder={""}>
-                  <Chip
-                    value={profile?.verified ? "Ya" : "Tidak"}
-                    color={profile?.verified ? "green" : "deep-orange"}
-                    variant="ghost"
-                  />
-                </ListItemSuffix>
-              </ListItem>
-              <hr />
-              <Link href={"#"}>
-                <ListItem placeholder={""} className="py-4">
-                  <ListItemPrefix placeholder={""}>
-                    <LockClosedIcon className="w-5 h-5" />
-                  </ListItemPrefix>
-                  Ganti Password
+              <p className="line-clamp-3 text-justify">
+                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Qui,
+                ex. Magni ducimus numquam, optio sed soluta obcaecati possimus
+                perspiciatis corporis!
+              </p>
+            </Card>
+            <Button placeholder={""}>Telusuri Berita Lainnya</Button>
+          </div>
+          <div className=" col-span-12 mb-auto md:col-span-6 2xl:col-span-4">
+            <Card placeholder={""} className="">
+              <List placeholder={""}>
+                <ListItem placeholder={""}>
+                  Total Rooms
                   <ListItemSuffix placeholder={""}>
-                    <ChevronRightIcon className="w-4 h-4" />
+                    <Chip value={profile?._count.rooms} variant="ghost" />
                   </ListItemSuffix>
                 </ListItem>
-              </Link>
-              <hr />
-              <Link href={"/account/delete"}>
-                <ListItem placeholder={""} className="text-red-400 py-4">
-                  <ListItemPrefix placeholder={""}>
-                    <TrashIcon className="w-5 h-5" />
-                  </ListItemPrefix>
-                  Hapus Akun
+                <hr />
+                <ListItem placeholder={""}>
+                  Total Devices
                   <ListItemSuffix placeholder={""}>
-                    <ChevronRightIcon className="w-4 h-4" />
+                    <Chip value={profile?._count.devices} variant="ghost" />
                   </ListItemSuffix>
                 </ListItem>
-              </Link>
-            </List>
-          </Card>
+                <hr />
+                <ListItem placeholder={""}>
+                  Email
+                  <ListItemSuffix placeholder={""}>
+                    <Chip
+                      value={profile?.email}
+                      className="lowercase"
+                      variant="ghost"
+                    />
+                  </ListItemSuffix>
+                </ListItem>
+                <hr />
+                <ListItem placeholder={""}>
+                  Telepon
+                  <ListItemSuffix placeholder={""}>
+                    <Chip value={"-"} variant="ghost" />
+                  </ListItemSuffix>
+                </ListItem>
+                <hr />
+                <ListItem placeholder={""}>
+                  Akun Dibuat
+                  <ListItemSuffix placeholder={""}>
+                    <Chip
+                      value={profile?.createdAt.toLocaleDateString()}
+                      variant="ghost"
+                    />
+                  </ListItemSuffix>
+                </ListItem>
+                <hr />
+                <Link href={"#"}>
+                  <ListItem placeholder={""} className="py-4">
+                    <ListItemPrefix placeholder={""}>
+                      <LockClosedIcon className="w-5 h-5" />
+                    </ListItemPrefix>
+                    Ganti Password
+                    <ListItemSuffix placeholder={""}>
+                      <ChevronRightIcon className="w-4 h-4" />
+                    </ListItemSuffix>
+                  </ListItem>
+                </Link>
+                <hr />
+                <Link href={"/account/delete"}>
+                  <ListItem placeholder={""} className="text-red-400 py-4">
+                    <ListItemPrefix placeholder={""}>
+                      <TrashIcon className="w-5 h-5" />
+                    </ListItemPrefix>
+                    Hapus Akun
+                    <ListItemSuffix placeholder={""}>
+                      <ChevronRightIcon className="w-4 h-4" />
+                    </ListItemSuffix>
+                  </ListItem>
+                </Link>
+              </List>
+            </Card>
+          </div>
         </div>
       </div>
     </main>
