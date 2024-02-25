@@ -20,7 +20,11 @@ import type {
   SessionType,
 } from "@/types";
 import { sendVerification } from "./utils/mail";
+import { error } from "console";
 
+export const setcookie = () => {
+  cookies().set("A", "B");
+};
 export const Register = async ({ email, password, name }: RegisterProps) => {
   const cookie = cookies();
   const hashedPassword = hashPassword(password);
@@ -145,14 +149,59 @@ export const GetLastSendEmailVerification = async () => {
       },
       orderBy: { createdAt: "desc" },
     });
-    console.log("last Send Email", result);
+    // console.log("last Send Email", result);
     if (!result) return null;
     return result.createdAt;
   } catch (error) {
-    console.log("error", error);
+    // console.log("error", error);
     return null;
   } finally {
     prisma.$disconnect();
+  }
+};
+
+export const VerifyEmail = async (token: string) => {
+  try {
+    const findToken = await prisma.emailVerification.findFirst({
+      where: {
+        token: token,
+      },
+      include: { user: true },
+      orderBy: { createdAt: "desc" },
+    });
+    if (!findToken) return { error: "Token tidak valid" };
+    if (findToken.user.verified) {
+      // console.log("updateSession", await UpdateSession());
+      return { success: "Akun sudah diverifikasi" };
+    }
+
+    const findLatestToken = await prisma.emailVerification.findFirst({
+      where: {
+        user: { email: findToken.user.email },
+      },
+      orderBy: { createdAt: "desc" },
+    });
+    if (!findLatestToken) return { error: "Belum membuat token" };
+    else if (findToken.token !== findLatestToken.token)
+      return { error: "Token Expired" };
+    else if (
+      new Date().getTime() - findToken.createdAt.getTime() >
+      1000 * 60 * 5
+    )
+      return { error: "Token Expired" };
+
+    const result = await prisma.user.update({
+      where: { email: findToken.user.email },
+      data: { verified: { set: true } },
+    });
+
+    // console.log("updateSession", await UpdateSession());
+    return { success: "Verifikasi berhasil" };
+  } catch (error: any) {
+    return { error: "Verifikasi gagal" };
+  } finally {
+    prisma.$disconnect();
+    await UpdateSession();
   }
 };
 
@@ -195,6 +244,46 @@ export const GetSelf = async (token: string | undefined = undefined) => {
   // console.log("decoded", decodedToken);
   if (!decodedToken) cookies().delete("JWT_TOKEN");
   return decodedToken;
+};
+
+export const UpdateSession = async () => {
+  console.log("Update session");
+
+  const currentSession = await GetSelf();
+  if (!currentSession) return false;
+
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        email: currentSession.email,
+      },
+    });
+    console.log("user", user);
+    if (!user) {
+      cookies().delete("JWT_TOKEN");
+      return false;
+    }
+
+    const newSession: SessionType = {
+      email: user.email,
+      image: user.image,
+      name: user.name,
+      role: user.role,
+      verified: user.verified,
+    };
+
+    const newToken = createToken(newSession);
+    console.log("newToken", newSession);
+    // cookies().delete("JWT_TOKEN");
+    cookies().set("JWT_TOKEN", newToken, {
+      expires: new Date().getTime() + 1000 * 60 * 60 * 24 * 7,
+    });
+
+    return true;
+  } catch (error) {
+    console.log("error", error);
+    return false;
+  }
 };
 
 export const FetchUser = async (userId: string | undefined = undefined) => {

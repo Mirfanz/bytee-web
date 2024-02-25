@@ -1,14 +1,11 @@
+import { PageProps } from "@/.next/types/app/layout";
 import VerifiedPage from "@/app/ui/auth/account/verified-page";
 import VerifyPage from "@/app/ui/auth/account/verify";
-import {
-  GetLastSendEmailVerification,
-  GetSelf,
-  SendEmailVerification,
-} from "@/lib/actions";
+import { GetLastSendEmailVerification, GetSelf } from "@/lib/actions";
 import { SessionType } from "@/types";
-import { RedirectType, redirect } from "next/navigation";
+import { redirect } from "next/navigation";
 
-export default async function () {
+export default async function ({ searchParams }: PageProps) {
   const sessionData: SessionType = await GetSelf();
   if (!sessionData) return redirect("/login");
   if (sessionData.verified) return <VerifiedPage sessionData={sessionData} />;
