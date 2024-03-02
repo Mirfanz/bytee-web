@@ -3,12 +3,10 @@ import VerifiedPage from "@/app/ui/auth/account/verified-page";
 import VerifyPage from "@/app/ui/auth/account/verify";
 import { GetLastSendEmailVerification, GetSelf } from "@/lib/actions";
 import { SessionType } from "@/types";
-import { redirect } from "next/navigation";
 
 export default async function ({ searchParams }: PageProps) {
   const sessionData: SessionType = await GetSelf();
-  if (!sessionData) return redirect("/login");
-  if (sessionData.verified) return <VerifiedPage sessionData={sessionData} />;
+  if (sessionData?.verified) return <VerifiedPage sessionData={sessionData} />;
 
   let lastSendEmailVerification =
     (await GetLastSendEmailVerification())?.getTime() || 0;

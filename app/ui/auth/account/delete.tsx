@@ -1,20 +1,24 @@
 "use client";
 
 import { Button, IconButton, Input } from "@material-tailwind/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import type { SessionType, SigninProps } from "@/types";
 import { useRouter } from "next/navigation";
-import { RemoveAccount } from "@/lib/actions";
+import { GetSelf, RemoveAccount } from "@/lib/actions";
 import Swal from "sweetalert2";
 import { Toast } from "@/lib/utils/swal";
 
-type Props = {
-  sessionData: SessionType;
-};
+type Props = {};
 
-const DeleteAccount = ({ sessionData }: Props) => {
+const DeleteAccount = ({}: Props) => {
   const router = useRouter();
+  const [sessionData, setSessionData] = useState<SessionType>(null);
   const [emailField, setEmailField] = useState<string>("");
+  useEffect(() => {
+    GetSelf().then((data) => {
+      setSessionData(data);
+    });
+  }, []);
 
   const [deleting, setDeleting] = React.useState(false);
 

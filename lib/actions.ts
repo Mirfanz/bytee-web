@@ -315,7 +315,7 @@ export const FetchUser = async (userId: string | undefined = undefined) => {
         },
       })
       .finally(() => prisma.$disconnect());
-    return { success: "Data user " + data?.name, data };
+    return { success: "Data user " + data?.name, data, self };
   } catch {
     return { error: "Gagal mengambil data user" };
   }

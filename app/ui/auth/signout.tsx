@@ -19,7 +19,7 @@ const Signout = (props: Props) => {
           </h1>
           <p className="text-justify text-base text-gray-600">
             Gapapa sih, login lagi yaa aku tunggu. Awas jangan sampai lupa akun
-            ama password nya.{" "}
+            ama password nya.
             <strong className="font-semibold text-gray-600">
               Terima Kasih {">_<"}
             </strong>
@@ -27,7 +27,7 @@ const Signout = (props: Props) => {
           <div className="flex gap-3">
             <Button
               placeholder={""}
-              variant="outlined"
+              variant="filled"
               color="indigo"
               className="flex-1"
               onClick={router.back}
@@ -49,7 +49,7 @@ const Signout = (props: Props) => {
                   });
                 });
               }}
-              color="indigo"
+              color="red"
               className="flex-1"
             >
               Ya, Logout
