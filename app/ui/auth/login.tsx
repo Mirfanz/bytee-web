@@ -73,7 +73,7 @@ const Login = (props: Props) => {
               type="email"
               label="Email / Username"
               variant="outlined"
-              crossOrigin={false}
+              crossOrigin={""}
               required
             />
             <div className="relative">
@@ -85,7 +85,7 @@ const Login = (props: Props) => {
                 onChange={handleFieldChange}
                 label="Password"
                 type={showPassword ? "text" : "password"}
-                crossOrigin={false}
+                crossOrigin={""}
                 required
                 minLength={8}
               />

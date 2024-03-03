@@ -114,7 +114,7 @@ const Edit = ({ device }: Props) => {
                 value={fields.name}
                 onChange={handleFieldChange}
                 color="indigo"
-                crossOrigin={false}
+                crossOrigin={""}
                 label="Name"
                 required
                 minLength={2}

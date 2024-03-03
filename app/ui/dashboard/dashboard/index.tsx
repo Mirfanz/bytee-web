@@ -18,11 +18,7 @@ type Props = {
 
 const Dashboard = ({ rooms, guestRooms }: Props) => {
   const [connectStatus, setConnectStatus] = React.useState<boolean>(false);
-  const socket = io(":8083", {
-    port: 8083,
-    secure: false,
-  });
-
+  const socket = io("http://bytee.cloud:8083", {});
   useEffect(() => {
     setConnectStatus(socket.connected);
     socket.on("connect", () => {

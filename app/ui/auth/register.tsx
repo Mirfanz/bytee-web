@@ -77,7 +77,7 @@ const Register = (props: Props) => {
               onChange={handleFieldChange}
               label="Full Name"
               variant="outlined"
-              crossOrigin={false}
+              crossOrigin={""}
               required
               minLength={5}
             />
@@ -89,7 +89,7 @@ const Register = (props: Props) => {
               type="email"
               label="Email / Username"
               variant="outlined"
-              crossOrigin={false}
+              crossOrigin={""}
               required
             />
             <div className="relative">
@@ -100,7 +100,7 @@ const Register = (props: Props) => {
                 onChange={handleFieldChange}
                 label="Password"
                 type={showPassword ? "text" : "password"}
-                crossOrigin={false}
+                crossOrigin={""}
                 required
                 minLength={8}
               />
@@ -125,7 +125,7 @@ const Register = (props: Props) => {
               onChange={(e) => setRepeatPassword(e.target.value)}
               label="Repeat Password"
               type={showPassword ? "text" : "password"}
-              crossOrigin={false}
+              crossOrigin={""}
               required
               minLength={8}
             />

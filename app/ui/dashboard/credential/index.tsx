@@ -30,7 +30,7 @@ const Credetial = (props: Props) => {
         <div className="flex gap-4 items-center">
           <p className=" flex-grow w-32">API_KEY</p>
           :
-          <Input crossOrigin={false} disabled value={apiKey} />
+          <Input crossOrigin={""} disabled value={apiKey} />
         </div>
       </div>
     </main>

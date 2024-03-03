@@ -4,7 +4,7 @@ import VerifyPage from "@/app/ui/auth/account/verify";
 import { GetLastSendEmailVerification, GetSelf } from "@/lib/actions";
 import { SessionType } from "@/types";
 
-export default async function ({ searchParams }: PageProps) {
+export default async function verifyPage({ searchParams }: PageProps) {
   const sessionData: SessionType = await GetSelf();
   if (sessionData?.verified) return <VerifiedPage sessionData={sessionData} />;
 

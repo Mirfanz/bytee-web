@@ -512,7 +512,7 @@ const TableRooms = ({
                       label="Guest Email"
                       icon={<UserIcon className="w-4 h-4" />}
                       className=" m-0"
-                      crossOrigin={false}
+                      crossOrigin={""}
                       color="indigo"
                       type="email"
                       value={addGuestField}

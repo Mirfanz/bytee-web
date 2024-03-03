@@ -81,7 +81,7 @@ const New = (props: Props) => {
                 value={fields.name}
                 onChange={handleFieldChange}
                 color="indigo"
-                crossOrigin={false}
+                crossOrigin={""}
                 label="Name"
                 required
                 minLength={4}
