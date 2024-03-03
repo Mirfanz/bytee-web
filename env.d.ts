@@ -4,5 +4,6 @@ declare namespace NodeJS {
     DATABASE_URL: string;
     BREVO_APIKEY: string;
     VERIFICATION_DELAY: number;
+    HOST: string;
   }
 }
