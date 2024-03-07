@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Alert, Button, ButtonGroup } from "@material-tailwind/react";
 import {
   ArrowLeftOnRectangleIcon,
@@ -8,8 +8,8 @@ import {
 } from "@heroicons/react/24/outline";
 import CardDevice from "./card-device";
 import { useRouter } from "next/navigation";
-import { io } from "socket.io-client";
 import type { RoomType } from "@/types";
+import MQTT from "mqtt";
 
 type Props = {
   rooms: RoomType[] | null;
@@ -18,27 +18,34 @@ type Props = {
 
 const Dashboard = ({ rooms, guestRooms }: Props) => {
   const [connectStatus, setConnectStatus] = React.useState<boolean>(false);
-  const socket = io("http://bytee.cloud:8083", {});
+  const [mqtt, setMqtt] = useState<MQTT.MqttClient>(
+    MQTT.connect({
+      port: 8083,
+      protocol: "ws",
+    })
+  );
+  function getTopic(deviceId: string): string {
+    return `bytee/device/${deviceId}/state`;
+  }
+
   useEffect(() => {
-    setConnectStatus(socket.connected);
-    socket.on("connect", () => {
-      setConnectStatus(socket.connected);
+    mqtt?.on("connect", (packet) => {
+      console.log("packet", packet);
+      setConnectStatus(true);
     });
-    socket.on("connect_error", (err) => {
-      setConnectStatus(socket.connected);
+    mqtt?.on("error", (error) => {
+      console.log("MQTT Error", error);
     });
-    socket.on("error", (err) => {
-      console.error("Connection error: ", err);
-      setConnectStatus(socket.connected);
-      socket.close();
+    mqtt?.on("disconnect", (packet) => {
+      setConnectStatus(false);
     });
-    socket.on("reconnect", () => {
-      setConnectStatus(socket.connected);
+    mqtt?.on("reconnect", () => {
+      setConnectStatus(false);
     });
-    socket.on("disconnect", () => {
-      setConnectStatus(socket.connected);
-    });
-  }, []);
+    // return () => {
+    //   mqtt?.end();
+    // };
+  }, [mqtt]);
 
   const router = useRouter();
   return (
@@ -78,10 +85,7 @@ const Dashboard = ({ rooms, guestRooms }: Props) => {
                     placeholder={""}
                     onClick={() => {
                       room.devices.map((device) => {
-                        socket.emit("publish", {
-                          deviceId: device.id,
-                          state: false,
-                        });
+                        mqtt?.publish(getTopic(device.id), "0");
                       });
                     }}
                   >
@@ -91,10 +95,7 @@ const Dashboard = ({ rooms, guestRooms }: Props) => {
                     placeholder={""}
                     onClick={() => {
                       room.devices.map((device) => {
-                        socket.emit("publish", {
-                          deviceId: device.id,
-                          state: true,
-                        });
+                        mqtt?.publish(getTopic(device.id), "1");
                       });
                     }}
                   >
@@ -107,7 +108,7 @@ const Dashboard = ({ rooms, guestRooms }: Props) => {
                   {room.devices.map((device) => (
                     <CardDevice
                       key={device.id}
-                      socket={socket}
+                      mqtt={mqtt}
                       device={device}
                       connectStatus={connectStatus}
                     />
@@ -154,10 +155,7 @@ const Dashboard = ({ rooms, guestRooms }: Props) => {
                     placeholder={""}
                     onClick={() => {
                       room.devices.map((device) => {
-                        socket.emit("publish", {
-                          deviceId: device.id,
-                          state: false,
-                        });
+                        mqtt?.publish(getTopic(device.id), "0");
                       });
                     }}
                   >
@@ -167,10 +165,7 @@ const Dashboard = ({ rooms, guestRooms }: Props) => {
                     placeholder={""}
                     onClick={() => {
                       room.devices.map((device) => {
-                        socket.emit("publish", {
-                          deviceId: device.id,
-                          state: true,
-                        });
+                        mqtt?.publish(getTopic(device.id), "1");
                       });
                     }}
                   >
@@ -183,7 +178,7 @@ const Dashboard = ({ rooms, guestRooms }: Props) => {
                   {room.devices.map((device) => (
                     <CardDevice
                       key={device.id}
-                      socket={socket}
+                      mqtt={mqtt}
                       device={device}
                       connectStatus={connectStatus}
                     />

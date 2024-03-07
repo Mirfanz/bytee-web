@@ -1,50 +1,45 @@
 "use client";
 
-import type { DeviceType, PublishProps, SubscribeProps } from "@/types";
+import type { DeviceType } from "@/types";
 import { PowerIcon } from "@heroicons/react/24/solid";
 import { Card, Spinner } from "@material-tailwind/react";
+import { MqttClient } from "mqtt";
 import React, { useEffect, useState } from "react";
-import { Socket } from "socket.io-client";
 
 type Props = {
   device: DeviceType;
-  socket: Socket;
+  mqtt: MqttClient | undefined;
   connectStatus?: boolean;
 };
 
-const CardDevice = ({ device, socket, connectStatus }: Props) => {
+const CardDevice = ({ device, mqtt, connectStatus }: Props) => {
+  const [topics] = useState({
+    device: `bytee/device/${device.id}/state`,
+    web: `bytee/web/${device.id}/state`,
+  });
   const [status, setStatus] = useState<boolean>(device.state);
-  const [switching, setSwitching] = useState<boolean>(false);
-
-  function subscribe(deviceId: SubscribeProps) {
-    return socket.emit("subscribe", deviceId);
-  }
-  function publish(data: PublishProps) {
-    return socket.emit("publish", data);
-  }
+  const [switching, setSwitching] = useState<boolean>(true);
 
   useEffect(() => {
-    socket.on("connect", () => {
-      subscribe(device.id);
+    mqtt?.on("connect", () => {
+      mqtt.subscribe(topics.web);
+      mqtt.publish(topics.device, "3");
     });
-    socket.on("mqtt_message", (data: PublishProps) => {
-      if (data.deviceId != device.id) return;
+    mqtt?.on("message", (topic, payload, packet) => {
+      if (topic != topics.web) return;
+      const message = payload.toString();
+      if (message === "0") setStatus(false);
+      else if (message === "1") setStatus(true);
       setSwitching(false);
-      setStatus(data.state);
     });
-  }, [socket]);
+  }, [mqtt]);
 
   async function handleSwithBtn() {
     if (switching) return;
     setSwitching(true);
-    const newStatus = !status;
-    publish({ deviceId: device.id, state: newStatus });
-    // setTimeout(() => {
-    //   setSwitching(false);
-    // }, 3000);
 
-    // setStatus(newStatus);
-    // setSwitching(false);
+    if (!status) mqtt?.publish(topics.device, "1");
+    else mqtt?.publish(topics.device, "0");
   }
 
   return (
