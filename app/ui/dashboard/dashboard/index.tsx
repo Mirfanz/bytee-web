@@ -20,8 +20,9 @@ const Dashboard = ({ rooms, guestRooms }: Props) => {
   const [connectStatus, setConnectStatus] = React.useState<boolean>(false);
   const [mqtt, setMqtt] = useState<MQTT.MqttClient>(
     MQTT.connect({
-      port: 8083,
-      protocol: "ws",
+      port: 443,
+      hostname: "mqtt.bytee.cloud/ws",
+      protocol: "wss",
     })
   );
   function getTopic(deviceId: string): string {
