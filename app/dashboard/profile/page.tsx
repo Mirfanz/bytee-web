@@ -6,5 +6,7 @@ export default async function ProfilePage() {
   const result = await FetchUser();
   if (result.error) notFound();
 
+  if (!result.data) notFound();
+
   return <Profile self={result.self} profile={result.data} />;
 }

@@ -60,7 +60,14 @@ const Navbar = (props: Props) => {
         </div>
       </nav>
 
-      <Drawer placeholder={""} open={open} onClose={() => setOpen(false)}>
+      <Drawer
+        placeholder={""}
+        open={open}
+        // className="sticky top-0"
+        overlay
+        overlayProps={{ className: "fixed" }}
+        onClose={() => setOpen(false)}
+      >
         <div
           className="overflow-y-auto h-full "
           style={{ scrollbarWidth: "thin" }}

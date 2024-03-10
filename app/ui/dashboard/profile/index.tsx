@@ -22,32 +22,41 @@ import {
 } from "@material-tailwind/react";
 import { Prisma } from "@prisma/client";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
+import DeleteAccountModal from "../../modals/delete-account";
 
 type Props = {
   self: boolean | undefined;
-  profile:
-    | Prisma.UserGetPayload<{
-        select: {
-          id: true;
-          name: true;
-          email: true;
-          role: true;
-          image: true;
-          createdAt: true;
-          verified: true;
-          updatedAt: true;
-          apiKey: true;
-          _count: { select: { devices: true; rooms: true } };
-        };
-      }>
-    | undefined
-    | null;
+  profile: Prisma.UserGetPayload<{
+    select: {
+      name: true;
+      email: true;
+      role: true;
+      image: true;
+      createdAt: true;
+      verified: true;
+      updatedAt: true;
+      id: true;
+      apiKey: true;
+      _count: {
+        select: { devices: true; rooms: true };
+      };
+    };
+  }>;
 };
 
 const Profile = ({ self, profile }: Props) => {
+  const [openDeleteAccount, setOpenDeleteAccount] = useState<boolean>(false);
+
   return (
     <main>
+      <DeleteAccountModal
+        isOpen={openDeleteAccount}
+        onClose={() => {
+          setOpenDeleteAccount(false);
+        }}
+        email={profile.email}
+      />
       <div className="container  py-4 pb-6 lg:py-8 lg:!px-8">
         <div className="flex flex-col md:flex-row w-full gap-4">
           <div className="w-full">
@@ -87,7 +96,7 @@ const Profile = ({ self, profile }: Props) => {
             <Card placeholder={""} className="w-full h-full" color="white">
               <CardBody
                 placeholder={""}
-                className=" justify-center px-2 text-sm md:text-base  items-center text-center flex flex-1"
+                className=" justify-center px-2 text-xs md:text-base  items-center text-center flex flex-1"
               >
                 Jika kamu tak sanggup menahan lelahnya belajar,
                 <br /> Maka bersiaplah menahan pahitnya kebodohan. <br />- Imam
@@ -193,17 +202,21 @@ const Profile = ({ self, profile }: Props) => {
                   </ListItem>
                 </Link>
                 <hr />
-                <Link href={"/account/delete"}>
-                  <ListItem placeholder={""} className="text-red-400 py-4">
-                    <ListItemPrefix placeholder={""}>
-                      <TrashIcon className="w-5 h-5" />
-                    </ListItemPrefix>
-                    Hapus Akun
-                    <ListItemSuffix placeholder={""}>
-                      <ChevronRightIcon className="w-4 h-4" />
-                    </ListItemSuffix>
-                  </ListItem>
-                </Link>
+                <ListItem
+                  onClick={() => {
+                    setOpenDeleteAccount(true);
+                  }}
+                  placeholder={""}
+                  className="text-red-400 py-4"
+                >
+                  <ListItemPrefix placeholder={""}>
+                    <TrashIcon className="w-5 h-5" />
+                  </ListItemPrefix>
+                  Hapus Akun
+                  <ListItemSuffix placeholder={""}>
+                    <ChevronRightIcon className="w-4 h-4" />
+                  </ListItemSuffix>
+                </ListItem>
               </List>
             </Card>
           </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import {
   Button,
   IconButton,
@@ -8,22 +8,18 @@ import {
   ListItem,
   ListItemPrefix,
 } from "@material-tailwind/react";
-import { CubeIcon } from "@heroicons/react/24/solid";
 import { usePathname } from "next/navigation";
 import {
   ArrowLeftOnRectangleIcon,
   BellAlertIcon,
-  CalendarDaysIcon,
-  CpuChipIcon,
   FingerPrintIcon,
   HomeModernIcon,
-  PowerIcon,
   RectangleGroupIcon,
   UserIcon,
-  XMarkIcon,
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import Image from "next/image";
+import SignoutModal from "@/app/ui/modals/signout";
 
 type Props = {};
 
@@ -66,12 +62,14 @@ const Sidebar = (props: Props) => {
       path: "/dashboard/profile",
       active: pathname === "/dashboard/profile",
     },
-    {
-      label: "Sign Out",
-      icon: <ArrowLeftOnRectangleIcon className="h-5 w-5" />,
-      path: "/signout",
-    },
+    // {
+    //   label: "Sign Out",
+    //   icon: <ArrowLeftOnRectangleIcon className="h-5 w-5" />,
+    //   path: "/signout",
+    // },
   ];
+
+  const [openSignout, setOpenSignout] = useState<boolean>(false);
   return (
     <List placeholder={""} className="gap-2 mx-1">
       <ListItem
@@ -91,9 +89,9 @@ const Sidebar = (props: Props) => {
         <Link key={index} href={item.path}>
           <ListItem
             placeholder={""}
-            className={`flex py-4 items-center rounded-none bg-gray-100 duration-100 ${
+            className={`flex py-4 items-center  bg-gray-50 duration-100 ${
               item.active
-                ? " border border-indigo-700 !bg-indigo-100 !text-indigo-700 rounded"
+                ? "  !bg-indigo-50 !text-indigo-700 font-medium"
                 : " text-gray-700"
             }`}
           >
@@ -102,6 +100,26 @@ const Sidebar = (props: Props) => {
           </ListItem>
         </Link>
       ))}
+      <ListItem
+        placeholder={""}
+        className={
+          "flex py-4 items-center  bg-gray-50 duration-100 text-gray-700"
+        }
+        onClick={() => {
+          setOpenSignout(true);
+        }}
+      >
+        <ListItemPrefix placeholder={""}>
+          <ArrowLeftOnRectangleIcon className="h-5 w-5" />
+        </ListItemPrefix>
+        Log Out
+      </ListItem>
+      <SignoutModal
+        isOpen={openSignout}
+        onClose={() => {
+          setOpenSignout(false);
+        }}
+      />
     </List>
   );
 };
