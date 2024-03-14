@@ -1,35 +1,27 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
+import { getServerSession } from "./lib/utils/session";
+import { MiddlewareConfig } from "next/dist/build/analysis/get-page-static-info";
 
 export async function middleware(request: NextRequest) {
   const response = NextResponse.next();
-  const token = request.cookies.get("JWT_TOKEN");
+  const token = request.cookies.get("JWT_TOKEN")?.value;
   const { pathname } = request.nextUrl;
   const protectedPaths = ["/account/verify", "/account/delete"];
 
-  const getSession = async () => {
-    return await fetch(new URL("/api/auth/session", request.url), {
-      method: "post",
-      body: JSON.stringify({ authToken: token?.value }),
-    })
-      .then((data) => data.json())
-      .catch(() => null);
-  };
+  const sessionData = await getServerSession(token);
 
-  if ((pathname === "/login" || pathname === "/register") && token?.value) {
-    const sessionData = await getSession();
-    if (sessionData)
+  if ((pathname === "/login" || pathname === "/register") && token) {
+    if (sessionData.user)
       return NextResponse.redirect(new URL("/dashboard/profile", request.url));
   }
 
   if (pathname.startsWith("/dashboard") || protectedPaths.includes(pathname)) {
-    if (!token?.value)
-      return NextResponse.redirect(new URL("/login", request.url));
+    if (!token) return NextResponse.redirect(new URL("/login", request.url));
 
-    const sessionData = await getSession();
     if (!sessionData?.user)
       return NextResponse.redirect(new URL("/login", request.url));
-    else if (!sessionData?.user.verified && pathname != "/account/verify")
+    else if (!sessionData?.user?.verified && pathname != "/account/verify")
       return NextResponse.redirect(new URL("/account/verify", request.url));
   }
 
@@ -37,5 +29,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  mather: ["/dashboard/:path*", "/account/:path*"],
+  matcher: ["/login", "/register", "/dashboard/:path*", "/account/:path*"],
 };

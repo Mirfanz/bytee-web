@@ -5,17 +5,17 @@ import {
   SendEmailVerification,
   SignOut,
 } from "@/lib/actions";
+import { UserType } from "@/lib/utils/session";
 import { Toast } from "@/lib/utils/swal";
-import { SessionType } from "@/types";
 import { Button, Chip } from "@material-tailwind/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 
-type Props = { sessionData: SessionType };
+type Props = { user: UserType | null };
 
-const VerifiedPage = ({ sessionData }: Props) => {
+const VerifiedPage = ({ user }: Props) => {
   return (
     <main>
       <div className="container !h-screen items-center flex justify-center">

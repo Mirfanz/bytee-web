@@ -1,12 +1,12 @@
 import { PageProps } from "@/.next/types/app/layout";
 import VerifiedPage from "@/app/ui/auth/account/verified-page";
 import VerifyPage from "@/app/ui/auth/account/verify";
-import { GetLastSendEmailVerification, GetSelf } from "@/lib/actions";
-import { SessionType } from "@/types";
+import { GetLastSendEmailVerification } from "@/lib/actions";
+import { SessionType, getServerSession } from "@/lib/utils/session";
 
 export default async function verifyPage({ searchParams }: PageProps) {
-  const sessionData: SessionType = await GetSelf();
-  if (sessionData?.verified) return <VerifiedPage sessionData={sessionData} />;
+  const { user }: SessionType = await getServerSession();
+  if (user?.verified) return <VerifiedPage user={user} />;
 
   let lastSendEmailVerification =
     (await GetLastSendEmailVerification())?.getTime() || 0;
@@ -14,11 +14,5 @@ export default async function verifyPage({ searchParams }: PageProps) {
   const delay: number = process.env.VERIFICATION_DELAY;
   let timeGap: number = new Date().getTime() - lastSendEmailVerification;
   const wait = Math.floor((delay * 1000 - timeGap) / 1000);
-  return (
-    <VerifyPage
-      sessionData={sessionData}
-      wait={wait > 0 ? wait : 0}
-      delay={delay}
-    />
-  );
+  return <VerifyPage user={user} wait={wait > 0 ? wait : 0} delay={delay} />;
 }

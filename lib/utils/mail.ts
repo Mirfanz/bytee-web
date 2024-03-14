@@ -1,8 +1,8 @@
-import { UserType } from "@/types";
 import {
   TransactionalEmailsApi,
   TransactionalEmailsApiApiKeys,
 } from "@sendinblue/client";
+import { UserType } from "./session";
 
 export async function sendVerification(user: UserType, token: string) {
   const apiInstance = new TransactionalEmailsApi();

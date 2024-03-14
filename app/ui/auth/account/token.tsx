@@ -7,7 +7,6 @@ import {
   VerifyEmail,
 } from "@/lib/actions";
 import { Toast } from "@/lib/utils/swal";
-import { SessionType } from "@/types";
 import { Button, Chip, Spinner } from "@material-tailwind/react";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";

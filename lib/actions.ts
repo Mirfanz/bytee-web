@@ -2,29 +2,18 @@
 
 import prisma from "@/prisma";
 import { cookies } from "next/headers";
-import {
-  comparePassword,
-  createToken,
-  decodeToken,
-  hashPassword,
-} from "./utils/auth";
-import { Jwt, JwtPayload, Algorithm } from "jsonwebtoken";
-import { RedirectType, redirect } from "next/navigation";
-import { Prisma } from "@prisma/client";
+import { comparePassword, hashPassword } from "./utils/password";
+import { redirect } from "next/navigation";
 
 import type {
   RegisterProps,
   AddRoomProps,
   AddDeviceProps,
   SigninProps,
-  SessionType,
 } from "@/types";
 import { sendVerification } from "./utils/mail";
-import { error } from "console";
+import { UserType, generateToken, getServerSession } from "./utils/session";
 
-export const setcookie = () => {
-  cookies().set("A", "B");
-};
 export const Register = async ({ email, password, name }: RegisterProps) => {
   const cookie = cookies();
   const hashedPassword = hashPassword(password);
@@ -39,16 +28,18 @@ export const Register = async ({ email, password, name }: RegisterProps) => {
       })
       .finally(() => prisma.$disconnect());
 
-    const token = createToken({
+    const token = await generateToken({
       name: result.name,
       email: result.email,
       role: result.role,
       image: result.image,
       verified: result.verified,
     });
+
     cookie.set("JWT_TOKEN", token, {
-      expires: new Date().getTime() + 1000 * 60 * 60 * 24 * 7,
+      expires: new Date().getTime() + 60000 * 60 * 24 * 7,
     });
+
     return {
       success: "Register berhasil.",
       authToken: token,
@@ -83,7 +74,7 @@ export const Signin = async ({ email, password }: SigninProps) => {
     if (!comparePassword(password, result.hashedPassword))
       throw new Error("Password salah.");
 
-    const token = createToken({
+    const token = await generateToken({
       email: result.email,
       name: result.name,
       image: result.image,
@@ -92,10 +83,9 @@ export const Signin = async ({ email, password }: SigninProps) => {
     });
 
     cookies().set("JWT_TOKEN", token, {
-      expires: new Date().getTime() + 1000 * 60 * 60 * 24 * 7,
+      expires: new Date().getTime() + 60000 * 60 * 24 * 7,
     });
 
-    // if (!result.verified)
     return {
       success: "Login Berhasil",
       data: {
@@ -114,18 +104,18 @@ export const Signin = async ({ email, password }: SigninProps) => {
 };
 
 export const SendEmailVerification = async () => {
-  const session = await GetSelf();
-  if (!session) redirect("login");
+  const { user } = await getServerSession();
+  if (!user) redirect("login");
 
   try {
     const result = await prisma.emailVerification.create({
       data: {
         user: {
-          connect: { email: session.email, verified: false },
+          connect: { email: user.email, verified: false },
         },
       },
     });
-    if (!(await sendVerification(session, result.token)))
+    if (!(await sendVerification(user, result.token)))
       return { error: "Gagal mengirim email" };
     return {
       success: "Link verifikasi dikirim",
@@ -139,13 +129,13 @@ export const SendEmailVerification = async () => {
 };
 
 export const GetLastSendEmailVerification = async () => {
-  const session = await GetSelf();
-  if (!session) redirect("login");
+  const { user } = await getServerSession();
+  if (!user) redirect("login");
 
   try {
     const result = await prisma.emailVerification.findFirst({
       where: {
-        user: { email: session.email },
+        user: { email: user.email },
       },
       orderBy: { createdAt: "desc" },
     });
@@ -206,7 +196,7 @@ export const VerifyEmail = async (token: string) => {
 };
 
 export const RemoveAccount = async () => {
-  const user = await GetSelf();
+  const { user } = await getServerSession();
   if (!user) redirect("/login");
 
   try {
@@ -220,7 +210,6 @@ export const RemoveAccount = async () => {
         role: true,
       },
     });
-    // console.log("data", data);
     cookies().delete("JWT_TOKEN");
     return { success: "Akun dihapus", data };
   } catch (error: any) {
@@ -236,35 +225,25 @@ export const SignOut = async () => {
   return true;
 };
 
-export const GetSelf = async (token: string | undefined = undefined) => {
-  const authToken = token || cookies().get("JWT_TOKEN")?.value;
-  if (!authToken) return null;
-
-  const decodedToken: SessionType = decodeToken(authToken);
-  // console.log("decoded", decodedToken);
-  if (!decodedToken) cookies().delete("JWT_TOKEN");
-  return decodedToken;
-};
-
 export const UpdateSession = async () => {
   console.log("Update session");
 
-  const currentSession = await GetSelf();
-  if (!currentSession) return false;
+  const currentSession = await getServerSession();
+  if (!currentSession.user) return false;
 
   try {
     const user = await prisma.user.findUnique({
       where: {
-        email: currentSession.email,
+        email: currentSession.user.email,
       },
     });
-    console.log("user", user);
+
     if (!user) {
       cookies().delete("JWT_TOKEN");
       return false;
     }
 
-    const newSession: SessionType = {
+    const newSession: UserType = {
       email: user.email,
       image: user.image,
       name: user.name,
@@ -272,13 +251,11 @@ export const UpdateSession = async () => {
       verified: user.verified,
     };
 
-    const newToken = createToken(newSession);
-    console.log("newToken", newSession);
-    // cookies().delete("JWT_TOKEN");
+    const newToken = await generateToken(newSession);
+    console.log("newUserType", newSession);
     cookies().set("JWT_TOKEN", newToken, {
-      expires: new Date().getTime() + 1000 * 60 * 60 * 24 * 7,
+      expires: new Date().getTime() + 60000 * 60 * 24 * 7,
     });
-
     return true;
   } catch (error) {
     console.log("error", error);
@@ -291,7 +268,7 @@ export const FetchUser = async (userId: string | undefined = undefined) => {
   const self = userId ? false : true;
 
   if (self) {
-    email = (await GetSelf())?.email;
+    email = (await getServerSession())?.user?.email;
     if (!email) redirect("/login");
   }
 
@@ -323,7 +300,7 @@ export const FetchUser = async (userId: string | undefined = undefined) => {
 };
 
 export const FetchApiKey = async () => {
-  const user = await GetSelf();
+  const { user } = await getServerSession();
   if (!user) redirect("/login");
   try {
     const data = await prisma.user
@@ -345,7 +322,7 @@ export const FetchRooms = async ({
   roomId?: string;
   asGuest?: boolean;
 }) => {
-  const user = await GetSelf();
+  const { user } = await getServerSession();
   if (!user) redirect("/login");
 
   try {
@@ -409,7 +386,7 @@ export const AddGuestAccess = async ({
   roomId: string;
   email: string;
 }) => {
-  const user = await GetSelf();
+  const { user } = await getServerSession();
   if (!user) redirect("/login");
 
   if (email === user.email) return { error: "Email sendiri _-" };
@@ -446,7 +423,7 @@ export const RemoveGuestAccess = async ({
   roomId: string;
   guestEmail?: string;
 }) => {
-  const user = await GetSelf();
+  const { user } = await getServerSession();
   if (!user) redirect("/login");
 
   try {
@@ -474,7 +451,7 @@ export const RemoveGuestAccess = async ({
 };
 
 export const AddRoom = async ({ name, description }: AddRoomProps) => {
-  const user = await GetSelf();
+  const { user } = await getServerSession();
   if (!user) redirect("/login");
 
   try {
@@ -506,7 +483,7 @@ export const UpdateRoom = async ({
   roomId: string;
   data: AddRoomProps;
 }) => {
-  const user = await GetSelf();
+  const { user } = await getServerSession();
   if (!user) redirect("/login");
 
   try {
@@ -532,7 +509,7 @@ export const UpdateRoom = async ({
 };
 
 export const DeleteRoom = async (roomId: string) => {
-  const user = await GetSelf();
+  const { user } = await getServerSession();
   if (!user) redirect("/login");
 
   try {
@@ -559,7 +536,7 @@ export const DeleteRoom = async (roomId: string) => {
 export const FetchDevices = async (
   deviceId: string | undefined = undefined
 ) => {
-  const user = await GetSelf();
+  const { user } = await getServerSession();
   if (!user) redirect("/login");
 
   try {
@@ -583,7 +560,7 @@ export const AddDevice = async ({
   description,
   roomId,
 }: AddDeviceProps) => {
-  const user = await GetSelf();
+  const { user } = await getServerSession();
   if (!user) redirect("/login");
   if (!name) return { error: "Name is required" };
   if (!roomId) return { error: "Please select a room" };
@@ -614,7 +591,7 @@ export const AddDevice = async ({
 };
 
 export const DeleteDevice = async (deviceId: string) => {
-  const user = await GetSelf();
+  const { user } = await getServerSession();
   if (!user) redirect("/login");
   try {
     const data = await prisma.device
@@ -647,7 +624,7 @@ export const SwitchDevice = async ({
   deviceId: string;
   state: boolean;
 }) => {
-  const user = await GetSelf();
+  const { user } = await getServerSession();
   if (!user) redirect("/login");
   try {
     const data = await prisma.device
@@ -677,7 +654,7 @@ export const EditDevice = async ({
   deviceId: string;
   data: AddDeviceProps;
 }) => {
-  const user = await GetSelf();
+  const { user } = await getServerSession();
   if (!user) redirect("/login");
   try {
     const result = await prisma.device
@@ -708,8 +685,7 @@ export const EditDevice = async ({
 export const FetchNotifications = async (
   notifId: string | undefined = undefined
 ) => {
-  const user = await GetSelf();
-
+  const { user } = await getServerSession();
   if (!user) redirect("/login");
 
   try {

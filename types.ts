@@ -1,14 +1,7 @@
 import { Prisma } from "@prisma/client";
 import { JwtPayload } from "jsonwebtoken";
 
-export type UserType = {
-  name: string;
-  email: string;
-  role: "user" | "member" | "admin";
-  image: string | null;
-};
-
-export type SessionType = (UserType & { verified: boolean }) | null;
+// export type SessionType = (UserType & { verified: boolean }) | null;
 
 export type RoomType = Prisma.RoomGetPayload<{
   select: {
@@ -56,14 +49,18 @@ export type DeviceType = Prisma.DeviceGetPayload<{
   };
 }>;
 
-// =================================================================
-// =================================================================
-export type SubscribeProps = string;
-
-export type PublishProps = {
-  deviceId: string;
-  state: boolean;
+export type PageProps = {
+  params?: any;
+  searchParams?: any;
 };
+
+export type LayoutProps = {
+  children?: React.ReactNode;
+  params?: any;
+};
+
+// =================================================================
+// =================================================================
 
 export type RegisterProps = {
   email: string;

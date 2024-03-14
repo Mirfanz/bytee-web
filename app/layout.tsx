@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
 import Providers from "./ui/providers";
+import SessionProvider from "./session-provider";
+import { getServerSession } from "@/lib/utils/session";
 
 const poppins = Poppins({
   weight: [
@@ -24,15 +26,19 @@ export const metadata: Metadata = {
   description: "WEb server untuk belajar iot smarthome device.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const sessionData = await getServerSession();
+
   return (
     <html lang="en">
       <body className={poppins.className}>
-        <Providers>{children}</Providers>
+        <SessionProvider value={sessionData}>
+          <Providers>{children}</Providers>
+        </SessionProvider>
       </body>
     </html>
   );

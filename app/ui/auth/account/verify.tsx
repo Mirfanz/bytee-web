@@ -6,16 +6,16 @@ import {
   SignOut,
   UpdateSession,
 } from "@/lib/actions";
+import { SessionType, UserType } from "@/lib/utils/session";
 import { Toast } from "@/lib/utils/swal";
-import { SessionType } from "@/types";
 import { Button, Chip } from "@material-tailwind/react";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 
-type Props = { sessionData: SessionType; wait: number; delay: number };
+type Props = { user: UserType | null; wait: number; delay: number };
 
-const VerifyPage = ({ sessionData, wait, delay }: Props) => {
+const VerifyPage = ({ user, wait, delay }: Props) => {
   const router = useRouter();
   const [waiting, setWaiting] = useState<number>(wait);
   const [loading, setLoading] = useState<boolean>(false);
@@ -38,7 +38,7 @@ const VerifyPage = ({ sessionData, wait, delay }: Props) => {
           <p className="text-justify text-base text-gray-700 mb-1">
             Mohon verifikasi email anda melalui tautan yang telah kami kirim ke{" "}
             <strong className="font-semibold text-gray-600">
-              {sessionData?.email}
+              {user?.email}
             </strong>
             .
           </p>
