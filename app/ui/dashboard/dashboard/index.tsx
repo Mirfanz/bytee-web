@@ -1,23 +1,31 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Alert, Button, ButtonGroup } from "@material-tailwind/react";
+import {
+  Alert,
+  Button,
+  ButtonGroup,
+  IconButton,
+} from "@material-tailwind/react";
 import {
   ArrowLeftOnRectangleIcon,
+  CubeTransparentIcon,
   ExclamationTriangleIcon,
+  PowerIcon,
 } from "@heroicons/react/24/outline";
 import CardDevice from "./card-device";
 import { useRouter } from "next/navigation";
 import type { RoomType } from "@/types";
 import MQTT from "mqtt";
+import { FetchRooms } from "@/lib/actions";
+import ErrorComponent from "@/app/ui/error";
 
-type Props = {
-  rooms: RoomType[] | null;
-  guestRooms: RoomType[] | null;
-};
+type Props = {};
 
-const Dashboard = ({ rooms, guestRooms }: Props) => {
+const Dashboard = ({}: Props) => {
   const [connectStatus, setConnectStatus] = React.useState<boolean>(false);
+  const [rooms, setRooms] = useState<RoomType[] | undefined>([]);
+  const [guestRooms, setGuestRooms] = useState<RoomType[] | undefined>([]);
   const [mqtt, setMqtt] = useState<MQTT.MqttClient>(
     MQTT.connect({
       port: 443,
@@ -28,6 +36,15 @@ const Dashboard = ({ rooms, guestRooms }: Props) => {
   function getTopic(deviceId: string): string {
     return `bytee/device/${deviceId}/state`;
   }
+
+  useEffect(() => {
+    FetchRooms({ asGuest: false })
+      .then((result) => setRooms(result.error ? undefined : result.data))
+      .catch(() => setRooms(undefined));
+    FetchRooms({ asGuest: true })
+      .then((result) => setGuestRooms(result.error ? undefined : result.data))
+      .catch(() => setGuestRooms(undefined));
+  }, []);
 
   useEffect(() => {
     mqtt?.on("connect", (packet) => {
@@ -70,39 +87,41 @@ const Dashboard = ({ rooms, guestRooms }: Props) => {
             <div key={room.id} className="mb-8">
               <div className="flex items-center justify-between mb-3">
                 <h3 className="font-medium text-lg text-gray-800 flex items-center gap-2 ">
-                  <ArrowLeftOnRectangleIcon
-                    strokeWidth={2}
-                    className="w-5 h-5"
-                  />
+                  <CubeTransparentIcon strokeWidth={2} className="w-5 h-5" />
                   {room.name}
                 </h3>
-                <ButtonGroup
-                  placeholder={""}
-                  size="sm"
-                  variant="outlined"
-                  color="indigo"
-                >
-                  <Button
+                <div className="flex">
+                  <IconButton
                     placeholder={""}
+                    size="sm"
+                    color="deep-orange"
+                    variant="filled"
+                    className="rounded-e-none"
+                    title="Matikan Semua"
                     onClick={() => {
                       room.devices.map((device) => {
                         mqtt?.publish(getTopic(device.id), "0");
                       });
                     }}
                   >
-                    OFF
-                  </Button>
-                  <Button
+                    <PowerIcon strokeWidth={2.5} className="w-4 h-4 " />
+                  </IconButton>
+                  <IconButton
+                    title="Nyalakan Semua"
                     placeholder={""}
+                    size="sm"
+                    color="teal"
+                    variant="filled"
+                    className="rounded-s-none"
                     onClick={() => {
                       room.devices.map((device) => {
                         mqtt?.publish(getTopic(device.id), "1");
                       });
                     }}
                   >
-                    ON
-                  </Button>
-                </ButtonGroup>
+                    <PowerIcon strokeWidth={2.5} className="w-4 h-4" />
+                  </IconButton>
+                </div>
               </div>
               {room.devices?.length ? (
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
@@ -116,63 +135,53 @@ const Dashboard = ({ rooms, guestRooms }: Props) => {
                   ))}
                 </div>
               ) : (
-                <Alert
-                  color="indigo"
-                  variant="outlined"
-                  icon={<ExclamationTriangleIcon className="w-6 h-6" />}
-                >
-                  Nothing device in this room
-                </Alert>
+                <ErrorComponent status="warning" message="Tidak ada device" />
               )}
             </div>
           ))
         ) : (
-          <Alert
-            color="indigo"
-            variant="outlined"
-            icon={<ExclamationTriangleIcon className="w-6 h-6" />}
-          >
-            Terjadi kesalahan saat mengambil data room
-          </Alert>
+          <ErrorComponent status="error" message="Gagal mengambil data rooms" />
         )}
         <div>
           {guestRooms?.map((room) => (
             <div key={room.id} className="mb-8">
               <div className="flex items-center justify-between mb-3">
                 <h3 className="font-medium text-lg text-gray-800 flex items-center gap-2 ">
-                  <ArrowLeftOnRectangleIcon
-                    strokeWidth={2}
-                    className="w-5 h-5"
-                  />
-                  {room.name}
+                  <CubeTransparentIcon strokeWidth={2} className="w-5 h-5" />
+                  {room.name} &lt;{room.user.name.split(" ")?.shift()}&gt;
                 </h3>
-                <ButtonGroup
-                  placeholder={""}
-                  size="sm"
-                  variant="outlined"
-                  color="indigo"
-                >
-                  <Button
+                <div className="flex">
+                  <IconButton
                     placeholder={""}
+                    size="sm"
+                    color="deep-orange"
+                    variant="filled"
+                    className="rounded-e-none"
+                    title="Matikan Semua"
                     onClick={() => {
                       room.devices.map((device) => {
                         mqtt?.publish(getTopic(device.id), "0");
                       });
                     }}
                   >
-                    OFF
-                  </Button>
-                  <Button
+                    <PowerIcon strokeWidth={2.5} className="w-4 h-4 " />
+                  </IconButton>
+                  <IconButton
+                    title="Nyalakan Semua"
                     placeholder={""}
+                    size="sm"
+                    color="teal"
+                    variant="filled"
+                    className="rounded-s-none"
                     onClick={() => {
                       room.devices.map((device) => {
                         mqtt?.publish(getTopic(device.id), "1");
                       });
                     }}
                   >
-                    ON
-                  </Button>
-                </ButtonGroup>
+                    <PowerIcon strokeWidth={2.5} className="w-4 h-4" />
+                  </IconButton>
+                </div>
               </div>
               {room.devices?.length ? (
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
@@ -186,13 +195,7 @@ const Dashboard = ({ rooms, guestRooms }: Props) => {
                   ))}
                 </div>
               ) : (
-                <Alert
-                  color="indigo"
-                  variant="outlined"
-                  icon={<ExclamationTriangleIcon className="w-6 h-6" />}
-                >
-                  Nothing device in this room
-                </Alert>
+                <ErrorComponent status="warning" message="Tidak ada device" />
               )}
             </div>
           ))}

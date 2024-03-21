@@ -13,10 +13,10 @@ type Props = {
 };
 
 const CardDevice = ({ device, mqtt, connectStatus }: Props) => {
-  const [topics] = useState({
+  const topics = {
     device: `bytee/device/${device.id}/state`,
     web: `bytee/web/${device.id}/state`,
-  });
+  };
   const [status, setStatus] = useState<boolean>(device.state);
   const [switching, setSwitching] = useState<boolean>(true);
 

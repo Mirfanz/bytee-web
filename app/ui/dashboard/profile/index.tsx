@@ -55,7 +55,6 @@ const Profile = ({ self, profile }: Props) => {
         onClose={() => {
           setOpenDeleteAccount(false);
         }}
-        email={profile.email}
       />
       <div className="container  py-4 pb-6 lg:py-8 lg:!px-8">
         <div className="flex flex-col md:flex-row w-full gap-4">

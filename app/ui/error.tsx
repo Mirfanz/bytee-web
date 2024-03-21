@@ -17,10 +17,10 @@ const ErrorComponent = ({
 }: Props & ComponentProps<"div">) => {
   return (
     <main>
-      <div className={"container py-4 " + className}>
+      <div className={className}>
         <Alert
           color={status == "error" ? "red" : "amber"}
-          variant="filled"
+          variant="ghost"
           onClose={() => {}}
           icon={
             status == "error" ? (

@@ -15,8 +15,6 @@ export default async function NotificationPage() {
 
   if (!notifications)
     return <ErrorComponent message={errorMessage} status="error" />;
-  if (!notifications.length)
-    return <ErrorComponent message={"Belum ada notifikasi"} status="warning" />;
 
   return <Notification notifications={notifications} />;
 }

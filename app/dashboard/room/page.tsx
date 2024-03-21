@@ -2,13 +2,15 @@ import { FetchRooms } from "@/lib/actions";
 import Room from "../../ui/dashboard/room";
 import { Prisma } from "@prisma/client";
 import type { RoomType } from "@/types";
+import ErrorComponent from "@/app/ui/error";
 
 export default async function RoomPage() {
-  const rooms: RoomType[] | null = await FetchRooms({});
+  const rooms = await FetchRooms({});
 
-  const guestRooms: RoomType[] | null = await FetchRooms({ asGuest: true });
+  const guestRooms = await FetchRooms({ asGuest: true });
 
-  if (!rooms) return <h1>Terjadi Kesalahan</h1>;
+  if (rooms.error)
+    return <ErrorComponent message={rooms.error} status="error" />;
 
-  return <Room rooms={rooms} guestRooms={guestRooms} />;
+  return <Room rooms={rooms.data} guestRooms={guestRooms.data} />;
 }

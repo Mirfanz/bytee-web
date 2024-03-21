@@ -373,9 +373,9 @@ export const FetchRooms = async ({
         },
       })
       .finally(() => prisma.$disconnect());
-    return data;
+    return { success: "", data };
   } catch (error) {
-    return null;
+    return { error: "Gagal mengambil data Rooms" };
   }
 };
 
@@ -476,23 +476,33 @@ export const AddRoom = async ({ name, description }: AddRoomProps) => {
   }
 };
 
-export const UpdateRoom = async ({
-  roomId,
-  data,
-}: {
+export type UpdateRoomProps = {
   roomId: string;
-  data: AddRoomProps;
-}) => {
+  data: {
+    name?: string;
+    description?: string;
+  };
+};
+export const UpdateRoom = async ({ roomId, data }: UpdateRoomProps) => {
   const { user } = await getServerSession();
   if (!user) redirect("/login");
+
+  data = {
+    name: data.name?.trim(),
+    description: data.description?.trim(),
+  };
+
+  if (!data.name) return { error: "Nama tidak boleh kosong" };
+  else if (!data.name && !data.description)
+    return { error: "Tidak ada data yang dikirim" };
 
   try {
     const result = await prisma.room
       .update({
         where: { id: roomId, user: { email: user.email } },
         data: {
-          name: data.name,
-          description: data.description,
+          name: data.name || undefined,
+          description: data.description || undefined,
         },
         select: {
           name: true,
@@ -500,6 +510,9 @@ export const UpdateRoom = async ({
           description: true,
           createdAt: true,
         },
+      })
+      .then((result) => {
+        console.log("result", result);
       })
       .finally(() => prisma.$disconnect());
     return { success: "Room diedit", data: result };
@@ -562,7 +575,8 @@ export const AddDevice = async ({
 }: AddDeviceProps) => {
   const { user } = await getServerSession();
   if (!user) redirect("/login");
-  if (!name) return { error: "Name is required" };
+  name = name.trim();
+  if (!name) return { error: "Nama tidak boleh kosong" };
   if (!roomId) return { error: "Please select a room" };
   try {
     const data = await prisma.device
@@ -571,7 +585,7 @@ export const AddDevice = async ({
           name,
           description,
           user: { connect: { email: user.email } },
-          room: { connect: { id: roomId } },
+          room: { connect: { id: roomId, user: { email: user.email } } },
         },
         select: {
           id: true,
@@ -647,15 +661,19 @@ export const SwitchDevice = async ({
   }
 };
 
-export const EditDevice = async ({
-  deviceId,
-  data,
-}: {
+export type EditDeviceProps = {
   deviceId: string;
-  data: AddDeviceProps;
-}) => {
+  data: {
+    name?: string;
+    description?: string;
+    roomId?: string;
+  };
+};
+export const EditDevice = async ({ deviceId, data }: EditDeviceProps) => {
   const { user } = await getServerSession();
   if (!user) redirect("/login");
+  data.name = data.name?.trim();
+  if (!data.name) return { error: "Nama tidak boleh kosong" };
   try {
     const result = await prisma.device
       .update({

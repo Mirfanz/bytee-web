@@ -1,19 +1,24 @@
 "use client";
 
+import { useSession } from "@/app/session-provider";
 import { RemoveAccount } from "@/lib/actions";
 import { Button, Dialog, DialogBody, Input } from "@material-tailwind/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 
 type Props = {
   isOpen: boolean;
   onClose: () => void;
-  email: string;
 };
 
-const DeleteAccountModal = ({ isOpen, onClose, email }: Props) => {
+const DeleteAccountModal = ({ isOpen, onClose }: Props) => {
+  const { user } = useSession();
   const [emailField, setEmailField] = useState<string>("");
   const [deleting, setDeleting] = useState<boolean>(false);
+  useEffect(() => {
+    setEmailField("");
+    setDeleting(false);
+  }, [isOpen]);
 
   return (
     <Dialog open={isOpen} handler={onClose} placeholder={""} size="xs">
@@ -70,7 +75,7 @@ const DeleteAccountModal = ({ isOpen, onClose, email }: Props) => {
             }}
             color="red"
             className="flex-1"
-            disabled={emailField !== email || deleting}
+            disabled={emailField !== user?.email || deleting}
             loading={deleting}
           >
             Hapus Akun
