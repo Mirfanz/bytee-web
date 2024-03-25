@@ -1,4 +1,4 @@
-import { PageProps, RoomType } from "@/types";
+import { PageProps } from "@/types";
 import RoomDetail from "../../../ui/dashboard/room/detail";
 import { FetchRooms } from "@/lib/actions";
 import { notFound } from "next/navigation";
@@ -6,11 +6,11 @@ import ErrorComponent from "@/app/ui/error";
 
 export default async function RoomDetailPage({ params }: PageProps) {
   const { roomId } = params;
-  let guest = false;
+  let owner = true;
   let room = (await FetchRooms({ roomId, asGuest: false })).data;
 
   if (!room?.length) {
-    guest = true;
+    owner = false;
     room = (await FetchRooms({ roomId, asGuest: true })).data;
   }
 
@@ -19,5 +19,5 @@ export default async function RoomDetailPage({ params }: PageProps) {
 
   if (!room?.length) notFound();
 
-  return <RoomDetail guest={guest} room={room[0]} />;
+  return <RoomDetail owner={owner} room={room[0]} />;
 }

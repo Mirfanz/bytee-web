@@ -38,10 +38,10 @@ import EditRoomModal from "../../modals/edit-room";
 
 type Props = {
   room: RoomType;
-  guest: boolean;
+  owner: boolean;
 };
 
-const RoomDetail = ({ room, guest }: Props) => {
+const RoomDetail = ({ room, owner }: Props) => {
   const { user } = useSession();
   const router = useRouter();
   const [accordionDevice, setAccordionDevice] = useState<number>(-1);
@@ -108,6 +108,31 @@ const RoomDetail = ({ room, guest }: Props) => {
         .finally(() => {});
     });
   }
+  async function removeMyAccess() {
+    Confirm.fire({
+      titleText: "Hapus Akses?",
+      text: "Anda tidak akan bisa mengakses dan mengontrol device di room ini lagi.",
+      confirmButtonText: "Ya, Hapus",
+      confirmButtonColor: "red",
+    }).then(({ isConfirmed }) => {
+      if (!isConfirmed) return;
+      RemoveGuestAccess({ roomId: room.id })
+        .then((resp) => {
+          if (resp.error)
+            return Toast.fire({
+              icon: "error",
+              text: resp.error || "Failed remove guest",
+            });
+
+          Toast.fire({
+            icon: "success",
+            text: resp.success || "Guest removed",
+          });
+          router.back();
+        })
+        .finally(() => {});
+    });
+  }
 
   async function handleDeleteDevice(
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
@@ -153,32 +178,34 @@ const RoomDetail = ({ room, guest }: Props) => {
           <h1 className="text-2xl font-semibold me-auto text-gray-900 !border-s-4 border-indigo-700 ps-2 ">
             My Rooms &gt; {room.name}
           </h1>
-          <Menu placement="bottom-start">
-            <MenuHandler>
-              <IconButton placeholder={""} size="sm">
-                <Cog6ToothIcon className="w-5 h-5" />
-              </IconButton>
-            </MenuHandler>
-            <MenuList
-              placeholder={""}
-              className="w-32 min-w-0 p-1 text-indigo-700"
-            >
-              <MenuItem
+          {owner && (
+            <Menu placement="bottom-start">
+              <MenuHandler>
+                <IconButton placeholder={""} size="sm">
+                  <Cog6ToothIcon className="w-5 h-5" />
+                </IconButton>
+              </MenuHandler>
+              <MenuList
                 placeholder={""}
-                className="flex gap-2 items-center"
-                onClick={() => setDialogEditRoom((prev) => !prev)}
+                className="w-32 min-w-0 p-1 text-indigo-700"
               >
-                <PencilSquareIcon className="w-4 h-4" /> Edit
-              </MenuItem>
-              <MenuItem
-                placeholder={""}
-                onClick={handleDeleteRoom}
-                className="flex gap-2 items-center text-deep-orange-700"
-              >
-                <TrashIcon className="w-4 h-4 " /> Hapus
-              </MenuItem>
-            </MenuList>
-          </Menu>
+                <MenuItem
+                  placeholder={""}
+                  className="flex gap-2 items-center"
+                  onClick={() => setDialogEditRoom((prev) => !prev)}
+                >
+                  <PencilSquareIcon className="w-4 h-4" /> Edit
+                </MenuItem>
+                <MenuItem
+                  placeholder={""}
+                  onClick={handleDeleteRoom}
+                  className="flex gap-2 items-center text-deep-orange-700"
+                >
+                  <TrashIcon className="w-4 h-4 " /> Hapus
+                </MenuItem>
+              </MenuList>
+            </Menu>
+          )}
         </div>
 
         <div className="grid grid-cols-12 gap-6">
@@ -218,11 +245,13 @@ const RoomDetail = ({ room, guest }: Props) => {
                       <AccordionBody className="pt-0">
                         <div className="px-2">
                           <table cellPadding={4}>
-                            <tr>
-                              <td>ID</td>
-                              <td className="px-2"> : </td>
-                              <td>{device.id}</td>
-                            </tr>
+                            {owner && (
+                              <tr>
+                                <td>ID</td>
+                                <td className="px-2"> : </td>
+                                <td>{device.id}</td>
+                              </tr>
+                            )}
                             <tr>
                               <td>Status</td>
                               <td className="px-2"> : </td>
@@ -233,44 +262,48 @@ const RoomDetail = ({ room, guest }: Props) => {
                               <td className="px-2"> : </td>
                               <td>{device.state ? "Hidup" : "Mati"}</td>
                             </tr>
-                            <tr>
-                              <td>Dibuat</td>
-                              <td className="px-2"> : </td>
-                              <td>{device.createdAt.toLocaleString()}</td>
-                            </tr>
-                            <tr>
-                              <td>Aksi</td>
-                              <td className="px-2"> : </td>
-                              <td>
-                                <div className="flex ">
-                                  <Button
-                                    className="rounded-e-none bg-deep-orange-50"
-                                    placeholder={""}
-                                    size="sm"
-                                    color="deep-orange"
-                                    variant="text"
-                                    onClick={(e) =>
-                                      handleDeleteDevice(e, device)
-                                    }
-                                  >
-                                    Hapus
-                                  </Button>
-                                  <Button
-                                    className="rounded-s-none bg-indigo-50"
-                                    placeholder={""}
-                                    onClick={() => {
-                                      setEditCurrentDevice(device);
-                                      setDialogEditDevice(true);
-                                    }}
-                                    size="sm"
-                                    color="indigo"
-                                    variant="text"
-                                  >
-                                    Ubah
-                                  </Button>
-                                </div>
-                              </td>
-                            </tr>
+                            {owner && (
+                              <tr>
+                                <td>Dibuat</td>
+                                <td className="px-2"> : </td>
+                                <td>{device.createdAt.toLocaleString()}</td>
+                              </tr>
+                            )}
+                            {owner && (
+                              <tr>
+                                <td>Aksi</td>
+                                <td className="px-2"> : </td>
+                                <td>
+                                  <div className="flex ">
+                                    <Button
+                                      className="rounded-e-none bg-deep-orange-50"
+                                      placeholder={""}
+                                      size="sm"
+                                      color="deep-orange"
+                                      variant="text"
+                                      onClick={(e) =>
+                                        handleDeleteDevice(e, device)
+                                      }
+                                    >
+                                      Hapus
+                                    </Button>
+                                    <Button
+                                      className="rounded-s-none bg-indigo-50"
+                                      placeholder={""}
+                                      onClick={() => {
+                                        setEditCurrentDevice(device);
+                                        setDialogEditDevice(true);
+                                      }}
+                                      size="sm"
+                                      color="indigo"
+                                      variant="text"
+                                    >
+                                      Ubah
+                                    </Button>
+                                  </div>
+                                </td>
+                              </tr>
+                            )}
                           </table>
                         </div>
                       </AccordionBody>
@@ -284,17 +317,19 @@ const RoomDetail = ({ room, guest }: Props) => {
                   className="m-0 p-0"
                 />
               )}
-              <div className="">
-                <Button
-                  placeholder={""}
-                  size="md"
-                  color="teal"
-                  onClick={() => setDialogAddDevice(true)}
-                  className="w-full mt-4"
-                >
-                  Buat Perangkat Baru
-                </Button>
-              </div>
+              {owner && (
+                <div className="">
+                  <Button
+                    placeholder={""}
+                    size="md"
+                    color="teal"
+                    onClick={() => setDialogAddDevice(true)}
+                    className="w-full mt-4"
+                  >
+                    Buat Perangkat Baru
+                  </Button>
+                </div>
+              )}
             </Card>
           </div>
           <div className="col-span-12 lg:col-span-6">
@@ -339,28 +374,41 @@ const RoomDetail = ({ room, guest }: Props) => {
                         </h1>
                         <small className="">{guest.email}</small>
                       </div>
-                      <ListItemSuffix placeholder={""}>
-                        <IconButton
-                          placeholder={""}
-                          color="deep-orange"
-                          size="sm"
-                          onClick={() => removeGuest(guest.email)}
-                        >
-                          <TrashIcon className="w-5 h-5" />
-                        </IconButton>
-                      </ListItemSuffix>
+                      {owner && (
+                        <ListItemSuffix placeholder={""}>
+                          <IconButton
+                            placeholder={""}
+                            color="deep-orange"
+                            size="sm"
+                            onClick={() => removeGuest(guest.email)}
+                          >
+                            <TrashIcon className="w-5 h-5" />
+                          </IconButton>
+                        </ListItemSuffix>
+                      )}
                     </div>
                   </ListItem>
                 ))}
               </List>
-              <Button
-                placeholder={""}
-                color="teal"
-                className="w-full mt-4"
-                onClick={() => setDialogAddGuest(true)}
-              >
-                Izinkan Pengguna Lain
-              </Button>
+              {owner ? (
+                <Button
+                  placeholder={""}
+                  color="teal"
+                  className="w-full mt-4"
+                  onClick={() => setDialogAddGuest(true)}
+                >
+                  Izinkan Pengguna Lain
+                </Button>
+              ) : (
+                <Button
+                  placeholder={""}
+                  color="deep-orange"
+                  className="w-full mt-4"
+                  onClick={removeMyAccess}
+                >
+                  Hapus Izin Saya
+                </Button>
+              )}
             </Card>
           </div>
         </div>
