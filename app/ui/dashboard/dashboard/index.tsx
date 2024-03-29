@@ -47,21 +47,21 @@ const Dashboard = ({}: Props) => {
   }, []);
 
   useEffect(() => {
-    mqtt?.on("connect", (packet) => {
+    mqtt.on("connect", (packet) => {
       console.log("packet", packet);
       setConnectStatus(true);
     });
-    mqtt?.on("error", (error) => {
+    mqtt.on("error", (error) => {
       console.log("MQTT Error", error);
     });
-    mqtt?.on("disconnect", (packet) => {
+    mqtt.on("disconnect", (packet) => {
       setConnectStatus(false);
     });
-    mqtt?.on("reconnect", () => {
+    mqtt.on("reconnect", () => {
       setConnectStatus(false);
     });
     // return () => {
-    //   mqtt?.end();
+    //   mqtt.end();
     // };
   }, [mqtt]);
 
@@ -100,7 +100,7 @@ const Dashboard = ({}: Props) => {
                     title="Matikan Semua"
                     onClick={() => {
                       room.devices.map((device) => {
-                        mqtt?.publish(getTopic(device.id), "0");
+                        mqtt.publish(getTopic(device.id), "0");
                       });
                     }}
                   >
@@ -115,7 +115,7 @@ const Dashboard = ({}: Props) => {
                     className="rounded-s-none"
                     onClick={() => {
                       room.devices.map((device) => {
-                        mqtt?.publish(getTopic(device.id), "1");
+                        mqtt.publish(getTopic(device.id), "1");
                       });
                     }}
                   >
@@ -160,7 +160,7 @@ const Dashboard = ({}: Props) => {
                     title="Matikan Semua"
                     onClick={() => {
                       room.devices.map((device) => {
-                        mqtt?.publish(getTopic(device.id), "0");
+                        mqtt.publish(getTopic(device.id), "0");
                       });
                     }}
                   >
@@ -175,7 +175,7 @@ const Dashboard = ({}: Props) => {
                     className="rounded-s-none"
                     onClick={() => {
                       room.devices.map((device) => {
-                        mqtt?.publish(getTopic(device.id), "1");
+                        mqtt.publish(getTopic(device.id), "1");
                       });
                     }}
                   >
