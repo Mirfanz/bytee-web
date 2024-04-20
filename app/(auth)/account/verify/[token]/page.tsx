@@ -1,5 +1,5 @@
-import { PageProps } from "@/.next/types/app/layout";
 import VerifyingPage from "@/app/ui/auth/account/token";
+import { PageProps } from "@/types";
 
 export default async function verifyTokenPage({
   params,

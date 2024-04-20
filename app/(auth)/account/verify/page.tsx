@@ -1,8 +1,8 @@
-import { PageProps } from "@/.next/types/app/layout";
 import VerifiedPage from "@/app/ui/auth/account/verified-page";
 import VerifyPage from "@/app/ui/auth/account/verify";
 import { GetLastSendEmailVerification } from "@/lib/actions";
 import { SessionType, getServerSession } from "@/lib/utils/session";
+import { PageProps } from "@/types";
 
 export default async function verifyPage({ searchParams }: PageProps) {
   const { user }: SessionType = await getServerSession();

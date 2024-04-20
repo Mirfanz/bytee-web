@@ -29,7 +29,7 @@ body {
 }
 .container {
   overflow-x: hidden;
-  padding-inline: 0.75rem;
+  padding-inline: 1rem;
   max-width: none;
   min-width: none;
 }
