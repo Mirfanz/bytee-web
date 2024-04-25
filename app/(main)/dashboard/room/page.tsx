@@ -1,5 +1,5 @@
 import { FetchRooms } from "@/lib/actions";
-import Room from "../../ui/dashboard/room";
+import Room from "../../../ui/dashboard/room";
 import { Prisma } from "@prisma/client";
 import type { RoomType } from "@/types";
 import ErrorComponent from "@/app/ui/error";

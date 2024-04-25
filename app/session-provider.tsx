@@ -1,6 +1,8 @@
 "use client";
+import { SignOut } from "@/lib/actions";
 import { SessionType } from "@/lib/utils/session";
 import React, { createContext, useContext } from "react";
+import Swal from "sweetalert2";
 
 type Props = {
   children: React.ReactNode;
@@ -22,5 +24,21 @@ export const useSession = () => {
   //   throw new Error("useSession harus digunakan di dalam SessionProvider");
   return sessionContext;
 };
+
+export async function signOut() {
+  return Swal.fire({
+    titleText: "LogOut?",
+    text: "Yakin mau keluar dari akun ini.",
+    showCancelButton: true,
+    showConfirmButton: true,
+    confirmButtonText: "LogOut",
+    confirmButtonColor: "#FF5555",
+    cancelButtonText: "Kembali",
+    focusCancel: true,
+  }).then((value) => {
+    if (!value.isConfirmed) return false;
+    return SignOut();
+  });
+}
 
 export default SessionProvider;

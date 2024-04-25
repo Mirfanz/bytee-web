@@ -1,4 +1,4 @@
-import Profile from "../../ui/dashboard/profile";
+import Profile from "../../../ui/dashboard/profile";
 import { notFound } from "next/navigation";
 import { FetchUser } from "@/lib/actions";
 import ErrorComponent from "@/app/ui/error";

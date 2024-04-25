@@ -1,7 +1,5 @@
 import React, { Suspense } from "react";
-import Navbar from "../ui/dashboard/navbar";
-import Sidebar from "../ui/dashboard/sidebar";
-import { Drawer } from "@material-tailwind/react";
+import Sidebar from "../../ui/dashboard/sidebar";
 
 export default function DashboardLayout({
   children,
@@ -10,7 +8,6 @@ export default function DashboardLayout({
 }) {
   return (
     <>
-      <Navbar />
       <div className="flex">
         <div
           className="w-96 bg-white sticky top-16 hidden lg:block overflow-y-auto"

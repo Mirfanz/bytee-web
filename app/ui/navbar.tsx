@@ -29,8 +29,7 @@ import {
   UserIcon,
 } from "@heroicons/react/24/solid";
 import { usePathname } from "next/navigation";
-import { useSession } from "../session-provider";
-import SignoutModal from "./modals/signout";
+import { signOut, useSession } from "../session-provider";
 import { UsersIcon } from "@heroicons/react/24/outline";
 
 const font = Audiowide({ weight: ["400"], subsets: ["latin", "latin-ext"] });
@@ -67,11 +66,15 @@ const HomeNavbar = (props: Props) => {
     },
   ];
   const [open, setOpen] = React.useState<boolean>(false);
-  const [signoutModalOpen, setSignoutModalOpen] =
-    React.useState<boolean>(false);
   return (
     <>
-      <nav className="fixed left-0 right-0 z-50 top-0 backdrop-blur-sm bg-black bg-opacity-20">
+      <nav
+        className={`left-0 right-0 z-50 top-0 ${
+          pathname === "/"
+            ? "fixed backdrop-blur-sm bg-black bg-opacity-20"
+            : " sticky bg-indigo-900"
+        }`}
+      >
         <div className="container gap-3 flex items-center py-3 ">
           <Link
             href={"/"}
@@ -124,7 +127,7 @@ const HomeNavbar = (props: Props) => {
                   <MenuItem
                     placeholder={""}
                     className="text-center"
-                    onClick={() => setSignoutModalOpen(true)}
+                    onClick={() => signOut()}
                   >
                     Logout Account
                   </MenuItem>
@@ -160,7 +163,6 @@ const HomeNavbar = (props: Props) => {
       <Drawer
         placeholder={""}
         open={open}
-        // className="sticky top-0"
         overlay
         overlayProps={{ className: "fixed" }}
         onClose={() => setOpen(false)}
@@ -169,13 +171,9 @@ const HomeNavbar = (props: Props) => {
           className="overflow-y-auto h-full "
           style={{ scrollbarWidth: "thin" }}
         >
-          <Sidebar listItems={listItems} />
+          <Sidebar navItems={listItems} />
         </div>
       </Drawer>
-      <SignoutModal
-        isOpen={signoutModalOpen}
-        onClose={() => setSignoutModalOpen(false)}
-      />
     </>
   );
 };

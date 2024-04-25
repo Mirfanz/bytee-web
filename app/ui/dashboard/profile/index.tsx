@@ -3,6 +3,7 @@
 import { RemoveAccount } from "@/lib/actions";
 import {
   ChevronRightIcon,
+  KeyIcon,
   LockClosedIcon,
   ShareIcon,
   TrashIcon,
@@ -107,7 +108,7 @@ const Profile = ({ self, profile }: Props) => {
       </div>
       <div className="container pb-6 lg:!px-8">
         <div className="grid grid-cols-12 gap-4">
-          <div className="overflow-y-auto h-auto pb-3 flex flex-col gap-3 col-span-12 md:col-span-6 2xl:col-span-8">
+          <div className="overflow-y-auto h-auto pb-3 hidden md:flex flex-col gap-3 col-span-12 md:col-span-6 2xl:col-span-8">
             <Card placeholder={""} className=" gap-3 p-4">
               <h1 className="font-semibold line-clamp-1">
                 2024 Pemilu Paling Dungu?
@@ -145,8 +146,12 @@ const Profile = ({ self, profile }: Props) => {
             <Button placeholder={""}>Telusuri Berita Lainnya</Button>
           </div>
           <div className=" col-span-12 mb-auto md:col-span-6 2xl:col-span-4">
-            <Card placeholder={""} className="">
-              <List placeholder={""}>
+            <Card placeholder={""} className="overflow-hidden">
+              <h5 className="underline-0 bg-teal-50 font-semibold text-center underline-offset-8 p-4">
+                Informasi Akun
+              </h5>
+              <hr />
+              <List placeholder={""} className="p-2 pt-1">
                 <ListItem placeholder={""}>
                   Total Rooms
                   <ListItemSuffix placeholder={""}>
@@ -180,7 +185,7 @@ const Profile = ({ self, profile }: Props) => {
                 </ListItem>
                 <hr />
                 <ListItem placeholder={""}>
-                  Akun Dibuat
+                  Tanggal Dibuat
                   <ListItemSuffix placeholder={""}>
                     <Chip
                       value={profile?.createdAt.toLocaleDateString()}
@@ -192,7 +197,7 @@ const Profile = ({ self, profile }: Props) => {
                 <Link href={"#"}>
                   <ListItem placeholder={""} className="py-4">
                     <ListItemPrefix placeholder={""}>
-                      <LockClosedIcon className="w-5 h-5" />
+                      <KeyIcon className="w-5 h-5" />
                     </ListItemPrefix>
                     Ganti Password
                     <ListItemSuffix placeholder={""}>

@@ -1,5 +1,5 @@
 import { PageProps } from "@/types";
-import RoomDetail from "../../../ui/dashboard/room/detail";
+import RoomDetail from "../../../../ui/dashboard/room/detail";
 import { FetchRooms } from "@/lib/actions";
 import { notFound } from "next/navigation";
 import ErrorComponent from "@/app/ui/error";

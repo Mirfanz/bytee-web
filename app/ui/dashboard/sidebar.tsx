@@ -10,7 +10,6 @@ import {
 } from "@material-tailwind/react";
 import { usePathname } from "next/navigation";
 import {
-  ArrowLeftOnRectangleIcon,
   BellAlertIcon,
   ExclamationCircleIcon,
   FingerPrintIcon,
@@ -21,8 +20,7 @@ import {
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import Image from "next/image";
-import SignoutModal from "@/app/ui/modals/signout";
-import { useSession } from "@/app/session-provider";
+import { useSession, signOut } from "@/app/session-provider";
 
 type Props = {};
 
@@ -62,7 +60,6 @@ const Sidebar = (props: Props) => {
   ];
   const { user } = useSession();
 
-  const [openSignout, setOpenSignout] = useState<boolean>(false);
   return (
     <List placeholder={""} className="gap-2 mx-1">
       <ListItem
@@ -118,7 +115,7 @@ const Sidebar = (props: Props) => {
             placeholder={""}
             className={"py-4 bg-gray-50 duration-100 text-gray-700"}
             onClick={() => {
-              setOpenSignout(true);
+              signOut();
             }}
           >
             <ListItemPrefix placeholder={""}>
@@ -134,12 +131,6 @@ const Sidebar = (props: Props) => {
           </Button>
         </Link>
       )}
-      <SignoutModal
-        isOpen={openSignout}
-        onClose={() => {
-          setOpenSignout(false);
-        }}
-      />
     </List>
   );
 };

@@ -59,6 +59,13 @@ export type LayoutProps = {
   params?: any;
 };
 
+export type NavItem = {
+  label: string;
+  icon: React.ReactNode;
+  path: string;
+  active: boolean;
+};
+
 // =================================================================
 // =================================================================
 
