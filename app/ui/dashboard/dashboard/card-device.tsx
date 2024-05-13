@@ -8,7 +8,7 @@ import React, { useEffect, useState } from "react";
 
 type Props = {
   device: DeviceType;
-  mqtt: MqttClient;
+  mqtt?: MqttClient;
   connectStatus?: boolean;
 };
 
@@ -18,12 +18,12 @@ const CardDevice = ({ device, mqtt, connectStatus }: Props) => {
   const [switching, setSwitching] = useState<boolean>(false);
 
   useEffect(() => {
-    mqtt.subscribe("bytee/web/" + device.id + "/state", (error) => {
+    mqtt?.subscribe("bytee/web/" + device.id + "/state", (error) => {
       if (!error) console.log("subscribe", "bytee/web/" + device.id + "/state");
       console.log("DSSDS");
     });
 
-    mqtt.on("message", (topic, payload, packet) => {
+    mqtt?.on("message", (topic, payload, packet) => {
       if (topic != "bytee/web/" + device.id + "/state") return;
       console.log("New Message");
       const message = payload.toString();
@@ -40,7 +40,7 @@ const CardDevice = ({ device, mqtt, connectStatus }: Props) => {
     if (switching) return;
     setSwitching(true);
 
-    mqtt.publish(
+    mqtt?.publish(
       "bytee/device/" + device.id + "/state",
       !status ? "1" : "0",
       (error, packet) => {

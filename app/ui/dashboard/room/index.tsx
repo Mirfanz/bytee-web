@@ -96,7 +96,7 @@ const Room = ({ rooms, guestRooms }: Props) => {
                           icon={<RectangleGroupIcon className="w-4 h-4" />}
                         />
                         <Chip
-                          value={room.guests.length}
+                          value={room.guests.length + 1}
                           size="sm"
                           variant="ghost"
                           color="indigo"
@@ -136,7 +136,7 @@ const Room = ({ rooms, guestRooms }: Props) => {
                           icon={<RectangleGroupIcon className="w-4 h-4" />}
                         />
                         <Chip
-                          value={room.guests.length}
+                          value={room.guests.length + 1}
                           size="sm"
                           variant="ghost"
                           color="indigo"
