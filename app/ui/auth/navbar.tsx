@@ -14,23 +14,6 @@ type Props = {};
 const Navbar = (props: Props) => {
   const pathname = usePathname();
 
-  let buttonProps: { label: string; href: string } = {
-    label: "Login",
-    href: "/login",
-  };
-
-  switch (pathname) {
-    case "/login":
-      buttonProps = { label: "Register", href: "/register" };
-      break;
-    case "/register":
-      buttonProps = { label: "Login", href: "/login" };
-      break;
-    case "/signout":
-      buttonProps = { label: "Dashboard", href: "/dashboard" };
-      break;
-  }
-
   return (
     <>
       <nav className="fixed left-0 right-0 z-50 top-0 bg-indigo-900">
@@ -52,14 +35,14 @@ const Navbar = (props: Props) => {
             Bytee
           </Link>
           <div className="ms-auto text-gray-100 items-center gap-8">
-            <Link href={buttonProps.href} replace>
+            <Link href={"/"} replace>
               <Button
                 className="-"
                 placeholder={""}
                 size="sm"
                 color="deep-orange"
               >
-                {buttonProps.label}
+                Beranda
               </Button>
             </Link>
           </div>

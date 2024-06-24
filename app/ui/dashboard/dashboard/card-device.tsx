@@ -19,8 +19,7 @@ const CardDevice = ({ device, mqtt, connectStatus }: Props) => {
 
   useEffect(() => {
     mqtt?.subscribe("bytee/web/" + device.id + "/state", (error) => {
-      if (!error) console.log("subscribe", "bytee/web/" + device.id + "/state");
-      console.log("DSSDS");
+      if (!error) console.log(`Subscribe ${device.name}`);
     });
 
     mqtt?.on("message", (topic, payload, packet) => {

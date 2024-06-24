@@ -51,9 +51,10 @@ const Dashboard = ({}: Props) => {
     if (!mqtt)
       setMqtt(
         MQTT.connect({
-          port: 443,
-          hostname: "mqtt.bytee.cloud/ws",
-          protocol: "wss",
+          port: process.env.NEXT_PUBLIC_MQTT_PORT,
+          hostname: process.env.NEXT_PUBLIC_MQTT_HOST,
+          protocol: "ws",
+          // clientId: session.user?.email,
         })
       );
     else {

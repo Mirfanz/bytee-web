@@ -6,8 +6,9 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 enum roles {
@@ -35,6 +36,8 @@ model User {
   rooms         Room[]              @relation(name: "owner")
   notifications Notification[]
   verification  EmailVerification[] @relation()
+
+  @@map("users")
 }
 
 model EmailVerification {
@@ -62,6 +65,8 @@ model Device {
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   room Room @relation(fields: [roomId], references: [id], onDelete: Cascade)
+
+  @@map("devices")
 }
 
 model Room {
@@ -75,6 +80,8 @@ model Room {
   guests  User[]   @relation(name: "guest")
   devices Device[]
   user    User     @relation(name: "owner", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("rooms")
 }
 
 enum statusNotification {
@@ -96,4 +103,6 @@ model Notification {
   createdAt DateTime @default(now())
 
   user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notifications")
 }
