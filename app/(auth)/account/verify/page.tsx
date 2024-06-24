@@ -11,8 +11,8 @@ export default async function verifyPage({ searchParams }: PageProps) {
   let lastSendEmailVerification =
     (await GetLastSendEmailVerification())?.getTime() || 0;
 
-  const delay: number = process.env.VERIFICATION_DELAY;
+  const delay: number = process.env.NEXT_PUBLIC_VERIFICATION_DELAY;
   let timeGap: number = new Date().getTime() - lastSendEmailVerification;
   const wait = Math.floor((delay * 1000 - timeGap) / 1000);
-  return <VerifyPage user={user} wait={wait > 0 ? wait : 0} delay={delay} />;
+  return <VerifyPage user={user} wait={wait > 0 ? wait : 0} />;
 }

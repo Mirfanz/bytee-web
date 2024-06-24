@@ -13,10 +13,11 @@ import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 
-type Props = { user: UserType | null; wait: number; delay: number };
+type Props = { user: UserType | null; wait: number };
 
-const VerifyPage = ({ user, wait, delay }: Props) => {
+const VerifyPage = ({ user, wait }: Props) => {
   const router = useRouter();
+  const delay = process.env.NEXT_PUBLIC_VERIFICATION_DELAY;
   const [waiting, setWaiting] = useState<number>(wait);
   const [loading, setLoading] = useState<boolean>(false);
   useEffect(() => {
