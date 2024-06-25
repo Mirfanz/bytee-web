@@ -13,13 +13,15 @@ type Props = {
 };
 
 const CardDevice = ({ device, mqtt, connectStatus }: Props) => {
-  const [active, setActive] = useState<boolean>(device.active);
-  const [status, setStatus] = useState<boolean>(device.state);
-  const [switching, setSwitching] = useState<boolean>(false);
+  const [active, setActive] = useState<boolean>(false);
+  const [info, setInfo] = useState<string | null>(null);
+  const [state, setState] = useState<boolean>(device.state);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     mqtt?.subscribe("bytee/web/" + device.id + "/state", (error) => {
-      if (!error) console.log(`Subscribe ${device.name}`);
+      if (error) return console.log(`Subscribe Failed ${device.name}`);
+      mqtt.publish("bytee/device/" + device.id + "/state", "2");
     });
 
     mqtt?.on("message", (topic, payload, packet) => {
@@ -27,24 +29,29 @@ const CardDevice = ({ device, mqtt, connectStatus }: Props) => {
       console.log("New Message");
       const message = payload.toString();
       console.log("message", message);
-      if (message === "0") setStatus(false);
-      else if (message === "1") setStatus(true);
-      else if (message === "4") setActive(false);
-      else if (message === "5") setActive(true);
-      setSwitching(false);
+      switch (parseInt(message)) {
+        case 0:
+          setState(false);
+          break;
+        case 1:
+          setState(true);
+          break;
+      }
+      setLoading(false);
+      setActive(true);
     });
   }, [mqtt]);
 
   async function handleSwithBtn() {
-    if (switching) return;
-    setSwitching(true);
+    if (loading) return;
+    setLoading(true);
 
     mqtt?.publish(
       "bytee/device/" + device.id + "/state",
-      !status ? "1" : "0",
+      !state ? "1" : "0",
       (error, packet) => {
-        setSwitching(false);
-        if (!error) setStatus((prev) => !prev);
+        // setLoading(false);
+        if (!error) setState((prev) => !prev);
       }
     );
   }
@@ -68,18 +75,18 @@ const CardDevice = ({ device, mqtt, connectStatus }: Props) => {
           >
             <button
               className={`!w-12 h-8 z-10 duration-100 absolute shadow-none bg-gray-300 rounded flex justify-center items-center hover:brightness-95 ${
-                status ? "left-14 translate-x-1" : "left-1"
+                state ? "left-14 translate-x-1" : "left-1"
               }`}
               onClick={handleSwithBtn}
-              disabled={switching}
+              disabled={loading}
             >
-              {switching ? (
+              {loading ? (
                 <Spinner className="w-4 h-4" color="indigo" />
               ) : (
                 <PowerIcon
                   className="w-4 h-4 !duration-100"
                   strokeWidth={2}
-                  color={status ? "green" : "red"}
+                  color={state ? "green" : "red"}
                 />
               )}
             </button>
