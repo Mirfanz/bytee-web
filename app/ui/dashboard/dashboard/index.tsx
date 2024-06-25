@@ -53,7 +53,7 @@ const Dashboard = ({}: Props) => {
         MQTT.connect({
           port: process.env.NEXT_PUBLIC_MQTT_PORT,
           hostname: process.env.NEXT_PUBLIC_MQTT_HOST,
-          protocol: "ws",
+          protocol: "wss",
           // clientId: session.user?.email,
         })
       );
